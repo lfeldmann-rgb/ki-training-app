@@ -82,8 +82,12 @@ export function whichCommand(command) {
 
   const directories = (process.env.PATH || "").split(delimiter).filter(Boolean);
   // The name as written first — for whoever typed `npm.cmd` themselves — then
-  // the extensions Windows would have tried on their behalf.
-  const suffixes = isWindows ? ["", ...pathExtensions()] : [""];
+  // the extensions Windows would have tried on their behalf. On Windows the bare
+  // name counts only when it already carries one of those extensions: Node's
+  // folder holds an extensionless `npm` next to `npm.cmd` (a shell script for
+  // Git Bash), and Windows cannot start it — picking it reported npm missing.
+  const hasExtension = isWindows && pathExtensions().some((ext) => name.toLowerCase().endsWith(ext.toLowerCase()));
+  const suffixes = isWindows ? [...(hasExtension ? [""] : []), ...pathExtensions()] : [""];
   for (const directory of directories) {
     for (const suffix of suffixes) {
       const candidate = join(directory, name + suffix);

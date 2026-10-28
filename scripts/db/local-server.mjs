@@ -31,6 +31,10 @@ const pg = new EmbeddedPostgres({
   // Never delete the data on stop — this is somebody's development database,
   // and `stop` is what happens at the end of every working day.
   persistent: true,
+  // Say UTF-8 out loud. Left alone, initdb takes the system locale, and on a
+  // German or English Windows that is WIN1252 — the first migration with a `⚠`
+  // in it then fails. Production Postgres is UTF-8; this must be too.
+  initdbFlags: ["--encoding=UTF8", "--locale=C"],
   onLog: (message) => process.stdout.write(`${message}\n`),
   onError: (message) => process.stderr.write(`${message}\n`),
 });

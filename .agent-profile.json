@@ -1,0 +1,13 @@
+{
+  "agent": "claude",
+  "label": "Claude Code",
+  "stubs": false,
+  "pruned": [
+    ".agents/mcp_config.json",
+    ".agents/skills",
+    ".codex/config.toml",
+    ".opencode/plugins/session-start.js",
+    "opencode.json"
+  ],
+  "note": "Written by `node run.mjs agent-setup`. Delete it and run the command again to start over."
+}
