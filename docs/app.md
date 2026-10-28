@@ -78,11 +78,31 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Tests:** `lib/practice/self-checks.test.ts` (answer key never sent,
   half-filled sheets never scored, unknown blocks null)
 
-### Practice data — no page yet
+### The guided task — `/dashboard/aufgabe` ("Meine Aufgabe im Betrieb")
 
+- **Does:** three steps on one page. 1. the owner describes their business
+  (trade, size, where it hurts); 2. picks a lesson's topic and talks to the
+  companion, which suggests three tasks for this business and walks them
+  through one; 3. writes down which task they did and how it went, then asks
+  the same conversation for feedback and a next step. Reached from the menu,
+  from the course card on `/dashboard` and from every lesson
+  (`?thema=<lesson slug>`).
+- **Done when:** an owner describes their bakery, gets three tasks on the
+  phone-assistant topic, saves how they did one and gets feedback that refers
+  to it — checked 2026-10-28 as the test owner with real calls to OpenAI
+  (gpt-5.6-luna); test rows deleted afterwards
+- **Access:** page `hasPlan(memberId, "ki_praxis")` else
+  `/plans?needs=ki_praxis`; both actions `requireActiveUser()` +
+  `hasPlan(…, "ki_praxis")`; companion `aufgaben-coach`,
+  `requiresPlan: "ki_praxis"`, `costsTokens: 0`
 - **Data:** `practice_profiles`, `practice_reports` (`db/schema-practice.ts`),
-  created in the first stage so the guided task needs no second migration.
-  Both in `docs/data-protection.md` §8d and in both exports.
+  `chat_messages` for the conversation (`aufgaben-coach:<lesson slug>`). All in
+  `docs/data-protection.md` §8a/§8d and both exports.
+- **AI:** task `companion` on "auto" → OpenAI; ~0.4 cents per turn
+  (`node run.mjs ai-check`). What the owner wrote travels in `work`, fenced;
+  `about` is the lesson title only.
+- **Tests:** `lib/practice/rules.test.ts`; the companion module's own tests
+  (fence, gate, guard order)
 
 ## Decisions worth remembering
 
@@ -106,6 +126,18 @@ moment the feature works. Written down by your assistant, from the conversation
   per-question verdicts into the stored state would make it a free answer
   key (`modules/activity/activities.ts`, rule 3). If the vendor wants
   explanations per question, they belong in the lesson text.
+- **Feedback comes when the owner asks for it, in the same conversation** —
+  not as an automatic reply when a report is saved. Decided 2026-10-28 by the
+  assistant: one companion surface per topic (never a second panel), and the
+  report reaches it through `load()`. An automatic one-shot reply would need a
+  server action of its own beside the panel's guards.
+- **OpenAI is the provider** (key in `.env`, set by the vendor 2026-10-28),
+  because one key covers text and the lesson cover pictures. The template sent
+  OpenAI `max_tokens`, which its current models refuse; fixed in
+  `lib/ai/providers/openai-compat.ts` (`maxTokensField`).
+- **The in-app assistant ("Assistent") is live now that a key exists**, still
+  with the template's handbook — `ai-chat-knowledge` writes hers, or she is
+  switched off in `config/ai-chat.json`. Not decided yet.
 - ⚠️ **Fernunterricht (FernUSG) is open**: AI feedback on what an owner hands
   in may count as monitoring the learning outcome. Not decided here —
   `compliance-check` before the first sale.

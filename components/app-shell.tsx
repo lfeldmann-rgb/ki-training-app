@@ -54,7 +54,7 @@ import * as React from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { LayoutDashboard, CircleUser, CreditCard, FileText, MessageCircle, ShieldCheck, Users, Receipt, Coins, LogIn, LogOut, Menu } from "lucide-react";
+import { Briefcase, LayoutDashboard, CircleUser, CreditCard, FileText, MessageCircle, ShieldCheck, Users, Receipt, Coins, LogIn, LogOut, Menu } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { initialsFrom } from "@/lib/initials";
@@ -115,6 +115,9 @@ export type NavItem = NavItemBase;
 
 export const NAVIGATION: NavItem[] = [
   { href: "/dashboard", labelKey: "overview", icon: LayoutDashboard },
+  // KI-Praxis: the guided task. The course module puts "Kurs" directly under
+  // the overview; this follows it.
+  { href: "/dashboard/aufgabe", labelKey: "practice", icon: Briefcase },
   // The Member's own account: what they may use, until when, and their balance
   // (story 3.5). Under /dashboard, so `proxy.ts` already guards it — a
   // route OUTSIDE that prefix would be public until the matcher named it.

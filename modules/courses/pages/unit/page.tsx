@@ -411,7 +411,11 @@ export default async function CourseUnitPage({
         {/* KI-Praxis: the app's own additions to a lesson (the self-check
             closing a block). One component, owned by the app — this module
             does not know what is in it. */}
-        <LessonExtras blockSlug={block.slug} isLastInBlock={inBlock === siblings.length} />
+        <LessonExtras
+          unitSlug={unit.slug}
+          blockSlug={block.slug}
+          isLastInBlock={inBlock === siblings.length}
+        />
 
         <CompletionToggle
           unitSlug={unit.slug}

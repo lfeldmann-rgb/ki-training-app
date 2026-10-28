@@ -39,6 +39,7 @@ import { STATIC_MESSAGES } from "@/i18n/static-messages";
  */
 export const MEMBER_NAV_KEYS = [
   "overview",
+  "practice",
   "account",
   "billing",
   "chat",

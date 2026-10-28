@@ -18,6 +18,7 @@
 // from this list. An instruction sent by the browser is the entire prompt handed
 // to the customer; a `requiresPlan` sent by the browser is no gate at all.
 import type { CustomerFact, CustomerText } from "@/lib/ai/customer-text";
+import { practiceTopics, profileFor, reportsFor } from "@/lib/practice/manage";
 
 /** What one call is allowed to see about this member's subject. */
 export interface CompanionSubject {
@@ -106,7 +107,53 @@ export interface Companion {
  * `costsTokens` are read by `modules/companion/actions.ts`, which asks `hasPlan()`
  * and `spendTokens()` in the order check → work → charge.
  */
-export const COMPANIONS: readonly Companion[] = [];
+export const COMPANIONS: readonly Companion[] = [
+  // KI-Praxis: "Meine Aufgabe im Betrieb". One conversation per lesson topic
+  // (`subject` = the lesson's slug): it suggests tasks that fit this owner's
+  // business, walks them through one, and — once they have written down how
+  // it went — gives feedback and a next step. Everything the owner wrote (the
+  // profile, the reports) travels in `work`, inside the fence; `about` carries
+  // only the lesson title, which is the app's own text.
+  {
+    id: "aufgaben-coach",
+    instruction:
+      "Du bist ein praktischer KI-Coach für Inhaber kleiner Betriebe aus Einzelhandel, " +
+      "Handwerk und Kleingewerbe. Sprich Deutsch und duze. Bezieh dich immer auf den " +
+      "Betrieb, den der Inhaber beschrieben hat, und auf das Thema der Lektion.\n" +
+      "Wenn noch keine Aufgabe gewählt ist: Schlag genau drei kleine, konkrete Aufgaben " +
+      "vor, die er in dieser Woche in seinem Betrieb umsetzen kann – jede in einem Satz, " +
+      "nummeriert – und frag, welche er nehmen möchte.\n" +
+      "Wenn er eine gewählt hat: Führ ihn Schritt für Schritt hindurch, höchstens drei " +
+      "Schritte auf einmal, und frag nach jedem Abschnitt, ob es geklappt hat.\n" +
+      "Wenn er aufgeschrieben hat, wie er eine Aufgabe umgesetzt hat, und um Rückmeldung " +
+      "bittet: Nenn eine Sache, die gut war, und einen konkreten nächsten Schritt.\n" +
+      "Halte dich kurz, ohne Fachjargon. Nenn keine Preise von Anbietern als Tatsache, " +
+      "gib keine Rechtsberatung, und erinnere daran, keine sensiblen Kundendaten in " +
+      "KI-Werkzeuge einzugeben, wenn es zur Aufgabe passt.",
+    requiresPlan: "ki_praxis",
+    costsTokens: 0,
+    maxInputChars: 4000,
+    maxHistoryTurns: 12,
+    async load({ memberId, subject }) {
+      const topics = await practiceTopics();
+      const topic = topics.find((t) => t.slug === subject);
+      if (!topic) return null;
+      const [profile, reports] = await Promise.all([
+        profileFor(memberId),
+        reportsFor(memberId, subject, 3),
+      ]);
+      const work: CustomerText[] = [];
+      if (profile?.trade) work.push({ label: "Branche des Betriebs", text: profile.trade });
+      if (profile?.size) work.push({ label: "Größe des Betriebs", text: profile.size });
+      if (profile?.painPoint) work.push({ label: "Wo es im Betrieb hakt", text: profile.painPoint });
+      for (const report of reports) {
+        work.push({ label: "Gewählte Aufgabe", text: report.task });
+        work.push({ label: "So hat er sie umgesetzt", text: report.body });
+      }
+      return { about: [{ label: "Lektion", value: topic.title }], work };
+    },
+  },
+];
 
 /** The entry with this id, or `undefined`. The lookup the server action makes. */
 export function companionById(id: string): Companion | undefined {

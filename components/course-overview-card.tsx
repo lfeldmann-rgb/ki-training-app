@@ -26,6 +26,7 @@ export async function CourseOverviewCard({
   if (!first) return null;
 
   const t = await getTranslations("dashboard");
+  const tPractice = await getTranslations("practice");
   const { course, entitled, standing } = first;
   const courseHref = `/dashboard/course/${encodeURIComponent(course.slug)}`;
   const finished = standing !== null && standing.total > 0 && standing.done === standing.total;
@@ -80,6 +81,16 @@ export async function CourseOverviewCard({
             <Link href={courseHref}>{t("courseOpen")}</Link>
           </Button>
         )}
+
+        {/* The guided task lives beside the course, and a buyer reaches it
+            from here (docs/ux.md § 0, app/dashboard/overview-links.test.ts). */}
+        {entitled ? (
+          <div>
+            <Button asChild variant="outline">
+              <Link href="/dashboard/aufgabe">{tPractice("courseCardPractice")}</Link>
+            </Button>
+          </div>
+        ) : null}
       </CardContent>
     </Card>
   );

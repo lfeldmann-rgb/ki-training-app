@@ -44,9 +44,10 @@ vorgelesen ist es eine Notiz zum Prüfen, kein Versprechen, das du gegeben hast.
       Bild-Anbieter)
 - [ ] jede Lektion bekommt ihr KI-erzeugtes Titelbild
 - [x] am Ende jedes Abschnitts einen kurzen Selbsttest machen (gebaut 2026-10-28)
-- [ ] seinen Betrieb beschreiben, passende Aufgaben vorgeschlagen bekommen,
+- [x] seinen Betrieb beschreiben, passende Aufgaben vorgeschlagen bekommen,
       Schritt für Schritt durch eine geführt werden, aufschreiben wie er sie
-      umgesetzt hat und eine Rückmeldung mit nächstem Schritt bekommen
+      umgesetzt hat und eine Rückmeldung mit nächstem Schritt bekommen (gebaut
+      2026-10-28)
 - [ ] im Lernspiel zuordnen, welche Aufgaben im Betrieb KI übernehmen kann
       und welche nicht
 
