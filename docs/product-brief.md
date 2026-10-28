@@ -52,6 +52,13 @@ their own pace — the self-study course (`docs/courses.md`, shape 1).
   as *monitoring the learning outcome* (FernUSG, `docs/compliance.md` §6.5).
   Not decided here — flagged.
 
+## What the customer DOES (build-app 1d, 2026-10-28)
+
+- **Yes (1):** a short self-check closing each section — free per use, graded
+  on the server.
+- **Yes (2):** a small learning game on the hardest topic (e.g. sorting which
+  tasks in their business AI can take over and which not) — free per use.
+
 ## Context from the vendor's website
 
 - Audience in their words: owners of small businesses in retail, trades and
