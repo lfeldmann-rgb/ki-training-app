@@ -14,10 +14,16 @@ exactly these businesses on introducing AI.
 ## The five questions
 
 1. **Who pays, and what do they walk away with?** The **owners** of small
-   retail, trade and small businesses pay. What they walk away with: _open_ —
-   asked again before the end picture (build-app Step 1f).
-2. **What do they do in it in their first week?** _open_ — asked together with
-   the course's shape (build-app Step 1).
+   retail, trade and small businesses pay. They walk away knowing the AI use
+   cases for their business — and able to put them into practice themselves
+   (vendor's words: "Ich weiß jetzt Anwendungsfälle und kann sie selbst
+   umsetzen").
+2. **What do they do in it in their first week?** The first lesson, and one
+   small task solved in their own business — the app offers a few suggestions
+   and guides them through the process.
+
+**Course shape (asked 2026-10-28):** everything open at once, worked through at
+their own pace — the self-study course (`docs/courses.md`, shape 1).
 3. **How does it bill?** A **one-time payment**.
 4. **What is it called?** _open_ — the vendor is unsure. Until decided, the app
    keeps the template's name; it comes back before the salespage.
