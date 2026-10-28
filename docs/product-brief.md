@@ -40,6 +40,18 @@ their own pace — the self-study course (`docs/courses.md`, shape 1).
   on 2026-10-28 — goes into `docs/app.md` → *Decisions worth remembering* at
   the first stage.
 
+## What the app DOES alongside the customer (build-app 1c, 2026-10-28)
+
+- **Yes (1):** suggests tasks that fit the owner's business and guides them
+  through step by step — reads what they say about their business (trade,
+  size, where it hurts). ~1 cent per step.
+- **Yes (2):** reads what they write about a task ("so habe ich es umgesetzt")
+  and answers with feedback and a next step. ~1 cent each.
+- **No (3):** a look back over the course so far.
+- ⚠️ For `compliance-check`: AI feedback on what a learner hands in may count
+  as *monitoring the learning outcome* (FernUSG, `docs/compliance.md` §6.5).
+  Not decided here — flagged.
+
 ## Context from the vendor's website
 
 - Audience in their words: owners of small businesses in retail, trades and
