@@ -63,6 +63,14 @@ export interface CompatProfile {
   usageAccounting?: boolean;
   /** Currency of a provider-reported cost. OpenRouter quotes USD. */
   reportedCostCurrency?: string;
+  /**
+   * The name the output cap travels under. OpenAI's current models refuse
+   * `max_tokens` with a 400 ("unsupported_parameter … Use
+   * 'max_completion_tokens' instead" — measured 2026-10-28 on gpt-5.6-luna,
+   * the "auto" model), and that 400 reached the customer as a broken chat.
+   * Mistral and OpenRouter still take `max_tokens`, the default.
+   */
+  maxTokensField?: "max_tokens" | "max_completion_tokens";
 }
 
 export const COMPAT_PROFILES: Record<string, CompatProfile> = {
@@ -71,6 +79,7 @@ export const COMPAT_PROFILES: Record<string, CompatProfile> = {
     baseUrl: "https://api.openai.com/v1",
     envVar: "OPENAI_API_KEY",
     streamUsageOption: true,
+    maxTokensField: "max_completion_tokens",
   },
   mistral: {
     id: "mistral",
@@ -140,7 +149,7 @@ export function buildBody(
   const body: Record<string, unknown> = {
     model: req.model,
     messages,
-    max_tokens: req.maxTokens,
+    [profile.maxTokensField ?? "max_tokens"]: req.maxTokens,
     // The escape hatch, spread here rather than last: it may override the model
     // and the cap, which is the point, but it may NOT override the transport
     // flags below. A binding that set `stream: false` while this adapter is

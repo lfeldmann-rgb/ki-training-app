@@ -86,12 +86,26 @@ describe("buildBody", () => {
 
   it("lets providerOptions override the model and the cap — it is the escape hatch", () => {
     const body = buildBody(
-      { ...REQUEST, providerOptions: { max_tokens: 4000, reasoning_effort: "low" } },
+      { ...REQUEST, providerOptions: { max_completion_tokens: 4000, reasoning_effort: "low" } },
       COMPAT_PROFILES.openai,
       false,
     );
-    expect(body.max_tokens).toBe(4000);
+    expect(body.max_completion_tokens).toBe(4000);
     expect(body.reasoning_effort).toBe("low");
+  });
+
+  it("REGRESSION: sends OpenAI the cap as max_completion_tokens, the others as max_tokens", () => {
+    // OpenAI's current models answer `max_tokens` with a 400
+    // unsupported_parameter — every call of a fresh "auto" app on an OpenAI key
+    // failed (2026-10-28).
+    const openai = buildBody(REQUEST, COMPAT_PROFILES.openai, false);
+    expect(openai.max_completion_tokens).toBe(REQUEST.maxTokens);
+    expect(openai).not.toHaveProperty("max_tokens");
+    for (const other of [COMPAT_PROFILES.mistral, COMPAT_PROFILES.openrouter]) {
+      const body = buildBody(REQUEST, other, false);
+      expect(body.max_tokens).toBe(REQUEST.maxTokens);
+      expect(body).not.toHaveProperty("max_completion_tokens");
+    }
   });
 
   it("never sends cacheTtl — that word is ours, not any provider's", () => {
