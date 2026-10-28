@@ -13,6 +13,8 @@
 // same mistake as counting a 307 as a passing page.
 import { describe, expect, it } from "vitest";
 import path from "node:path";
+import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { tmpdir } from "node:os";
 import { notChecked } from "@/lib/test-not-checked";
 import {
   canOpenBrowser,
@@ -109,6 +111,26 @@ describe("finding a command on the PATH", () => {
     expect(whichCommand("ds24-a-command-that-does-not-exist")).toBeNull();
     // A path, not a PATH lookup — and still nothing.
     expect(whichCommand(path.join(process.execPath, "not-a-directory", "nope"))).toBeNull();
+  });
+
+  it("REGRESSION: on Windows the shim wins over an extensionless script beside it", () => {
+    // Node's own folder on Windows holds `npm` (a shell script for Git Bash) next
+    // to `npm.cmd`. Windows cannot start the first, and picking it made `doctor`
+    // report npm missing on a machine that had it.
+    const dir = mkdtempSync(path.join(tmpdir(), "which-"));
+    const saved = process.env.PATH;
+    try {
+      writeFileSync(path.join(dir, "ds24-tool"), "#!/bin/sh\n", { mode: 0o755 });
+      writeFileSync(path.join(dir, "ds24-tool.cmd"), "@echo off\r\n");
+      process.env.PATH = dir;
+      const found = whichCommand("ds24-tool");
+      // PATHEXT spells the extension in capitals, and NTFS does not care.
+      if (process.platform === "win32") expect(found?.toLowerCase()).toBe(path.join(dir, "ds24-tool.cmd").toLowerCase());
+      else expect(found).toBe(path.join(dir, "ds24-tool"));
+    } finally {
+      process.env.PATH = saved;
+      rmSync(dir, { recursive: true, force: true });
+    }
   });
 });
 

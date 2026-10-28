@@ -32,7 +32,7 @@
 // happened to call `updatedAt`. A rule that is wrong in both directions and
 // right by coincidence is the kind somebody deletes the first time it is wrong.
 import { readdirSync, readFileSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
@@ -159,7 +159,7 @@ function directClients(): { file: string; count: number }[] {
     const hits = (blankComments(readFileSync(file, "utf8")).match(
       /(?<![A-Za-z0-9_$.])postgres\(/g,
     ) ?? []).length;
-    if (hits > 0) found.push({ file: relative(ROOT, file), count: hits });
+    if (hits > 0) found.push({ file: relative(ROOT, file).split(sep).join("/"), count: hits });
   }
   return found;
 }

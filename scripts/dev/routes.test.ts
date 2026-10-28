@@ -12,11 +12,13 @@
 // teaches the next reader that the assertion is decoration. What is asserted is
 // the four skip rules and the shape, which is what the walk actually promises —
 // and what the `live` rung and `smoke.mjs` both now depend on being one answer.
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 
 import { collectPageRoutes } from "./routes.mjs";
 
-const ROOT = new URL("../../", import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 const routes = collectPageRoutes({ cwd: ROOT });
 
 describe("collectPageRoutes", () => {

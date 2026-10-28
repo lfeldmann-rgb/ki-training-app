@@ -111,7 +111,9 @@ describe("tunnel state", () => {
 
   afterEach(() => {
     process.chdir(original);
-    for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true });
+    // Retries: Windows releases a just-killed child's hold on its working
+    // directory a moment late, and an immediate delete answers EPERM.
+    for (const d of dirs.splice(0)) rmSync(d, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
     vi.restoreAllMocks();
   });
 
@@ -374,7 +376,10 @@ describe("stopPid", () => {
 
     const outcome = await stopPid(child.pid, { graceMs: 500 });
 
-    expect(outcome).toBe("killed");
+    // Windows has no polite request to ignore: Node's `process.kill()` ends the
+    // process unconditionally there, so the first step already stops it. What
+    // must hold on every system is the second line — it is gone.
+    expect(outcome).toBe(process.platform === "win32" ? "stopped" : "killed");
     expect(processAlive(child.pid)).toBe(false);
   });
 

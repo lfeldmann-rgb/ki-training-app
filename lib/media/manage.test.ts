@@ -22,7 +22,7 @@ import { beforeEach, describe, expect, it, onTestFinished, vi } from "vitest";
 
 import { readFileSync, readdirSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { join } from "node:path";
+import { join, posix } from "node:path";
 
 import type { MediaRow } from "@/db/schema-media";
 import { blankComments } from "@/scripts/lib/source-text.mjs";
@@ -655,22 +655,30 @@ describe("every upload door enters the outer guard", () => {
    * path. `CLAUDE.md` names this exact failure and
    * `scripts/lib/source-text.mjs` is the one answer.
    */
-  const filesNaming = (needle: RegExp): string[] => {
-    const hits: string[] = [];
+  let tree: { rel: string; code: string }[] | null = null;
+  /** The trees, read and blanked ONCE — six sweeps over them each re-read it all. */
+  const sourceTree = () => {
+    if (tree) return tree;
+    const found: { rel: string; code: string }[] = [];
     const walk = (dir: string) => {
       for (const entry of readdirSync(join(ROOT, dir), { withFileTypes: true })) {
-        const rel = join(dir, entry.name);
+        // `/` on every system: the door list below is spelt that way.
+        const rel = posix.join(dir, entry.name);
         if (entry.isDirectory()) {
           if (entry.name === "node_modules") continue;
           walk(rel);
         } else if (/\.(ts|tsx)$/.test(entry.name) && !entry.name.includes(".test.")) {
-          if (needle.test(blankComments(readFileSync(join(ROOT, rel), "utf8")))) hits.push(rel);
+          found.push({ rel, code: blankComments(readFileSync(join(ROOT, rel), "utf8")) });
         }
       }
     };
     for (const root of ["app", "lib", "scripts", "modules"]) walk(root);
-    return hits;
+    return (tree = found);
   };
+  const filesNaming = (needle: RegExp): string[] =>
+    sourceTree()
+      .filter(({ code }) => needle.test(code))
+      .map(({ rel }) => rel);
 
   for (const door of doors) {
     it(`${door.file} calls ${door.guard}() before ${door.stores}`, () => {

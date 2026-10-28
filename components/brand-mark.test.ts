@@ -26,7 +26,7 @@
 // reads source as TEXT goes through blankComments()") and
 // `scripts/lib/source-text.mjs` carries the measured post-mortem.
 import { existsSync, readFileSync, readdirSync, statSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { blankComments } from "@/scripts/lib/source-text.mjs";
@@ -94,7 +94,7 @@ function scan(
       const full = join(dir, entry);
       if (statSync(full).isDirectory()) walk(full);
       else if (CODE.test(entry)) {
-        consider(relative(ROOT, full), readFileSync(full, "utf8"));
+        consider(relative(ROOT, full).split(sep).join("/"), readFileSync(full, "utf8"));
       }
     }
   };

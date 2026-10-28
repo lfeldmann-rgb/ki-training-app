@@ -47,7 +47,7 @@
 // reason, and a reason that is only "it was there before" is not one.
 import { readdirSync, readFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 
 import { describe, it, expect } from "vitest";
 import { blankComments } from "@/scripts/lib/source-text.mjs";
@@ -182,7 +182,7 @@ describe("the IPN fields this app reads", () => {
     for (const file of ipnReaders()) {
       for (const key of keysReadIn(file)) {
         read += 1;
-        const relative = file.slice(ROOT.length);
+        const relative = file.slice(ROOT.length).split(sep).join("/");
         const allowed = ELSEWHERE[key];
         if (capturedKeys.has(key)) continue;
         if (allowed && (!allowed.onlyIn || relative === allowed.onlyIn)) continue;

@@ -29,7 +29,7 @@ import {
   existsSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join } from "node:path";
+import { join, sep } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 import { resolveImport } from "@/scripts/lib/import-graph.mjs";
@@ -415,7 +415,7 @@ describe("🚨 nothing on this tool's code path can WRITE to the media store", (
     // enumerator, the module registry, `db/index.ts` and every schema slice —
     // and a walk that quietly stopped at the first specifier would still be
     // "greater than two".
-    const walked = [...seen].map((file) => file.slice(APP_ROOT.length + 1));
+    const walked = [...seen].map((file) => file.slice(APP_ROOT.length + 1).split(sep).join("/"));
     for (const file of [
       "db/schema.ts",
       "db/index.ts",

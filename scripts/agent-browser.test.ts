@@ -347,7 +347,7 @@ describe("where Playwright keeps its browsers", () => {
     expect(playwrightBrowsersDir({ env: env({}), platform: "linux", home })).toBe("/home/x/.cache/ms-playwright");
     expect(playwrightBrowsersDir({ env: env({ XDG_CACHE_HOME: "/c" }), platform: "linux", home })).toBe("/c/ms-playwright");
     expect(playwrightBrowsersDir({ env: env({}), platform: "darwin", home })).toBe("/home/x/Library/Caches/ms-playwright");
-    expect(playwrightBrowsersDir({ env: env({ LOCALAPPDATA: "C:\\L" }), platform: "win32", home })).toBe(path.join("C:\\L", "ms-playwright"));
+    expect(playwrightBrowsersDir({ env: env({ LOCALAPPDATA: "C:\\L" }), platform: "win32", home })).toBe("C:\\L\\ms-playwright");
     expect(playwrightBrowsersDir({ env: env({ PLAYWRIGHT_BROWSERS_PATH: "/pw" }), platform: "linux", home })).toBe("/pw");
     // `0` is Playwright's "inside the package" and not a directory.
     expect(playwrightBrowsersDir({ env: env({ PLAYWRIGHT_BROWSERS_PATH: "0" }), platform: "linux", home })).toBe("/home/x/.cache/ms-playwright");

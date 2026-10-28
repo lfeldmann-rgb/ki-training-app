@@ -12,6 +12,10 @@ export default defineConfig({
   },
   test: {
     environment: "node",
+    // Windows only. The structural tests read the whole tree, and there every
+    // file open passes the virus scanner — measured 5.5 s for one under the
+    // full parallel run, over the 5 s default. Linux and macOS keep the default.
+    ...(process.platform === "win32" ? { testTimeout: 30_000, hookTimeout: 30_000 } : {}),
     // 🚨 `.tsx` too, although there is not one in this tree today.
     //
     // With `**/*.test.ts` alone a component test written with JSX is not

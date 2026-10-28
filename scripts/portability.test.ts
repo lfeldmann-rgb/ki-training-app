@@ -253,7 +253,9 @@ const BINARY_EXTENSIONS = new Set<string>([
 
 /** Everything shipped, minus what is generated or genuinely binary. */
 function shippedFiles(dir: string, found: string[] = []): string[] {
-  const SKIP = new Set([".git", "node_modules", ".next", ".dev", "dist", "out"]);
+  // `next-env.d.ts` is written by Next.js on every start with the SYSTEM's line
+  // ending, and is gitignored — it never ships, and no .gitattributes reaches it.
+  const SKIP = new Set([".git", "node_modules", ".next", ".dev", "dist", "out", "next-env.d.ts"]);
   for (const entry of readdirSync(dir)) {
     if (SKIP.has(entry)) continue;
     const full = path.join(dir, entry);

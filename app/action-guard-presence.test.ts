@@ -56,7 +56,7 @@
 // new action, and a walk that found NOTHING must be a failure rather than a
 // clean run — that is the shape of mistake this whole file exists to catch.
 import { readFileSync, readdirSync, existsSync } from "node:fs";
-import { join, relative } from "node:path";
+import { join, relative, sep } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { blankComments } from "@/scripts/lib/source-text.mjs";
@@ -124,6 +124,9 @@ const PUBLIC: Record<string, string> = {
     "acts only on the caller's own token (unstable_update is a no-op without a session); nothing is read or written",
 };
 
+/** A path as the keys below spell it: from the root, with `/` on every system. */
+const rel = (path: string) => relative(ROOT, path).split(sep).join("/");
+
 /** Every `.ts` under `dir`, recursively — admin/ is NESTED, unlike the mould. */
 function sourcesIn(dir: string, out: string[] = []): string[] {
   if (!existsSync(dir)) return out;
@@ -183,14 +186,14 @@ function firstAwait(body: string): string | null {
 function unguardedIn(files: ServerFile[], publicNames: readonly string[]): string[] {
   return files
     .flatMap((file) => actionsIn(file.source).map((action) => ({ ...action, path: file.path })))
-    .filter((action) => !publicNames.includes(`${relative(ROOT, action.path)}:${action.name}`))
+    .filter((action) => !publicNames.includes(`${rel(action.path)}:${action.name}`))
     .filter((action) => {
       const opener = firstAwait(action.body);
       return opener === null || !OPENERS.includes(opener);
     })
     .map(
       (action) =>
-        `${relative(ROOT, action.path)}:${action.name} (${firstAwait(action.body) ?? "nothing awaited"})`,
+        `${rel(action.path)}:${action.name} (${firstAwait(action.body) ?? "nothing awaited"})`,
     );
 }
 
@@ -227,7 +230,7 @@ describe.each(SURFACES)("$dir — every action opens with a guard", ({ dir, minF
 describe("the PUBLIC table cannot outlive what it excuses", () => {
   const known = new Set(
     [...serverFiles("app"), ...serverFiles("modules")].flatMap((file) =>
-      actionsIn(file.source).map((action) => `${relative(ROOT, file.path)}:${action.name}`),
+      actionsIn(file.source).map((action) => `${rel(file.path)}:${action.name}`),
     ),
   );
 
@@ -379,7 +382,7 @@ describe("🚨 stage 2 — and each opener really authorises, in EVERY place it 
       for (const { path, body } of definitions) {
         expect(
           reachesAuthority(body, new Set([opener])),
-          `${opener} in ${relative(ROOT, path)} guards nothing — it is in OPENERS but reaches no authority`,
+          `${opener} in ${rel(path)} guards nothing — it is in OPENERS but reaches no authority`,
         ).toBe(true);
       }
     },

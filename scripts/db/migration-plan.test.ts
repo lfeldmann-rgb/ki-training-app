@@ -8,11 +8,13 @@
 // a property of the manifests, so the tree itself can be asked. What a database
 // would add — that the chains really applied — is `scripts/deploy-test.mjs`'s
 // module profile, one rung further out.
+import { fileURLToPath } from "node:url";
+
 import { describe, expect, it } from "vitest";
 import { chainSummary, migrationChains } from "./migration-plan.mjs";
 import { availableModules, loadModules } from "../modules/registry.mjs";
 
-const ROOT = new URL("../../", import.meta.url).pathname;
+const ROOT = fileURLToPath(new URL("../../", import.meta.url));
 
 describe("which of this tree's modules bring a migration chain", () => {
   // Every module in the tree, not the installed list: `config/modules.json`

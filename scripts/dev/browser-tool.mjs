@@ -62,13 +62,16 @@ export function playwrightBrowsersDir({
   platform = process.platform,
   home = homedir(),
 } = {}) {
+  // The path rules of the platform ASKED about, not the one running this — so
+  // the answer for Linux is a Linux path even when Windows computes it.
+  const p = platform === "win32" ? path.win32 : path.posix;
   const override = env.PLAYWRIGHT_BROWSERS_PATH;
   if (override && override !== "0") return override;
   if (platform === "win32") {
-    return path.join(env.LOCALAPPDATA ?? path.join(home, "AppData", "Local"), "ms-playwright");
+    return p.join(env.LOCALAPPDATA ?? p.join(home, "AppData", "Local"), "ms-playwright");
   }
-  if (platform === "darwin") return path.join(home, "Library", "Caches", "ms-playwright");
-  return path.join(env.XDG_CACHE_HOME ?? path.join(home, ".cache"), "ms-playwright");
+  if (platform === "darwin") return p.join(home, "Library", "Caches", "ms-playwright");
+  return p.join(env.XDG_CACHE_HOME ?? p.join(home, ".cache"), "ms-playwright");
 }
 
 /**
