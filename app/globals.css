@@ -48,8 +48,8 @@
   --popover-foreground: hsl(30 10% 8%);
 
   /* The app's accent. Turn this dial to recolor. */
-  --primary: hsl(190 90% 26%);
-  --primary-foreground: hsl(0 0% 100%);
+  --primary: hsl(147 21% 40%);
+  --primary-foreground: hsl(147 20% 97%);
 
   /* Secondary surfaces: secondary buttons, badges. */
   --secondary: hsl(36 20% 95%);
@@ -66,7 +66,7 @@
 
   --border: hsl(34 14% 88%);
   --input: hsl(34 12% 82%);
-  --ring: hsl(190 90% 26%);
+  --ring: hsl(147 21% 40%);
   --radius: 0.5rem;
 
   /* Messages (Callout). Four intents, each with surface/border/text. The text
@@ -115,8 +115,8 @@
   --popover-foreground: hsl(36 12% 96%);
 
   /* Heller Akzent mit dunkler Schrift darauf — siehe Punkt 1 oben. */
-  --primary: hsl(186 62% 60%);
-  --primary-foreground: hsl(191 70% 9%);
+  --primary: hsl(147 21% 49%);
+  --primary-foreground: hsl(147 21% 13%);
 
   --secondary: hsl(30 6% 16%);
   --secondary-foreground: hsl(36 10% 95%);
@@ -129,7 +129,7 @@
 
   --border: hsl(30 6% 19%);
   --input: hsl(30 6% 24%);
-  --ring: hsl(186 62% 60%);
+  --ring: hsl(147 21% 49%);
 
   /* Dunkel gespiegelt: gedaempfte Flaeche, heller Rand, sehr helle Schrift.
      Nicht die Hell-Werte invertieren — kraeftige Farbflaechen blenden im

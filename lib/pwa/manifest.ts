@@ -96,7 +96,7 @@ export const OG_BACKGROUND = "#ffffff";
 /** `--foreground` in `:root` — the app's name on it. */
 export const OG_FOREGROUND = "#161412";
 /** `--primary` in `:root` — the one stroke of brand colour on the card. */
-export const OG_ACCENT = "#076a7e";
+export const OG_ACCENT = "#517b64";
 
 /**
  * A name that survives a home screen: Android shows roughly twelve characters

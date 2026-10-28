@@ -139,7 +139,7 @@ function escapeHtml(value: string): string {
 // this value equal to `--primary` in `:root` — it is the answer for an app
 // whose stylesheet could not be read, and a fallback in last season's colour
 // is a drift nothing reports.
-export const DEFAULT_ACCENT = "#076a7e";
+export const DEFAULT_ACCENT = "#517b64";
 
 /** The `--primary` value of a stylesheet as hex, or null when unreadable. */
 export function accentFromCss(css: string): string | null {

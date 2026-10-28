@@ -37,10 +37,12 @@ import { PWA_THEME_COLOR, PWA_THEME_COLOR_DARK } from "@/lib/pwa/manifest";
 // also why the variables are named after their ROLE rather than after the
 // fonts currently sitting on them — see docs/design-system.md → Typography.
 const appSans = localFont({
-  src: "../node_modules/@fontsource-variable/figtree/files/figtree-latin-wght-normal.woff2",
+  // Open Sans — the vendor's own body face (docs/design.md). Its variable
+  // weight axis runs 300–800.
+  src: "../node_modules/@fontsource-variable/open-sans/files/open-sans-latin-wght-normal.woff2",
   variable: "--font-app-sans",
   display: "swap",
-  weight: "300 900",
+  weight: "300 800",
   // The shipped locales (de, en) live inside `latin`; `latin-ext` is a second
   // file and buys nothing until i18n/config.ts grows a locale that needs it.
   fallback: ["system-ui", "-apple-system", "sans-serif"],
@@ -69,18 +71,18 @@ const appSans = localFont({
 //
 // The reach of this face is ONE rule in app/globals.css and it is `h1` alone.
 // The argument lives there, next to the rule.
+//
+// This app replaced it with Syne — the vendor's own heading face
+// (docs/design.md). Syne ships one latin cut, weight axis 400–800.
 const appHeading = localFont({
-  src: "../node_modules/@fontsource-variable/source-serif-4/files/source-serif-4-latin-wght-normal.woff2",
+  src: "../node_modules/@fontsource-variable/syne/files/syne-latin-wght-normal.woff2",
   variable: "--font-app-heading",
   display: "swap",
-  weight: "200 900",
-  // Same `latin`-only reasoning as the sans above. The fallback is a SERIF
-  // chain rather than the sans one: this variable exists to be a different
-  // voice, so the stand-in while the file loads should be too. Falling back
-  // onto the body sans is a different question and a different mechanism —
-  // app/globals.css's `var(--font-app-heading, var(--font-app-sans))`, which
-  // fires when this call is deleted rather than when the file is slow.
-  fallback: ["Georgia", "Times New Roman", "serif"],
+  weight: "400 800",
+  // Same `latin`-only reasoning as the sans above. Syne is a wide display
+  // sans, so the stand-in while the file loads is a sans chain rather than
+  // the shipped serif one.
+  fallback: ["system-ui", "-apple-system", "sans-serif"],
 });
 
 // The colour of the browser's own bar around the page — the one part of this
