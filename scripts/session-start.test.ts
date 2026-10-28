@@ -127,8 +127,13 @@ describe("the greeting after a compaction", () => {
     expect(customerLanguage(null)).toBeNull();
     expect(afterCompactText({ language: "German" })).toContain("Here that language is German");
     expect(afterCompactText()).not.toContain("Here that language is");
-    // The template ships no docs/app.md, so the real hook run above says nothing about it.
-    expect(run.stdout).not.toContain("Here that language is");
+    // The real hook run above reads THIS checkout: silent on a fresh template,
+    // and naming the language once a customer has written in one — the
+    // language guard remembers it in .dev/, so a working app is not a fresh one.
+    const { LANGUAGES, knownLanguage } = await import("./dev/hooks/language-guard.mjs");
+    const code = knownLanguage(ROOT);
+    if (code) expect(run.stdout).toContain(`Here that language is ${LANGUAGES[code].name}`);
+    else expect(run.stdout).not.toContain("Here that language is");
   });
 
   it("🚨 restates nothing that is not still written where it says it is", async () => {
