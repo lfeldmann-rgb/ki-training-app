@@ -1,0 +1,757 @@
+<!-- Copyright (c) 2026 Digistore24 Inc, St. Petersburg, USA — SPDX-License-Identifier: MIT -->
+<!-- This file exists twice: CLAUDE.md and AGENTS.md, the same text word for
+     word — AGENTS.md only carries, at its end, the block Next.js manages itself.
+     Different programs look for different names — Claude Code reads CLAUDE.md,
+     Codex and Antigravity read AGENTS.md, OpenCode takes either. Editing one
+     and not the other is how the two start disagreeing, so copy it across. -->
+
+# Guardrails for this app
+
+You (and every AI assistant) are building a **SAAS application with Digistore24
+billing** on this template. Stay on the golden path. Don't rip out the base structure.
+
+## What gets built here — without exception
+
+**Always a SAAS application that bills through Digistore24. Never a single web
+page.** That holds even when the user words it differently — a landing page has
+no accounts, no protected area and nothing Digistore24 could bill.
+
+**If the user asks for a plain web page, never just start building and never
+silently refuse.** Say in one sentence what this template is for and ask what
+people are supposed to *buy* and *use* afterwards — the page they want is almost
+always the app's own sales page (`app/page.tsx` + `app/plans/page.tsx`), never a
+project alongside. If there genuinely is no product behind it, say so openly.
+
+**Test apps are exempt** — "always SAAS" applies to what the user **builds**, not
+to what he **plays** with. "Hello World" or a small trying-out page MUST be built
+immediately, with no product question and no lecture, **inside the app** as a page
+under `app/` and never next to it. Once it runs, offer the bridge in one sentence
+("should this turn into something you can sell? Then I'll start `build-app`") —
+offer, never push.
+
+Both rules, and the reasoning behind them, live in the skill **`build-app`**
+(`.claude/skills/build-app/SKILL.md`, intro and *"Exception: test apps"*).
+
+## First: meet the user where they are
+
+The people working here are often **not developers**. **Anything unspecific on a
+still-unchanged app** — "hello", "how do I start?" — and **anything that is a
+short but concrete idea** ("an app for nutrition coaches") get the SAME answer:
+greet briefly, say in one sentence what this template is, and **start the skill
+`build-app`**. Two sentences are an idea, not a specification, and what they leave
+open does not stay open — who pays, what the buyer walks away with, what it is
+called, what it looks like otherwise get decided by you, silently, and reappear as
+finished work nobody chose. `build-app` step 0 asks those once, together, and says
+beforehand that it is going to. When in doubt, `build-app`.
+
+> **Before the first file in this project is written or changed, a `node` command
+> has answered in this session.** Either the greeting says
+> `[Setup: ok — verified <date>]`, or you have run `node run.mjs doctor --json`
+> yourself and it came back `"ok": true`. No building before that.
+
+A hard precondition, not a courtesy: a machine without Node lets an entire app
+come into being and gives way at the first command that runs any of it.
+
+| What you see | |
+|---|---|
+| `[Setup: ok — verified <date>]` | the full checklist went through on this machine. Carry on |
+| `[Setup: ok — not verified yet]` | nothing obvious is missing, but nobody has looked properly. Run `node run.mjs doctor` before building |
+| `[Setup: blocked — …]` | skill **`setup-machine`** first — it installs what is missing and prepares the project |
+| a command failing with "docker: not found", "npm not found" or "the database does not answer" | the same case: a setup problem, `setup-machine` — never a bug in the app |
+
+🚨 **No greeting at all is the same case, and the most important one to recognise.**
+Absence of a signal is never a signal: you MUST run `node run.mjs greet` before you
+touch a file — it prints the same line on demand. **In Antigravity CLI that is the
+normal path**: it has no session-start event, so this app ships it no hook at all.
+
+One more line can appear, `[Operations: …]` — what is open about RUNNING this app.
+🚨 Its ABSENCE is a state, not an omission: silence means at least one check ran
+and nothing is open at HIGH or CRITICAL. Every sentence it can say, and the
+greeting's three wirings: **[`docs/greeting.md`](docs/greeting.md)**. **Every
+technical word they meet has one plain meaning in [`docs/glossary.md`](docs/glossary.md)**
+— put it in the sentence, in their language; never send them to the file instead.
+
+## What the skills assume you can do
+
+Some of the playbooks below name a way of doing something rather than the thing
+itself. Read those as capabilities, not as tool names:
+
+| The text says | If you do not have it |
+|---|---|
+| *"ask the user"* / a multiple-choice question | Ask in plain prose and wait for the answer. Never assume one and carry on. |
+| *"in Claude Code they can type `!`"* | That is a shortcut for running one command inline. Elsewhere: tell the user the command and ask them to paste the output back. |
+| *"search the web"* | All four have it. If yours does not, say so rather than answering from memory — it is used for prices and current APIs. |
+| *"open the page and look"* (`ux-gateway`) | Ask, then `node run.mjs agent-browser --apply` gives you one (Playwright, headless, next session). That skill says what to do until then, and stopping is one of the options. |
+
+**One capability is not yours but the machine's: is the person at this screen?**
+The greeting says so when the answer is no (`[Machine: no browser here …]`), and
+three promises stop holding there without failing loudly — a link that opens
+itself, a `localhost` address the user can reach, and work that is simply on their
+disk when you are done: **[`docs/machine.md`](docs/machine.md)**.
+
+**Everything measurable is a command, not a capability**, and behaves identically
+in all four programs because it is a Node script and nothing else.
+
+**The skills are the method of this project, not an optional extra.** When a task
+matches one of them — **The path** below names every one, in order — you MUST
+**open that file and read it in full before you act**. Its frontmatter is a
+trigger and never a summary you may work from. Claude Code and OpenCode read
+`.claude/skills/`; Codex and Antigravity read the generated stubs in
+`.agents/skills/`, which point at the same file.
+
+**Reading the tree is the most expensive thing you do** — measured over 26 real
+sessions it outweighs every command and every check together. A broad question
+("where is X used") is worth a **subagent** where you have one: measured, it hands
+back one part in sixty-five. Where you have none, and for a file you already
+know, read directly — in a RANGE rather than whole, and never through `cat`. In
+Claude Code a hook refuses above 200 lines and answers with the line count
+([`docs/troubleshooting.md`](docs/troubleshooting.md) → *The read guard said no*);
+elsewhere it is still the rule. A subagent is waited for inside the turn that
+started it — see *Rules*.
+
+## The path
+
+<!-- journey:path start -->
+**Prerequisite** — *(optional)* `setup-machine`
+
+**1 Plan** — *(optional)* 1.1 `market-research`, 1.2 `design`, 1.3 `knowledge-intake` → 1.4 `build-app`
+
+**2 Build** — 2.1 `build-app` → 2.2 `setup-digistore` → *(optional)* 2.2b `billing-modes`, 2.3a `visuals`, 2.3b `content-production`, 2.3c `courses`, 2.3d `learning-activities`, 2.3e `community`, 2.3f `ai-companion`, 2.3g `mobile-companion`, 2.3h `ai-providers`, 2.3i `ai-chat-knowledge`, 2.3j `user-onboarding`, 2.3k `metrics` → 2.4 `salespage` → 2.5 `ux-gateway` → 2.6 `security-gateway` → 2.7 `performance-gateway` → 2.8 `compliance-check`
+
+**3 Go live** — 3.1 `setup-hosting` → 3.2 `go-live` → *(optional)* 3.3 `setup-environments`, 3.4 `setup-monitoring`
+
+**4 Run it** — 4.1 `operate` → *(optional)* 4.2 `go-to-market`
+
+**Alongside** — `guardrails`, `coach`
+<!-- journey:path end -->
+
+*"Where am I / what comes next"* is `node run.mjs journey`. `coach` is for a
+symptom, or a fork that cannot be measured. Why the phases sit in that order —
+experience before security, both after the payment step — is
+[`docs/guidance.md`](docs/guidance.md) → *How a skill works*.
+
+## Where guidance lives
+
+Five surfaces — this file, a skill's frontmatter, its body, its `references/`,
+and `docs/` — and **a fact belongs in exactly one of them**, because two copies
+drift and the copy that is not the owner is the one nobody updates. A line earns
+a place HERE only if an agent that has read no other file would otherwise cause
+damage it cannot see; `docs/*.md` is the only place a fact appears in full.
+
+**Whoever writes or changes a skill reads [`docs/guidance.md`](docs/guidance.md)
+first** — the five surfaces with the one question each answers, the contract every
+skill keeps (you run the commands, look before you ask, nothing the customer will
+SEE is assumed, an error is told in three parts — what happened, what it means
+for them, what happens next — and a number you chose is called a default and
+written down), and the **one shape every dated report takes**, which the four
+gateways and the operating round all write to and none of them restates.
+
+## Rules
+
+Each line below is a refusal. The conventions behind them — checkers, command
+line flags, raw SQL, dates — are **[`docs/conventions.md`](docs/conventions.md)**.
+
+- **Sign-in is opt-in, not opt-out: the refusal is `authorized()` in `auth.config.ts`**, which returns true for every path outside `/dashboard` — so **any new route outside `/dashboard` is public until you protect it there.** ⚠️ The `matcher` in `proxy.ts` says where the proxy RUNS, not what is protected. `app/route-protection.test.ts` is the backstop: a page outside `/dashboard` is either protected or carries a line saying what guards it instead, so a forgotten route fails the build rather than a customer. The three things a new protected area needs and the public-by-design list: **[`docs/auth-setup.md`](docs/auth-setup.md)**.
+- **IPN signature verification (SHA512) is mandatory.** Never switch off `lib/digistore/ipn.ts`, and set order status only through IPN events. 🚨 **Anything you hang off that event must be safe to receive TWICE** — today's writes survive a redelivery because three UNIQUE constraints say so, and a mail, a module hook or a table of your own **inherits nothing**. Same rule as a scheduled job, one door over. 🚨 **And the only identifier a payload carries is `order_id`** — the same on the payment and on the refund; `purchase_id` is an **API** parameter and no IPN field, and reading it left every buyer without access — [`docs/digistore-integration.md`](docs/digistore-integration.md).
+- 🚨 **A test purchase in DEV needs no approval and no cookie — the checkout link decorates ITSELF** (`withTestpayParam()` in `lib/digistore/testpay.ts`). So a path of your OWN on `getOrCreateBuyUrl` returns an UNFINISHED URL and has to end the same way — on the return value, after the cache. **Never append that key by hand and never re-implement either of its two gates:** WHEN it may exist is the environment allowlist, WHERE it may go is `DIGISTORE_CHECKOUT_HOSTS` (`lib/digistore/config.mjs`). An undecorated link is a LOG question, never an approval question — [`docs/digistore-createbuyurl.md`](docs/digistore-createbuyurl.md).
+- **Access comes from the entitlement API.** What a Member may use is answered by `hasPlan(memberId, productKey)` / `entitlementsFor(memberId)` (`lib/entitlements/manage.ts`) — never by reading a billing table. See **Access** below.
+- **No secrets in the code.** Read from `process.env` and add new variables to `.env.example`; the operator's Digistore24 credentials are read via `lib/digistore/settings.ts` — never from the database.
+- **No mock/demo fallback** on Digistore API errors — throw errors.
+- **Database changes only via migration.** `db/schema.ts` → `node run.mjs db-generate` → `node run.mjs db-migrate`; the file in `drizzle/` is checked in and never edited again after it has been applied. `db:push` only against an empty local DB, never against staging or production — [`docs/database.md`](docs/database.md).
+- **Environments are binding: DEV / STAGING / PROD** (`APP_ENV`). In STAGING and PROD mail delivery is a start condition, `APP_URL` is another — 🚨 **every link the app MAILS OUT takes its origin from it, never from the request** — and the sign-in mails' sender must live on the app's own domain — so even a test go-live needs a domain of its own, bought before the first deploy. The development sign-in (`lib/auth/dev-login.ts`) holds in DEV only, under the four conditions [`docs/environments.md`](docs/environments.md) names: 🚨 **never soften that gate, it is an auth bypass.**
+- **Use the design system — never rebuild anything yourself.** No raw `<button>`, `<input>`, `<select>` or `<table>`, no hand-picked colour classes; what is missing gets fetched with `npx shadcn@latest add <component>`. See **UI**.
+- **All visible text goes through i18n.** Every sentence lives in every `messages/<code>.json` — the languages are `LOCALES` in `i18n/config.ts`, never a pair written out by hand. See **Languages**.
+- **Messages always as a `Callout`** with one of its four intents, never with hand-picked colour classes. What must stay on screen is a `Callout`, what may drift past is a toast — three mechanisms, never a fourth. See **UI**.
+- **Light and dark both count.** Every new piece of UI MUST be readable in both, which follows by itself as long as colours come from the tokens.
+- **Tests are mandatory, and green is the commit condition rather than a courtesy** — nothing runs them for you after a push, so a red test that gets committed stays red until somebody looks. `.githooks/pre-commit` refuses on red, and a shipped test that fails is a finding about your change, never an obstacle to weaken or delete.
+- **⚠️ A SKIPPED test is not a passed one.** `⏭ <file>: NOT CHECKED — <reason>` on stderr has exactly five legitimate causes — `node run.mjs agent-setup --apply`; a registry that no longer holds the SHAPE a test needs; a foreign tool this machine does not have; a page this app has REPLACED (the skill **salespage** ran); a logo this app has SET (`brand icons --apply`). Anything else is a question nobody answered — [`docs/conventions.md`](docs/conventions.md) → *And a SKIPPED test is not a passed one*.
+- **Call up the app yourself before you say "done", then ask the log.** Green tests are no proof that the page loads, and a page that loads is no proof that it rendered. See **Never ship a broken page** below.
+- **"Done" is said in the words of the person who does not read code — what they can now open or do, and what is still open — and the file paths come LAST, under their own line.** Never a function name in the first paragraph. The shape, with an example: [`docs/guidance.md`](docs/guidance.md) → *How a skill works*.
+- **Every line the customer reads is in THEIR language — the plan, the hand-back and every progress line in between — and a progress line says what they get from the step, or is left out.** Measured 2026-09-10: a customer who wrote German got the plan in German and the build narrated in English ("Now re-export it from schema-core.ts"); which file was touched belongs in the commit message, not in front of them.
+- **A question is asked in the words it will be answered in** — what the customer will EXPERIENCE, never the criterion you decide by; the reason travels inside the question; and a choice with no consequence they can see or feel is not put to them: set it, say it in one sentence, record it. The long form, with the sentence that worked: [`docs/guidance.md`](docs/guidance.md) → *How a skill works*.
+- 🚨 **A turn ends with the result, never with an agent still working.** A background subagent dies with the turn in a print session, and an interactive customer reads "I will be notified when it is done" as done. Wait for it inside the turn, or open the hand-back with what is NOT there yet — [`docs/guidance.md`](docs/guidance.md) → *How a skill works*.
+- **A "no" says which of the four it is**: (a) a limit of the platform; (b) a rule of this template — with the test that holds it; (c) a skill's curation; (d) your own taste. Only (a) and (b) are "it cannot"; 🚨 **a (b) you cannot name a test for is a (c) or (d) in (b)'s clothes** — the standing example is the greys (`scripts/design/dials.test.ts` holds four dials, nothing holds the neutral values). The cases: [`docs/guidance.md`](docs/guidance.md) → *How a skill works*.
+- **Linux, macOS and Windows all count.** Every command in `run.mjs` and every script under `scripts/` MUST work on all three — a developer on Windows who cannot start the app has no way around it. See **Three systems**.
+- **Commit your work — a finished change is a commit, every time, and pushed when a remote exists.** Unfinished work too: `git commit --no-verify`, saying so in the message, and that is the flag's only legitimate use. Session artifacts (screenshots, throwaway scripts) live in `.dev/` or get deleted, never committed; at the end of a unit of work `git status` is empty and every commit was made on green. (`AGENTS.md` is generated from this file — never edit it.)
+- **A checker that reads source as TEXT goes through `blankComments()`** (`scripts/lib/source-text.mjs`), one that WALKS imports goes through `resolveImport()` (`scripts/lib/import-graph.mjs`), and a script that reads `--flag value` goes through `flagsFrom()` (`scripts/lib/args.mjs`) — never its own regex, never its own `@/` branch, never its own `indexOf`. All three refuse a further copy of themselves, and the third is why: there were eight, in three semantics, and one of them bootstrapped the wrong environment on `--env --apply`.
+- 🚨 **Never write a bracketed arbitrary Tailwind class in prose — a comment is not a comment to Tailwind.** It scans every file here as RAW TEXT, so a class written to EXPLAIN that it is wrong becomes a real rule. Say what the form is in words instead.
+- **A type on a query is a claim, and raw SQL does not keep it.** ``sql<Date>`min(created_at)` `` is a string wearing a `Date`'s clothes — `db/sql-cast.test.ts` fails on it, and `new Date(value)` is not the way out.
+
+## UI
+
+The app ships with a finished design system: **there is nothing to design here —
+there is something to use.**
+
+**A look of its own is not an exception to that rule — it is the skill `design`.**
+The kit has **four dials and the list is closed**: **accent**
+(`--primary`/`--primary-foreground`/`--ring`), **radius** (`--radius`), **type**
+(`--font-app-sans`/`--font-app-heading`) and **elevation**
+(`--elevation-raised`/`--elevation-overlay`). A dial is a **value, never a class** —
+filled once in `app/globals.css` or `app/layout.tsx`, written into
+`docs/design.md`, and never on a page as a `font-[…]`, a `shadow-[…]` or a bare
+`shadow-lg`; 🚨 naming the role instead (`shadow-(--elevation-overlay)`) is the
+sanctioned answer. Beyond the four the skill licenses nothing: no new component, no hex
+class, no fourth feedback mechanism.
+
+**The four rules that count:**
+
+1. **Every action reports back — a `redirect()` is not an excuse.** Three mechanisms,
+   never a fourth, picked by *where the result has to appear*: `<Callout>` for what must
+   stay on screen, `useActionToast(state)` for a server action on the same page,
+   `<FlashToast>` across a `redirect()`. **The message never travels in the URL** — the
+   parameter carries a reference the receiving page looks up.
+2. **Everything destructive asks first** — `<AlertDialog>`, naming *what* gets hit,
+   confirm button `variant="destructive"` and never the accent.
+3. **Every new page has a way in, in the same commit** — one line in `NAVIGATION`
+   (`components/app-shell.tsx`) plus its text in every language file, or a **link** if it
+   is a `[param]` page; **its card on `/dashboard`** (`app/dashboard/overview-links.test.ts`);
+   and its `<EmptyState>`, the state most customers meet first.
+4. **Both modes, always.** Colours come from tokens, never from Tailwind palettes, and
+   **every dial is set in BOTH blocks, not only `:root`** (`--radius` excepted).
+   `node run.mjs ux-check` fails on a token defined in one block only.
+
+**The construction kit is `components/ui/`**, all shadcn/ui. Which component to reach for
+instead of what, the mark and the five app icons, the dials in full and what is
+deliberately NOT configurable: **[`docs/design-system.md`](docs/design-system.md)**. What the app owes the
+person in front of it is [`docs/ux.md`](docs/ux.md), audited by `ux-gateway`.
+
+## Languages
+
+The app speaks **`LOCALES` in `i18n/config.ts`** — shipped: German, English,
+Spanish, French — **without a language prefix in the URL**. Read the list there;
+never write a pair like `["de", "en"]` out by hand — that is how a language
+silently stops being checked.
+
+**A visitor's language is the cookie, else the browser, else `DEFAULT_LOCALE`** —
+English if the app speaks it, otherwise the first in `LOCALES`. Only a language
+in the list can win, and the default is derived, never written.
+
+**No visible text in the code.** Every sentence lives in *every*
+`messages/<code>.json`; `i18n/messages.test.ts` breaks the build on a missing
+key, placeholder or error code, and it is never switched off. **All languages
+address the reader informally** — `du`, `tú`, `tu`. Rule and database layers
+return **codes, not sentences**; dates and prices are **formatted, never spelled
+by hand** (`useFormatter().dateTime(…)`, `formatPrice(def, locale)`).
+
+**Adding a language is eight steps, removing one is nine, and both lists are
+in one place**: the list, the fallback, writing text, adding and removing —
+**[`docs/locales.md`](docs/locales.md)**.
+
+## Never ship a broken page
+
+**Before you tell the user that something is done, you MUST call the page up yourself.**
+Without exception — green tests and a successful build do NOT rule out an app that
+greets the user with "Internal Server Error". The three commands below see the
+SERVER; a page is seen in a browser. Without a browser tool, ask, then
+`node run.mjs agent-browser --apply` gives you one for the next session.
+
+```bash
+node run.mjs start                # DB + migrations + app
+node run.mjs smoke                # calls EVERY page and reports server errors
+node run.mjs errors               # what the log picked up — including on a 200
+```
+
+`smoke` calls every page in **two passes**, anonymously and signed in, so the pages
+with the real queries get rendered rather than counted as redirects. **When the
+second pass is unavailable it says so, in one line — read it**: "9 protected page(s)
+NOT checked" is not a pass. **A 5xx is an error, a 307 to `/login` *with* a session
+is an error, and a redirect to a `localhost` origin on a DEPLOYED app is an error**
+(`APP_URL` at the host, never `AUTH_TRUST_HOST`); every other 307 says nothing
+about the page.
+
+**A 200 is not proof that the page rendered, and green means it loaded, not that it is
+correct.** A bad date, a missing translation, a hydration mismatch and an unawaited
+promise all answer 200 over a visibly broken page — that is what `node run.mjs errors`
+is for, and it exits non-zero so it can gate a "done". 🚨 **`smoke` skips dynamic PAGES
+(`[id]`) and is signed in as ONE account**, so money, roles and customer data need your
+own eyes.
+
+The deployed app answers both over `DIAGNOSTICS_SECRET`, and `node run.mjs health --url
+https://…` asks them plus the database, the jobs, the media store, the last payment
+notification and whether the sign-in mail can leave the server. The verdicts in full, what a 200 hides, and why a component is checked
+this way rather than in a unit test: **[`docs/smoke.md`](docs/smoke.md)**. Errors that
+are not what they look like: **[`docs/troubleshooting.md`](docs/troubleshooting.md)**.
+
+## Adding a feature
+
+0. **Say what you are about to build, before you build it.** One or two sentences —
+   what, for whom, and "done when …" in words the user can check ("a member sees their
+   monthly PDF", not "implement report generation") — then **wait** for the OK. Trying
+   things out is exempt. A feature too big for one session writes its plan down first,
+   as a dated `Planned:` line in `docs/app.md`.
+1. Extend `db/schema.ts` → `node run.mjs db-generate` → check the file →
+   `node run.mjs db-migrate`; the migration belongs in the commit. A table keyed on
+   the Member joins `docs/data-protection.md` and `lib/privacy/export.ts` in the
+   same commit (`lib/privacy/inventory.test.ts`). Content the operator authors
+   himself belongs in code, not tables: [`docs/content-authority.md`](docs/content-authority.md).
+2. Build the protected page under `app/dashboard/…` and gate purchase-dependent content
+   with `hasPlan(memberId, productKey)` — never on a billing table. A page deliberately
+   OUTSIDE `/dashboard` needs its line in `app/route-protection.test.ts`.
+3. Assemble the UI from `components/ui/`; `npx shadcn@latest add <component>` fetches
+   what is missing.
+4. **Texts in every `messages/<code>.json`** — all of them, and the list is
+   `LOCALES` in `i18n/config.ts`. Find a key with grep, never by reading a catalogue.
+5. **Write tests** (`vitest`) for the new logic and rules.
+6. `npm run typecheck && npm run test`, green, before the deploy.
+7. **`node run.mjs start && node run.mjs smoke && node run.mjs errors`** — call the new
+   page up yourself, signed in, then ask the log.
+8. **`node run.mjs ux-check`**, then look at the page as the customer: empty state,
+   actions that report back, readable in dark mode and at 380 px.
+9. **One entry in `docs/app.md`** — the path, the access gate, the tables, the tests,
+   and step 0's `Done when:` sentence, now checked rather than promised.
+
+**CLAUDE.md describes the template, which every app gets; `docs/app.md` describes THIS
+app, which nobody else has.** Two rules keep it worth reading: **quote the access
+gate, do not describe it** (`hasPlan(memberId, "basic")`, never "only for
+paying customers"), and **write down what was decided *against*, and why** — the
+rejected alternative cannot be read out of the code. The file's shape, and dates
+and raw SQL as the sharpest trap on the way:
+**[`docs/conventions.md`](docs/conventions.md)**.
+
+## Users & roles
+
+The `users` table has a `role` field, and there are **three** (`lib/roles.ts` — the
+canonical list, importable from a client component): `owner` is the SAAS operator
+and everything `requireOwner()` guards; `moderator` keeps the community's rooms
+clean and is **NOT an admin** (`requireOwner()` refuses them exactly as it refuses
+a member); `member` is the ordinary customer. Only an operator hands out a role,
+and impersonation stays operator → member.
+
+- **Securing admin areas:** server components MUST call `requireOwner()`
+  (`lib/authz.ts`) as the first line, and **every Server Action starts with
+  `requireOwner()`** too.
+- **The Member's own page is `/dashboard/account`**, its actions open with
+  `requireActiveUser()`, and none of them takes a user id from the form. Build
+  Member-facing settings there, never a second page.
+- 🚨 **A role is re-read from the DATABASE at the moment of each act, never taken
+  from the session.** Blocking (`users.blockedAt`) needs both halves for the same
+  reason: the `signIn` callback stops a new sign-in, `requireActiveUser()` ends
+  the running one.
+- 🚨 **For impersonation, the record is the authorisation, not a log line.** The
+  `jwt` callback rewrites the session only if the row in `impersonations` already
+  names the caller as its operator — never write the row after the swap, never
+  take a member id from the payload.
+- **A token package MUST NOT be handed out as a grant.** **Only manual grants can
+  be revoked**, and that refusal lives in the `UPDATE` itself: purchased access
+  ends by Digistore24 event only.
+
+The first person to sign in becomes `owner` **in DEV only**; in STAGING and PROD
+the operator creates theirs with `node run.mjs user-create --email … --role owner
+--apply`. All of it: **[`docs/auth-setup.md`](docs/auth-setup.md)**; what a
+moderator may actually do: **[`docs/community.md`](docs/community.md)**.
+
+## Access — what a Member may use
+
+Three functions, all in `lib/entitlements/manage.ts`, and nothing else —
+their signatures, and every other `lib/` file's the guidance names, are in
+**[`docs/api-map.md`](docs/api-map.md)**; read the section there before the file:
+
+```ts
+import { hasPlan, entitlementsFor, planStartedAt } from "@/lib/entitlements/manage";
+
+// One feature, one plan. A token package is a BALANCE, never an entitlement.
+if (await hasPlan(memberId, "basic")) { /* show it */ }
+const owned = await entitlementsFor(memberId); // [{ productKey, source, accessUntil }]
+// SINCE WHEN — what a week-by-week course unlocks against.
+const startedAt = await planStartedAt(memberId, "course_complete"); // Date | null
+```
+
+🚨 **Do not answer "since when" out of `entitlementsFor()`** — it is a
+`DISTINCT ON (product_key)`, one row per key and never chosen by age. `null` means
+no active grant, and an unknown key throws.
+
+These MUST NOT read a **billing table**: the **event** decides — `on_payment`
+grants, `on_refund` and `on_chargeback` end it for good, `on_payment_missed`
+suspends it reversibly.
+
+**A Member can hold two plans at once**, so always ask `hasPlan` per feature;
+`entitlements[0]` is never "the plan". **A missed payment makes the plan disappear
+from both answers** and is not an account closure: say "your access is paused",
+never nothing at all. `accessUntil` MUST be rendered with an explicit
+`timeZone: "UTC"`, and `null` gets a real sentence.
+
+Charging a prepaid balance is `spendTokens()` in the order **check → work →
+charge** — `hasSufficientBalance()` first — and it takes no member id, ever. All of that, the failure modes and the
+upgrade mechanics: **[`docs/entitlements.md`](docs/entitlements.md)**.
+
+## The AI assistant
+
+Optional, off until switched on. The guide is
+**[`docs/ai-chat.md`](docs/ai-chat.md)**; the skill that writes her handbook is
+`ai-chat-knowledge`, checked by `node run.mjs kb-check`.
+
+- **Two switches, both required.** `"enabled"` in `config/ai-chat.json` and a key
+  for whichever provider her task resolves to. Always read them through
+  `isChatEnabled()` in `lib/ai/chat-config.ts`, **never by re-reading the JSON**.
+  **Which model answers is not in that file** — that is `config/ai-models.json`.
+- **She answers from `content/knowledge/` and from registered content sources.**
+  No account data, no web, and she can LINK only to what she really looked up.
+- **`app/api/chat/route.ts` guards itself** with `currentActiveUser()` — **every**
+  `app/api/` route is public until it protects itself.
+- **One `ChatWindow`, two places** (the launcher and `/dashboard/chat`) with a
+  different `variant` — never a second chat component for a second place.
+
+## The knowledge corpus — what you know, before the handbook
+
+Optional, and a layer under the assistant: existing material distilled into notes
+the handbook is written FROM. The guide is
+**[`docs/knowledge.md`](docs/knowledge.md)**.
+
+- **The corpus informs writing; it never answers at runtime.**
+  `content/knowledge-sources/` is read by agents while writing, never by the app —
+  no code under `app/`, `lib/` or `scripts/` may reference it
+  (`scripts/knowledge-boundary.test.ts` fails the build).
+- **The Licence Gate holds at intake.** Third-party material is distilled in the
+  vendor's own words with the source cited, never stored verbatim; `_raw/` is for
+  `own-content` and `licensed` sources only.
+- **The chat offers only what the handbook offers**; `node run.mjs kb-check`
+  verifies every media reference before a release.
+
+## Talking to a language model
+
+Every model call goes through **one entry point**, and it names a TASK rather than
+a model — `await runTask("chat", { system, messages, memberId })` from
+`lib/ai/run`. Which of five companies answers is `config/ai-models.json`, so the
+Operator changes it without touching code. The guide is
+**[`docs/ai-providers.md`](docs/ai-providers.md)**, the skill is `ai-providers`,
+and `node run.mjs ai-check` shows which task runs on which model.
+
+- **No call site ever names a provider, constructs a vendor client or reads an API
+  key.** `lib/ai/providers/` is the only place that does, and
+  `lib/ai/providers/leak-guard.test.ts` fails the build if that stops being true.
+- **A task MUST be declared in code**: its id goes into `lib/ai/task-rules.mjs` AND
+  the union in `lib/ai/tasks.ts`. Binding it in `config/ai-models.json` is optional.
+- **Every call is recorded in `ai_usage`**, and **no prompt and no completion is
+  ever stored there**.
+- ⚠️ **A key that is PRESENT is not a key that WORKS, and only `node run.mjs
+  ai-check --live` can tell you.** It spends money, so it is 🚨 **never a gate**:
+  not in `make check`, not in `npm run test`, not in a deploy. A run that could
+  not look says `⏭ NOT CHECKED` and exits 1 — never 0.
+- **There is no spend ceiling, deliberately** — a hard stop belongs on the
+  provider account.
+- 🚨 **Customer-written text is FENCED, and the fence is the CORE's** —
+  `buildFencedRequest()` in `lib/ai/customer-text.ts`, for every caller that sends
+  a model something somebody else wrote. **Only the work is fenced**, so anything
+  you append around it must be words you wrote. Import it, never rebuild it.
+
+## Scheduled jobs — work with no request behind it
+
+The guide is **[`docs/cron.md`](docs/cron.md)**; `node run.mjs cron --list` says
+what exists, when it last ran and what it said.
+
+- **A job is an entry in `lib/cron/jobs.ts`.** Nothing else. The schedule is
+  `config/cron.json` (`everyMinutes`), and `cron_runs` records what happened. A
+  MODULE brings its own, `cron` *and* `cronJobs` in its manifest, both or
+  neither. 🚨 **Leaving a job OUT of `config/cron.json` is not "off"** — no entry
+  means `JOB_DEFAULTS`, which is enabled and daily.
+- **It must be safe to run twice.** Deleting rows older than a cutoff is
+  idempotent; sending a mail is not, unless the job records that it sent one —
+  `claimSend()`, claim before you send. ⚠️ Give such a job an interval well UNDER
+  its window.
+- **It returns one line of NUMBERS and throws on failure.** That line lands in
+  `cron_runs.lastDetail`, so no address, no member id, no text anybody typed.
+- 🚨 **Operational reporting has exactly ONE producer, the job `ops-watchdog`**,
+  and `lib/notify/reporter-guard.test.ts` fails the build on a second caller. A
+  check that could not be MADE is counted in every line it writes and never mails
+  on its own.
+
+## Content sources — the app's content, as something the assistant can look up
+
+How the in-app chat searches what this app contains and points the member at the
+page. The guide is **[`docs/content-source.md`](docs/content-source.md)**.
+
+- **One registry, one interface** — `lib/content-source/sources.ts`; a MODULE
+  contributes by declaring `"contentSource"` in its manifest, so the core never
+  names a module. 🚨 The contract stays in the CORE
+  (`lib/content-source/types.ts`) so a module that breaks it fails
+  `npm run typecheck` rather than a customer's first question.
+- **One enforcement path.** Every tool runs through `runTool()` in
+  `lib/ai/run-tool.ts`. **No tool ever takes a member id**: the account is
+  `ctx.memberId`, bound to the session before the handler runs.
+- 🚨 **The gate is ONE function called from both the source and the page** — never
+  two `hasPlan(memberId, key)` calls that agree today. Nothing in the template can
+  catch that; both halves are yours.
+- **A media hit links the PAGE that shows the medium, never the file** — a signed
+  URL expires and bypasses `mayAccess()`. And **visibility is the source's duty**:
+  `get()` answers `null` for "missing" and "not visible" alike.
+
+## Modules — what this app is made of
+
+A few features are large enough that an app wants them whole or not at all;
+those live under `modules/<id>/`, and `config/modules.json` says which ones this
+app has. It **ships empty**.
+
+- 🚨 **Installed is not the same as switched on, and their 404s are
+  indistinguishable** — so a 404 here is never a diagnosis.
+- **`node run.mjs module list` is the one command that answers "what is this app
+  made of"**, and nothing else does.
+- 🚨 **A module's guidance lives in the CORE tree, never under `modules/`.**
+  An agent must be able to learn about a module this app does NOT have — that
+  it exists and is one command away — and text under `modules/<name>/` is not
+  there until the module is.
+
+| module | to install | the full story | the playbook |
+|---|---|---|---|
+| community | `node run.mjs module add community` | [`docs/community.md`](docs/community.md) | `community` |
+| courses | `node run.mjs module add courses` | [`docs/courses.md`](docs/courses.md) | `courses` |
+| activity | `node run.mjs module add activity` | [`docs/learning.md`](docs/learning.md) | `learning-activities` |
+| companion | `node run.mjs module add companion` | [`docs/ai-in-product.md`](docs/ai-in-product.md) | `ai-companion` |
+| api | `node run.mjs module add api` | [`docs/api.md`](docs/api.md) | `mobile-companion` |
+| metrics | `node run.mjs module add metrics` | [`docs/metrics.md`](docs/metrics.md) | `metrics` |
+
+Then `db-migrate`. ⚠️ **`courses` and `community` REQUIRE `api`.** 🚨 **That
+table is the whole set** — `module add` takes an id already under `modules/`,
+and there is no way to fetch another. All of it:
+**[`docs/modules.md`](docs/modules.md)**.
+
+🚨 **A `##` section in this file may condense only a subsystem present in a
+pristine deploy.** A subsystem behind `module add` gets one row of that table and
+nothing more: every session of every app pays for a section whether the module is
+installed or not.
+
+## Setting an environment up — your agent, over MCP
+
+Code travels with a deploy; **rows do not** — the owner account, the rooms, the
+courses live only in the database they were made in. So your agent talks to the
+**running app** rather than to a database, and no production connection string is
+ever in anybody's shell. `node run.mjs setup-check` says where it stands; the
+guide is **[`docs/setup-mcp.md`](docs/setup-mcp.md)**.
+
+- **One switch, and it ships OFF.** `"enabled"` in `config/setup.json`, read
+  through `isSetupEnabled()` — **never by re-reading the JSON**, and any unknown
+  key or out-of-range value switches the whole surface off. There is no runtime
+  toggle: switching it on is a deploy, and so is switching it off.
+- **Outside DEV every change is two acts** — a plan, then an apply carrying the
+  one-time token the server issued. ⚠️ It does **not** stop an agent calling both
+  in a row; whoever wants a human in the loop keeps the surface off there.
+- **Every act is one append-only row**, readable on
+  `/dashboard/admin/setup-audit`.
+
+## Media — pictures, video, recordings and the files you sell
+
+Anything the app puts in front of a customer that is not text goes through one
+place, `lib/media/`. Its guide is **[`docs/visuals.md`](docs/visuals.md)**, and
+`node run.mjs media-check` says what may go in.
+
+Six refusals, each of which fails **silently** when it is skipped:
+
+- 🚨 **No SVG on this path** — `lib/media/sniff.ts` refuses it at every door, for
+  every kind, for every role. The operator's own logo under `public/brand/` is
+  the one exception and is never a `media` row; **a customer's SVG is still
+  refused, always.**
+- 🚨 **`mayAccess()` before `mediaUrlFor()`, in the same function.**
+  `mediaUrlFor()` **grants nothing** — it is the step after the check said yes,
+  and calling it without one is how a private file becomes public.
+- 🚨 **Every upload door calls ITS guard before it writes anything** —
+  `guardUploadEntry()` and then `acceptUpload()`. A door that calls only the
+  second is an upload path with no rate limit and a kill switch that does
+  nothing.
+- **`<MediaUpload>` is the app's only file field.** A hand-built
+  `<input type="file">` anywhere else fails the build. What a member may make
+  their own is `owner` or `members`; a form may never choose `public` or
+  `entitled`.
+- **`MEDIA_DRIVER=local` stops the app from starting in STAGING and PROD**
+  (`lib/env-guard.ts`).
+- **Selling a file is a visibility and a LIST of Product Keys**: `visibility:
+  "entitled"` plus `planKeys`, and holding **one** of them is enough — a list
+  because a file may belong to several offerings, NOT because of monthly and
+  yearly: those are two ways to pay for ONE key (**Plans & Digistore products**
+  below). Every key is validated when written (`hasPlan()` **throws** on an
+  unknown one); **an empty list refuses.**
+
+## Content that must exist in PROD
+
+**What is in the repo travels with every deploy. What is only on this machine —
+the local database, anything under `.data/` — does not exist in PROD until a
+command puts it there.** The full story is
+**[`docs/content.md`](docs/content.md)**; who authors content (code, or rows
+through a surface) is decided first, in
+**[`docs/content-authority.md`](docs/content-authority.md)**.
+
+- **Define content as repo files from day one, never only as rows in the local
+  database.** Constants in code where the vendor is the author; content files
+  plus an idempotent applier under `scripts/content/appliers/` where tables are
+  the right answer.
+- **Applying is a deliberate step, and PROD's is at go-live** —
+  `node run.mjs content-publish --env prod --apply`, which needs `APP_URL_PROD` +
+  `SETUP_KEY_PROD` and **no `DATABASE_URL` and no `MEDIA_S3_*_PROD`**. The shell
+  pair (`content-media-sync`, then `content-apply --env prod`) is the
+  **fallback**, not deprecated.
+- 🚨 **`node run.mjs content-check --env prod` green is the exit condition.** It
+  counts nothing itself: each owner answers for its own rows, and a module that
+  cannot answer is a **failure**, never a pass. 🚨 **A store that did not answer
+  is a THIRD state** — `⏭`, never a tick: exit 0 there means nothing was found
+  wrong, not that anything was proved.
+
+## The salespage — the home page that sells
+
+The route `/` **is** the app's salespage, and what ships there is a placeholder
+describing the template. The skill that replaces it is **`salespage`**; the
+reference is **[`docs/salespage.md`](docs/salespage.md)**.
+
+- **The offer block is not the `/plans` table.** `/plans` is the catalog; the
+  salespage features ONE product and links to `/plans` for the comparison.
+- **Names and voice come before the first sentence.** Every feature by the
+  name the app shows (`nav.*`, the assistant's `name` in `config/ai-chat.json`)
+  — explained at its first mention or left out, a stranger has never seen the
+  app, and a name never moves to another feature; one section lists EVERY
+  feature plainly, name and one line, whatever the complaint was —
+  the operator's voice written down in `docs/marketing/voice.md`, and a
+  revision answers with a PRINCIPLE applied to every section — never a new
+  sentence for the one they pointed at. Measured 2026-09-14: eight rounds, the
+  headline turned eight times, the problem paragraph never. **And no draft
+  reaches the operator without the Lektorat** — a second reader in a fresh
+  context, `freigegeben` or `zurück` against a fixed list.
+- **Nothing invented** — no made-up testimonials, member numbers, results or
+  guarantees (UWG; `compliance-check` takes it seriously). 🚨 **And never promise
+  how LONG a members' area lasts** — "für immer", "lebenslang", "lifetime",
+  "dauerhaft", "unbegrenzt" and five more words Digistore24 names.
+  `node run.mjs legal-check` refuses them as STEMS, and only where the sentence
+  also names access, so "unbegrenzt viele Notizen" stays allowed.
+- 🚨 **The buyer is told WHO charged them, on both post-purchase surfaces** — the
+  thank-you page and the dashboard's purchase confirmation, because a signed-in
+  buyer never sees the first. `legal-check` refuses a missing key AND a missing
+  mount.
+- **One price, one place** — `formatPrice()` off the registry, and the buy button
+  through `checkoutLinksFor()`.
+
+## Plans & Digistore products
+
+**One fork comes before every other billing question: whose Digistore24 account
+gets paid.** The default — the operator is the only vendor — is what everything
+else assumes; the **platform** shape (the app's users connect *their* accounts)
+is NOT built, is not a setting, and is not to be built "just in case". Both:
+**[`docs/digistore-integration.md`](docs/digistore-integration.md)**.
+
+`config/digistore-products.json` is the **single source** — it feeds the plans
+page *and* the sync script. **One price, one place: the registry AUTHORS it** and
+`ds24-sync` copies it onto the product's payment plans, so no second price list
+survives, in the code or in the DS24 interface. One offering is one product **per
+language**, one **plan per way to pay**, one product SET **per environment**.
+
+🚨 **Monthly and yearly are two `paymentOptions` of ONE offering** — not two
+products, not two Product Keys; both hold one key.
+And 🚨 **a product with no plan of ours has Digistore24's own (~27 €), whose
+order form charges it and whose orders GRANT** — on a subscription for ever.
+
+What this app sells is `billingMode` in that same file (`"subscriptions" |
+"tokens" | "both"`, read through `lib/billing-mode.ts`, never by re-reading the
+JSON). Two rules make it safe to flip live; the rest is
+**[`docs/digistore-billing-modes.md`](docs/digistore-billing-modes.md)**:
+
+- 🚨 **It is COSMETIC. It never decides access.** `hasPlan()`,
+  `entitlementsFor()`, `consumeTokens()` and the IPN behave identically in every mode.
+- **A mode may hide an empty thing, never a non-empty one.** Every call site is
+  written `!sellsTokens() && balance === 0`, never `!sellsTokens()` alone.
+
+🚨 **`ds24-sync` creates nothing until you have seen the list** — `--create-new`
+is the yes. `"sell": false` parks an entry **without touching ACCESS**; `--prune`
+removes what this app made and no longer wants, deactivating whatever ever sold.
+Buy forms first: `/plans?preview=checkout` (DEV + localhost); **never dummy ids.**
+
+**Leave `APP_URL` alone** — a non-local value switches off the development login
+(`lib/auth/dev-login.ts`) and locks you out of your own app; a locally-run
+`ds24-sync --env prod|staging` reads `APP_URL_PROD` / `APP_URL_STAGING`.
+**"Paid, but nothing happened" has a command, not a theory:** `node run.mjs
+ds24-purchase --order ABC12345`, and a *rejected* IPN is `ds24-ipn-verify`.
+
+## Local commands
+
+Everything runs through `run.mjs` (`node run.mjs` on its own shows the overview).
+Arguments go straight through — there is no `ARGS="…"` wrapping. **`node run.mjs
+help --json` is the full inventory**, so the list below is the handful typed in a
+normal session and never the set of commands that exist:
+
+Read that listing rather than naming a command from memory. Four things about it
+that the listing does not say:
+
+- `node run.mjs greet` — run it yourself whenever no greeting appeared, and
+  **always, first, in Antigravity CLI**, which has no session-start event.
+- `ux-check` / `security-check` are the countable halves of `ux-gateway` and
+  `security-gateway`. Green means **counted**, not good.
+- `errors`, `health` and `cron --list` take `--url https://…` and then ask a
+  DEPLOYED app the same question, with no shell on the host.
+- The npm scripts behind them remain usable, and the `Makefile` only forwards
+  here — **never point the user at `make`**, it is missing on Windows.
+
+**Which of these an app that is LIVE keeps owing, and how often**:
+**[`docs/operations.md`](docs/operations.md)** — walked by the skill `operate`,
+whose dated report NAME is the only state it creates and is exactly what the
+greeting's `[Operations: …]` line reads back. What npm says on a customer's first
+install, and which of it is real:
+**[`docs/troubleshooting.md`](docs/troubleshooting.md)**.
+
+## Three systems
+
+**This app has to run on Linux, macOS and Windows**, because Claude Code, Codex,
+Antigravity and OpenCode all do. What has to be installed, and the full table of
+shell tools that are not portable: **[`docs/portability.md`](docs/portability.md)**.
+
+Four refusals hold for anything you write here:
+
+- 🚨 **Anything that starts, stops or finds a process is a `.mjs` script, never
+  bash.** **Exactly one exception**, and it is the question the rule cannot
+  answer — *is there a Node here at all?*: the `SessionStart` guard in
+  `.claude/settings.json` asks it in shell. **Do not "fix" that one.**
+- 🚨 **Never pass a `shell` option yourself** — that decision belongs to
+  `scripts/lib/proc.mjs`, and `scripts/portability.test.ts` fails the build on a
+  second one.
+- 🚨 **Split a file on `/\r?\n/`, never on `"\n"`.** Go through `setEnvValue()` /
+  `readEnvValue()` rather than parsing `.env` again somewhere else.
+- 🚨 **Normalise before hashing** — `normalizeText()` from
+  `scripts/core/export-plan.mjs`.
+
+## What the app stores about people
+
+**[`docs/data-protection.md`](docs/data-protection.md)** is the inventory: every
+table holding personal data, every recipient, every retention window. **Keep it
+current when you add a table** — a privacy policy is only as true as the list it
+was written from, and `compliance-check` drafts yours from this one.
+
+- **An access request is one command:** `node run.mjs data-export --email …`,
+  and it searches by **address, not by account**. Do not "tidy" it into a
+  member-scoped export, and do not strip the operator notes from it.
+- ⚠️ **There is a second export — the member's own download from
+  `/dashboard/account` — and neither may be gated on a feature switch.** Switching
+  a module off deletes nothing. **The only thing that may make a module's sections
+  absent is the module being ABSENT**
+  ([`docs/data-protection.md`](docs/data-protection.md) §14a).
+- **Prose somebody wrote ABOUT a member is personal data** — operator notes, a
+  removal reason, a report's reason. It belongs in both exports, and deletion
+  reaches it (per table, §14a) while the **act** stays.
+
+## Which EU rules reach this app
+
+**[`docs/compliance.md`](docs/compliance.md) is the map**, and the skill that
+walks it is `compliance-check`. Four rules before you touch any of it:
+
+- **The AI disclosure is law, not copy** (Art. 50(1) EU AI Act). It is a rule
+  about a LIST of surfaces, and the list has two halves: `DISCLOSURE_SURFACES` in
+  `lib/ai/disclosure.mjs` is the core's, and an installed module contributes its
+  own. Any AI feature you add next MUST join whichever registry it belongs to, and
+  mount `<AiDisclosure surface="…" />` above its transcript **unconditionally**.
+- **This app needs no consent from anybody, and that is the shipped answer.**
+  🚨 **Do not add a cookie banner** — under § 25 TDDDG a banner where nothing
+  tracking touches the device is a defect, not caution. Anything you add that
+  writes to a device — `localStorage` included — joins the list in
+  [`docs/compliance.md`](docs/compliance.md) § 2.
+- **Deleting an account does not delete everything, and the dialog says so.**
+  Orders stay, with the member link `null`; a running subscription **warns and
+  does not block**.
+- 🚨 **Every legal text written here is a draft for legal review, and the page
+  says so.** `<!-- ds24-appkit:draft -->` on its first line keeps the box
+  "Entwurf zur Vorlage bei einer Rechtsberatung" up and `legal-check` reporting
+  until the OPERATOR removes it after a lawyer has read the text — never you.
+  Nobody here gives legal advice.
+
+## STOP criteria
+
+For changes to billing logic, signature/auth checks, the export/deletion
+of customer data or new external payment/data integrations: first read `guardrails`
+and, when in doubt, involve a human.
+
+🚨 **A secret never travels through the conversation.** Never ask for an API
+key, a token or a password in the chat: a browser login or a command that
+writes `.env` does it, or the customer puts the line into `.env` themselves. One
+that has landed in a chat, a screenshot or a commit is replaced at its issuer —
+[`docs/guidance.md`](docs/guidance.md) → *How a skill works*.

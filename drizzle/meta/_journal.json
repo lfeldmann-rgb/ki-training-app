@@ -1,0 +1,83 @@
+{
+  "version": "7",
+  "dialect": "postgresql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "7",
+      "when": 1786200704472,
+      "tag": "0000_squashed",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1786200704473,
+      "tag": "0001_hand_written",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786272804833,
+      "tag": "0002_conscious_warpath",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1786307202811,
+      "tag": "0003_shocking_callisto",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1786315197816,
+      "tag": "0004_flimsy_ares",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1786319368668,
+      "tag": "0005_short_psylocke",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1786357893042,
+      "tag": "0006_fearless_blockbuster",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1786360344469,
+      "tag": "0007_chief_moondragon",
+      "breakpoints": true
+    },
+    {
+      "idx": 8,
+      "version": "7",
+      "when": 1786632539765,
+      "tag": "0008_drop_requires_plan",
+      "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1786632546382,
+      "tag": "0009_plan_keys_list",
+      "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1788966461815,
+      "tag": "0010_payment_option",
+      "breakpoints": true
+    }
+  ]
+}

@@ -1,0 +1,236 @@
+<!-- Copyright (c) 2026 Digistore24 Inc, St. Petersburg, USA — SPDX-License-Identifier: MIT -->
+
+# Stages — what happens after the yes, one line of the plan at a time
+
+_Read from `build-app` → *After the yes* and from Step 4. The yes to the end
+picture starts the FIRST stage, not the whole list; this file says what a stage
+is, what it has to satisfy before it is handed back, the words to hand it back
+with, and what to do when a session was cut in the middle of one._
+
+## What a stage is
+
+**One `- [ ]` line of `docs/plan.md`** — one thing the customer will be able to
+DO, in the order the lines stand. Not a file, not a table, not a test run;
+those are what a stage is made of. Roughly ten minutes of building each, and
+"roughly" is a claim you check against the clock, not a promise you keep by
+cutting corners: a line that turns out to be twenty minutes is two lines, and
+you say so before you start it.
+
+**The first stage carries the whole agreed data model.** Steps 1b–1d decided
+the columns; a second migration for something the first could have carried is
+the mistake the skill warns about twice. A later stage touches `db/schema.ts`
+only where its line needs a column nobody could foresee.
+
+## What a stage has to satisfy before it is handed back
+
+Every item, every time — a stage that skips one is not done, it is abandoned:
+
+1. The pages and logic of its line exist, gated through the entitlement API
+   where the line depends on a purchase — and every table the line added that
+   is keyed on the member has its row in `docs/data-protection.md` and its
+   section in `lib/privacy/export.ts` (the customer's quotes are her data).
+2. `npm run typecheck && npm run test` green — `node run.mjs test` does both.
+3. `node run.mjs start && node run.mjs smoke && node run.mjs errors` clean,
+   with the signed-in pass really run (Step 4's `NOT checked` line read).
+4. **If you can open a real browser, look at it now** — `smoke` proves every page
+   answers, not that it looks right. If you have none, `ux-gateway` explains how
+   to offer the user the Playwright MCP server (a one-minute change to their own
+   program, not to this app); seeing the pages once now is cheaper than meeting
+   them broken in the `ux-gateway` pass later. **To fetch a page as the owner
+   from a script of your own** — a PDF to save, a page to diff — use what
+   `smoke` uses: `import { signInAsOwner } from "./scripts/dev/sign-in.mjs"`,
+   `const r = await signInAsOwner("http://localhost:3000")`, then
+   `fetch(url, { headers: { cookie: r.cookie } })`. It answers `{ cookie, as, role }`,
+   or `{ skipped, reason }` when there is no owner yet (the reason names the
+   `user-create` command — step 3b), or `{ refused }`; DEV only. Run once on
+   2026-09-03: skipped before the owner existed, then `/dashboard` 200 with the
+   cookie and 307 without. Sessions used to read the 200-line script 22 times
+   to find this.
+5. **Committed AND pushed**, on green, with the migration in the commit. Not at
+   the end of the build — at the end of THIS stage: the commit survives whatever
+   ends the next turn, the push survives the machine, and `start.md` A2 created
+   the remote for exactly this. Measured 2026-09-15: seventeen commits, none
+   pushed, and the customer's GitHub repository still held the bare template
+   when she asked whether her work was safe. No remote (they declined GitHub):
+   say so in the hand-back, once.
+6. Its entry in `docs/app.md` (Step 4b), and its line in `docs/plan.md` ticked
+   with the date.
+
+## The hand-back — and then the turn ENDS
+
+Say it in plain words, and then stop. Not "next I will…" followed by doing it:
+the customer decides whether the next stage starts, and the decision is only
+real if the turn is over when they read this.
+
+> "Stage 2 of 5 is done: **you can now buy the monthly plan and reach the
+> members' area.** Open http://localhost:3000, sign in with your own address —
+> you are the admin — and you'll see the plans page and, after a test purchase,
+> the area behind it.
+>
+> Next would be stage 3, *hand in a photo and get a written assessment back* —
+> about ten minutes. Say **go**, tell me what to change first, or say **run
+> through** and I'll build the remaining stages without stopping to ask."
+
+Three answers, all valid, none negotiated:
+
+| | |
+|---|---|
+| **go** (or the next stage's number) | start it — a new turn, the same checklist |
+| **a correction** | fix it inside THIS stage first, hand back again, then ask again |
+| **"run through" / "don't stop"** | write `- **Pace:** run through without stopping — asked for on <date>` into `docs/plan.md`, and from then on hand each stage back in one paragraph WITHOUT the question, in the same turn. Never ask again in this project: a session that reads the `Pace:` line has its answer |
+
+**Files and function names, if you name them at all, go under their own line
+at the very END — after the last sentence about the app, before nothing but
+the stage question.** The customer reads the first lines, whoever reads code
+reads the last; the example above names none. A hand-back that opens with
+`whatPaysFor()` and two sibling functions before it says what the customer can
+now see has its two readers the wrong way round — measured on a customer's app,
+2026-09-04, and the rule is `CLAUDE.md` → *Rules*, the shape with an example
+`docs/guidance.md` → *How a skill works*.
+
+The sentence is true even after `smoke` signed in with a test owner: an owner
+row counts only once a person has signed in to it (`lib/users/bootstrap.ts`).
+Measured 2026-09-15 in three runs: "sign in with any address" while a test
+owner existed sent the customer in as a member — the rule was changed to make
+the sentence right rather than to forbid it.
+
+**The address is not optional.** A hand-back that says "done" without saying
+where to look leaves the customer with nothing to open — measured in a field
+run whose closing line was *"fertig gebaut und läuft"* and named no page.
+
+**The name is not optional either.** The first stage writes it where the app
+wears it — `NEXT_PUBLIC_APP_NAME` in `.env` (intake question 4) — chosen by
+the customer, announced by you as a working title, or ASSUMED like every other
+open point when they asked for no more questions. A first hand-back whose
+corner still says "Your App" has delivered no name; measured twice on
+2026-09-10, once with a title the plan had announced and once without any.
+
+**The app is RUNNING when they read the address, and the stage is committed
+and pushed before they read anything.** A hand-back that stops the app and
+ends with "run `node run.mjs start`, then open…" hands the customer a command
+instead of a page, and one that ends with "shall I commit?" asks them to
+decide what `CLAUDE.md` → *Rules* already decided — both measured 2026-09-10.
+And "not pushed yet — I'll do it next time" to a customer who just asked
+whether her work is safe (2026-09-15) withholds the one command that would
+have made it so.
+
+**Every line between the yes and the hand-back is in the customer's language
+too, and says what they get.** `CLAUDE.md` → *Rules* says so; measured
+2026-09-10 in two of three runs, the plan and the hand-back were German and
+the twenty progress lines between them were English developer talk ("Now wire
+the two export paths"). The customer reads those lines. Say what the step
+gives them, in their words, or say nothing until the next thing they can use.
+
+**A step that will take more than about two minutes is announced BEFORE it
+starts — what, roughly how long, and what will be true afterwards — then a
+line per landed piece.** `docs/guidance.md` → *How a skill works* has the
+rule; it did not reach the build. Measured 2026-09-15: 565 seconds of silence
+while eight lessons were written in one script, 223 seconds inside a
+`smoke`/sign-in chain, 165 seconds waiting for a subagent — every one a
+spinner from the customer's chair, and "Ich schreibe jetzt acht Lektionen,
+etwa acht Minuten" would have cost one line.
+
+**The stage is built in THIS session, not handed to a subagent as a whole.**
+Measured 2026-09-10: one hand-off was thirty-four minutes without a word to the
+customer, and the session then vouched for checks it had not seen. A subagent
+may take a bounded piece; the session itself runs the tests, `smoke` and
+`errors` before it speaks, and says something the customer can use at least
+every stage — silence reads as "stuck".
+
+**Every function the app sells was opened once AS THE OWNER before the
+hand-back names it.** Chat, self-check, hand-in, room — opened in the browser
+or fetched with the owner's cookie (item 4), not verified with a member's
+`curl`. Measured 2026-09-15, four times in one run: the hand-back promised
+"sign in with any address, that account is the admin" while `smoke` had
+already created an owner; the self-check said "belongs to a product you don't
+have"; the chat said "Kein Zugang"; the chat knew nothing of the course —
+each found by the customer, each a turn. In DEV the owner holds every product
+on sale (`owner-account.md`); what the hand-back names, you have seen as her.
+
+**A hand-back leaves no test rows behind.** Accounts, hand-ins and rooms you
+created to verify are deleted before the hand-back or named in it — a customer
+who finds `owner@example.com` in her queue asks who that is (2026-09-15). A
+test owner you keep for the next `smoke` stays out of her way: her own first
+sign-in is still the admin.
+
+**A path through the app is read from `messages/*.json` and the navigation,
+never from memory.** "Betreiber → Benutzer → Aktionen → Als Benutzer
+einloggen" is copied from the strings the app renders; measured 2026-09-15,
+one hand-back invented three labels ("Verwaltung → Nutzer", "Als dieses Konto
+anmelden", "on the account page") and the customer searched.
+
+
+**The LAST hand-back names what is still a placeholder.** "Alles fertig" with
+the home page still describing the template, the legal pages still saying
+"not filled in" and no Digistore24 product behind the buy button is finished
+code, not a finished product — so the closing paragraph says which of the
+three the path still owes and which skill does it: `salespage` (2.4),
+`compliance-check` (2.8), `setup-digistore` (2.2). Measured: a closing text
+that named only the last of the three, over a home page that said "Dieses
+Template ist für den Verkauf über Digistore24 vorbereitet".
+
+## Why the turn ends here — say this once, in the announcement, not every time
+
+The person at the keyboard may be on a plan whose usage window is five hours
+and whose one long turn spends most of it; this template cannot see which plan
+that is, so it works the same way for everybody. Three things follow, and they
+are the reasons, in the customer's words if they ask:
+
+- **A window can end in the middle of a turn.** A build that runs forty
+  minutes in one turn and is cut at minute thirty leaves half an app that does
+  not start — and no more turns until the window resets. A stage that ends
+  with a running app loses at most the stage after it, never the app.
+- **Ten minutes in, they see something.** From the other chair a forty-minute
+  turn is indistinguishable from a program going in circles, however often it
+  narrates; a page that opens is not.
+- **Every stop is a rewind point.** Claude Code checkpoints on each of the
+  customer's messages, so a stage boundary is a place they can go back to.
+  One boundary per build is one place; one per stage is five.
+
+And it costs the customer who does not need it exactly one sentence — "run
+through" — which is why the default is the careful one.
+
+**The same announcement names the third door: a fresh session.** One sentence,
+once — *"You can also close this and start a new session in the project folder
+whenever you like; it reads `docs/plan.md` and `git status` and carries on at
+the first open line."* Everything a stage needs is on disk by the time the
+turn ends — that is what the checklist above is FOR — so a session is
+disposable at every hand-back, and a developer who keeps their context clean
+by starting over should hear that the path is built, not discover it. Say it
+once and not at every hand-back: a fresh session pays the entry again
+(`CLAUDE.md`, this skill, its references — measured over 26 sessions, reading
+the tree outweighs everything else), and starting one level up is the step
+`docs/start.md` names as the one that goes wrong most often. "go" stays the
+default; the sentence makes the other door visible.
+
+## When a session was cut in the middle of a stage
+
+A new session in this project reads two things before it does anything:
+`docs/plan.md` and `git status`. **An unticked line together with uncommitted
+files is an interrupted stage**, and it is finished FIRST — not started over,
+not skipped, not left beside a new one. Say which line it is, look at what is
+there, and carry that stage through the checklist above to its hand-back. Only
+then the next line.
+
+**Ticked lines, a clean tree, and the customer says "go", "continue" or
+"weiter" — that is not a cut session and not a new build.** The first
+unticked line of `docs/plan.md` is the next stage; start it with the same
+checklist, in the same turn. Do NOT run the intake again, do not ask for the
+end picture again, do not treat "build my app" as a first contact: a
+`docs/plan.md` with open lines IS the agreed picture, and a session that asks
+the five questions over a plan already written measures nothing but its own
+memory. If the plan's last line is ticked, the build is done — say so, and
+name what the LAST hand-back names (the placeholders and their skills).
+
+If the customer needs the app running NOW and the interrupted stage is far from
+green, `git stash` parks the half-built stage and the last committed one
+starts; the stash is then the interrupted stage, and it comes back before
+anything new. What the customer sees when a window ends, and what to tell them,
+is `docs/troubleshooting.md` → *The build stopped half-way — a usage limit,
+not a bug*.
+
+## Not for an experiment
+
+Same boundary as everywhere in this skill: "Hello World" or a page to get a
+feel for the template is one thing, built in one go, no plan, no stages, no
+question afterwards.

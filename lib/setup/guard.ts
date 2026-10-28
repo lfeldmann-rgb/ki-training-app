@@ -1,0 +1,296 @@
+// Copyright (c) 2026 Digistore24 Inc, St. Petersburg, USA
+// SPDX-License-Identifier: MIT
+
+// 🚨 `guardSetup()` — the ONE door into the setup surface, and the first line
+// of every dispatch. `lib/setup/guard-presence.test.ts` reads the handlers
+// rather than trusting a list, because the middleware footgun here is
+// structural: `proxy.ts` matches `/dashboard` only, so everything under
+// `app/api/` is public until it guards itself.
+//
+// The order below is the design, not an implementation detail. Three points in
+// it are load-bearing and are argued where they happen.
+
+import { isLimited, record } from "@/lib/rate-limit";
+import { isSetupEnabled, setupConfig } from "./config";
+import {
+  bearerFrom,
+  isDev,
+  mayRunDestructive,
+  needsConfirmation,
+  parseEnvClaim,
+  payloadDigest,
+  serverEnv,
+  setupError,
+  validateInput,
+} from "./rules";
+import { authenticateKey, spendConfirmation } from "./manage";
+import type { SetupContext, SetupTool } from "./types";
+import type { AppEnv } from "@/lib/env-guard";
+
+/** Per key. Generous — this is a setup session, not a public API. */
+const CALL_LIMIT = { max: 120, windowMs: 60_000 };
+/** Per origin. A credential factory deserves a narrower door than a read. */
+const AUTH_FAIL_LIMIT = { max: 20, windowMs: 15 * 60_000 };
+
+const CALL_BUCKET = "setup:calls";
+const AUTH_BUCKET = "setup:authfail";
+
+export type GuardResult =
+  | { ok: false; response: Response }
+  | {
+      ok: true;
+      keyId: string;
+      ownerId: string;
+      appEnv: AppEnv;
+      tool: SetupTool;
+      mode: "plan" | "apply";
+      input: Record<string, unknown>;
+      /**
+       * The digest of the bytes this call carried, or null — computed HERE so
+       * the `apply` that spends a token and the `plan` that mints one cannot
+       * hash the payload two different ways. `dispatch.ts` takes it from here
+       * rather than computing its own.
+       */
+      payloadSha: string | null;
+    };
+
+export interface SetupRequestBody {
+  tool?: unknown;
+  env?: unknown;
+  mode?: unknown;
+  input?: unknown;
+  confirmation?: unknown;
+}
+
+/**
+ * Everything between a request and a tool running.
+ *
+ * `callerKey` is how the origin is identified for the failure meter — the
+ * caller's address, supplied by the route so this stays testable.
+ */
+export async function guardSetup(args: {
+  request: Request;
+  body: SetupRequestBody;
+  tools: ReadonlyMap<string, SetupTool>;
+  callerKey: string;
+  /** Bytes, when this came through the multipart door. See step 12. */
+  file?: SetupContext["file"];
+}): Promise<GuardResult> {
+  const { request, body, tools, callerKey, file } = args;
+
+  // 1. Origin. Absent is fine (a native client sends none); foreign is not.
+  //    The DNS-rebinding guard `/api/v1` already makes, for the same reason.
+  const origin = request.headers.get("origin");
+  if (origin && !originAllowed(origin)) {
+    // Counted: see step 3 — every refusal a stranger can reach writes a row.
+    record(AUTH_BUCKET, callerKey, AUTH_FAIL_LIMIT);
+    return { ok: false, response: setupError("badRequest", "Origin not allowed.") };
+  }
+
+  // 2. The switch, BEFORE the key. A disabled surface never reaches the key
+  //    table: off means off for everybody, the operator included — and the
+  //    404 must not depend on whether a credential happened to be good.
+  if (!isSetupEnabled()) {
+    return { ok: false, response: setupError("setupDisabled") };
+  }
+
+  // 3. 🚨 The failed-authentication meter, BEFORE every refusal that a stranger
+  //    can reach — not only before the key lookup.
+  //
+  //    It used to sit at step 5, and the four refusals above and below it
+  //    (foreign origin, APP_ENV unset, an unparseable env claim, an env
+  //    mismatch) are all reachable with NO credential at all — while
+  //    `lib/setup/dispatch.ts` writes an audit row for every refusal code
+  //    except `setupDisabled`. So an outsider who has learned the surface is on
+  //    (the first non-404 answer tells them) could POST `{"tool":"x","env":"…"}`
+  //    in a loop and write into the production `setup_audit` table without
+  //    limit, pushing the real acts out of `listActs()` and off the operator's
+  //    page. `dispatch.ts` names exactly that danger for the switched-OFF state
+  //    — "a row per probe would let an outsider fill this table from outside" —
+  //    and nobody closed it for the switched-ON one.
+  //
+  //    ⚠️ `callerKey` comes from a header and is forgeable, which `lib/rate-limit.ts`
+  //    admits in its own docstring. A bound that a determined attacker can
+  //    sidestep still turns "unlimited by anybody" into "work per row", and it
+  //    is what this layer can do without a session.
+  if (isLimited(AUTH_BUCKET, callerKey, AUTH_FAIL_LIMIT)) {
+    return { ok: false, response: setupError("rateLimited", undefined, { "retry-after": "900" }) };
+  }
+
+  // 4. 🚨 The server's own environment, refusing the empty case. `appEnv("")`
+  //    is "development", so a deployed host that lost APP_ENV from its secrets
+  //    would otherwise be handed every DEV relaxation this surface grants —
+  //    single-call mutations and owner promotion included.
+  const appEnv = serverEnv(process.env.APP_ENV);
+  if (!appEnv) {
+    record(AUTH_BUCKET, callerKey, AUTH_FAIL_LIMIT);
+    return {
+      ok: false,
+      response: setupError("envUnset", "APP_ENV is not set on this host."),
+    };
+  }
+
+  // 5. The caller's CLAIM — validated against a closed set, never normalised.
+  //    Running it through appEnv() would make appEnv("banana") === "production"
+  //    true and wave a garbled claim through on exactly the environment this
+  //    check protects. Validating and normalising are opposite acts.
+  const claimed = parseEnvClaim(body.env);
+  if (!claimed) {
+    record(AUTH_BUCKET, callerKey, AUTH_FAIL_LIMIT);
+    return {
+      ok: false,
+      response: setupError(
+        "badRequest",
+        'env must be one of: development, staging, production (not "prod" or "dev").',
+      ),
+    };
+  }
+  if (claimed !== appEnv) {
+    record(AUTH_BUCKET, callerKey, AUTH_FAIL_LIMIT);
+    return {
+      ok: false,
+      response: setupError(
+        "envMismatch",
+        `This app is ${appEnv}; the call was addressed to ${claimed}.`,
+      ),
+    };
+  }
+
+  // 6/7. The key. `authenticateKey()` refuses by prefix before any query, and
+  //      re-reads the owner's role from the database at this moment.
+  const secret = bearerFrom(request.headers.get("authorization"));
+  const key = secret ? await authenticateKey(secret) : null;
+  if (!key) {
+    record(AUTH_BUCKET, callerKey, AUTH_FAIL_LIMIT);
+    // One identical 401 for unknown, revoked, expired, blocked and not-an-owner.
+    // The reasons live in the server log; telling them apart from outside is a
+    // probing tool.
+    return { ok: false, response: setupError("unauthorized") };
+  }
+
+  // 8. The per-key ceiling.
+  if (isLimited(CALL_BUCKET, key.keyId, CALL_LIMIT)) {
+    return { ok: false, response: setupError("rateLimited", undefined, { "retry-after": "60" }) };
+  }
+  record(CALL_BUCKET, key.keyId, CALL_LIMIT);
+
+  // 9. The tool. The surface is enumerated: what is not declared does not exist.
+  const name = typeof body.tool === "string" ? body.tool : "";
+  const tool = tools.get(name);
+  if (!tool) {
+    return { ok: false, response: setupError("unknownTool", `No tool named "${name}".`) };
+  }
+
+  const mode = body.mode === "apply" ? "apply" : "plan";
+
+  // 10. Destructive tools are refused outside DEV unless named in the config.
+  if (tool.destructive && !mayRunDestructive(appEnv, tool.name, setupConfig().allowDestructive)) {
+    return {
+      ok: false,
+      response: setupError(
+        "destructiveRefused",
+        `"${tool.name}" destroys data and is refused in ${appEnv}. Name it in config/setup.json to allow it.`,
+      ),
+    };
+  }
+
+  // 11. The input, through the tool's own schema. Unknown keys are REJECTED —
+  //     a tool argument is written by a model, and silently ignoring a field it
+  //     believed in is how a caller comes to think it asked for something else.
+  const validated = validateInput(tool.inputSchema, body.input ?? {});
+  if (!validated.ok) {
+    return { ok: false, response: setupError("badRequest", validated.detail) };
+  }
+
+  // 12. Outside DEV, applying needs the token this key was given for THIS tool,
+  //     THIS input and THESE bytes — and spending it is a conditional UPDATE,
+  //     not a lookup.
+  //
+  // 🚨 **The payload is part of the binding (A79), and only where there is
+  // one.** Everywhere else the validated input names what will happen; at
+  // `/api/setup/media` it does not — the input is a `path` this app never opens
+  // and the act is the file beside it. Measured before it was fixed: a plan
+  // answering `two-act.png (70 bytes) would be stored as public`, applied with
+  // its own token and 584 different bytes, answered
+  // `200 {"created":1,"detail":"stored 584 bytes as image"}`. Changing the
+  // `path` invalidated the token; changing the file did not. The second act
+  // confirmed a label rather than the thing.
+  //
+  // ⚠️ Computed here rather than per door, and computed ONCE — `dispatch.ts`
+  // reads it off the result to mint with. Two spellings of "the digest of this
+  // call's payload" is the same failure `canonicalJson()` was pinned against.
+  //
+  // ⚠️ And only when a confirmation is actually in play: in DEV nothing here
+  // runs, so a 50 MB upload on a developer's machine is not hashed for a branch
+  // that answers false.
+  const confirmationInPlay = needsConfirmation(appEnv, tool.mutates);
+  const payloadSha = confirmationInPlay && file ? payloadDigest(file.bytes) : null;
+
+  if (mode === "apply" && confirmationInPlay) {
+    if (typeof body.confirmation !== "string" || body.confirmation === "") {
+      return {
+        ok: false,
+        response: setupError(
+          "confirmationRequired",
+          `Call ${tool.name} with mode "plan" first and pass the confirmation it returns.`,
+        ),
+      };
+    }
+    const problem = await spendConfirmation({
+      token: body.confirmation,
+      keyId: key.keyId,
+      tool: tool.name,
+      appEnv,
+      toolInput: validated.value,
+      payloadSha,
+    });
+    if (problem) {
+      return {
+        ok: false,
+        response: setupError(
+          problem,
+          // ⚠️ "for a different call" and no longer "for different input": the
+          // binding covers the file too, and a sentence naming only the input
+          // would send an operator whose upload changed underneath them looking
+          // at their JSON.
+          "That confirmation is spent, expired, or was issued for a different call " +
+            "(a different input, or a different file).",
+        ),
+      };
+    }
+  }
+
+  return {
+    ok: true,
+    keyId: key.keyId,
+    ownerId: key.ownerId,
+    appEnv,
+    tool,
+    mode,
+    input: validated.value,
+    payloadSha,
+  };
+}
+
+/**
+ * Same shape as the API module's origin check, and the same reason: a browser
+ * on another origin must not be able to drive this, and a foreign `Origin`
+ * header is the cheapest tell.
+ */
+function originAllowed(origin: string): boolean {
+  const appUrl = process.env.APP_URL;
+  if (!appUrl) return false;
+  try {
+    return new URL(origin).origin === new URL(appUrl).origin;
+  } catch {
+    return false;
+  }
+}
+
+/** Exported for the guard's own tests. */
+export const SETUP_LIMITS = { CALL_LIMIT, AUTH_FAIL_LIMIT, CALL_BUCKET, AUTH_BUCKET };
+
+/** Whether this environment lets a mutation apply in one call. */
+export function singleCallApply(appEnv: AppEnv): boolean {
+  return isDev(appEnv);
+}

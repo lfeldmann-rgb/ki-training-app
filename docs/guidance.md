@@ -1,0 +1,498 @@
+<!-- Copyright (c) 2026 Digistore24 Inc, St. Petersburg, USA — SPDX-License-Identifier: MIT -->
+
+# How guidance is written in this repo
+
+This file is for whoever WRITES guidance — a new skill, a new doc, a new block in
+`CLAUDE.md`. It is not read by every session, deliberately: the rules below are
+an authoring contract, and an authoring contract loaded on every turn of every
+app is exactly the kind of text this project keeps moving out of `CLAUDE.md`.
+
+What lives here: the division of labour between the five surfaces, and the
+contract every skill keeps.
+
+## The five surfaces, and the one question each answers
+
+A fact belongs in exactly one of these. Two copies drift, and the copy that is
+not the owner is the one nobody updates.
+
+- **`CLAUDE.md`** — a line belongs here only if an agent that has read no other
+  file would otherwise cause damage it cannot see. Every `##` section is at most
+  40 lines and carries a bold link to the doc that holds its long form. ⚠️ It
+  used to say **ends in** such a link, and 21 of the 29 sections did not: the
+  ones closing with a bullet list put the pointer in their intro instead, which
+  reads the same and costs fewer lines. Nothing measured the difference (G4 in
+  `scripts/guidance-budget.test.mjs` asks only whether the doc is linked at all),
+  so the wording was simply wrong about two thirds of the file — and a rule that
+  is visibly wrong teaches the reader to skim the ones beside it.
+- **`SKILL.md` frontmatter** — says *when to start*, never *how it works*. If a
+  sentence would still be true after the steps were rewritten, it is not a
+  trigger and does not belong in the description.
+- **`SKILL.md` body** — the ORDER of the work: steps, decision points,
+  hand-overs. Anything still true if the steps changed does not belong in it.
+- **`references/*.md`** — what ONE step of ONE skill reads once: a catalogue, a
+  long example, a template. Linked from its own skill and from nothing else,
+  never from `CLAUDE.md`.
+- **`docs/*.md`** — the full form of one subsystem with more than one reader, and
+  the only place a fact appears in full. Everything else points here.
+
+One of those sizes is measured rather than trusted:
+`scripts/docs-coverage.test.ts` keeps
+every `SKILL.md` under 500 lines, because the whole body loads when the skill
+triggers and over that mark it has stopped being a procedure and become a
+catalogue the customer's session pays for on every use. The fix is never to
+delete it — it is to move the catalogue into `references/` beside the skill.
+
+## Only recommend what you have run
+
+A prohibition costs an unnecessary detour at worst. **A recommendation is a
+guarantee** — and whoever follows one has no way of telling that it does not
+hold. So whoever writes a class, a call or a command into a doc, a skill or a
+reference as *the* answer to something **runs it once first**, and says in the
+same place what came back.
+
+The measured case: `docs/design-system.md` and the `design` skill's
+`references/tokens.md` both named `shadow-(--elevation-overlay)` as the
+sanctioned way to write the elevation dial, and did so for three releases
+without the form ever having been sent through `cn()`. tailwind-merge did not
+know that shape, so the class lost to any plain `shadow-…` standing beside it
+and did nothing at all — a silent no-op behind a clean HTTP 200, on a page that
+looked finished. Two lines in a `node` REPL would have answered it before the
+first reader followed the advice.
+
+This is the mirror of **Only report what you can show** further down: a finding
+needs something you saw, and a recommendation needs something you ran.
+
+## How a skill works — the same way every time
+
+Whoever writes or changes a skill keeps to this, because a user who has found
+their way around one skill has then found their way around all of them:
+
+- **You run the commands.** Through your Bash tool, and you report what came
+  back. Never "run `node run.mjs …` and tell me what it says" — the people here
+  are not developers, and a command handed over is a conversation that stops.
+- **Say where this is going, not just what you are doing.** Before a stretch
+  that will run for several minutes: one sentence on what you are about to do,
+  roughly how long, and **what will be true when it is finished** — then a line
+  per step as it lands. The last of those three is the one that is usually
+  missing. Measured, against real sessions: a run somebody described as "thirty
+  silent minutes" turned out to speak forty-nine times, the longest gap being
+  four minutes. They were not short of text. They were short of a thread — every
+  line said what was happening and none of them said where it ended, which from
+  the other chair is indistinguishable from a machine going in circles.
+- **Anything that would run unattended for more than a few minutes is handed
+  back in pieces the customer can OPEN — and the turn ends at each one.** The
+  rule above is about narration; this one is about stopping, and narration does
+  not replace it: measured over the field-test archive, the build turn after the
+  customer's yes ran 17–30 minutes in fourteen runs while speaking every minute,
+  and a customer measured 44 on a slower model. The person at the keyboard may
+  be on a plan whose usage window one such turn exhausts, and the template
+  cannot see which plan that is, so the shape is the same for everybody: a piece
+  is something they can open (`build-app` → *After the yes*, one `docs/plan.md`
+  line per turn), it is committed before it is handed back, and the hand-back
+  names the address and asks. The customer who does not want the stops says so
+  once — "run through" — and that answer is written down, never re-asked.
+- **No technical word arrives unexplained.** Commit, branch, pull request, port,
+  migration, schema, environment variable — each is a word somebody here is
+  meeting for the first time. Use it where it is the right word, and put its
+  plain meaning in the same sentence, once. A question nobody can parse gets
+  answered at random, and that answer then travels on as if it were a decision.
+  The plain meanings have one home, [`glossary.md`](glossary.md) — one entry
+  per word, with whether it touches only their computer and whether it can be
+  undone, written for the customer and read by you. Take the meaning from
+  there rather than improvising a new one each time; never answer a word with
+  a link to the file.
+- **A question is asked in the words it will be answered in — the same rule as
+  the hand-back below, applied where the damage starts, because the questions
+  come first.** Three parts. It names what the customer will EXPERIENCE, not
+  the criterion you decide by. The reason travels with it — one sentence on why
+  the answer matters, inside the question. And a choice with no consequence the
+  customer can see or feel is not put to them: set it, say it in one sentence,
+  record it in `docs/app.md`. Measured on a customer's app on 2026-09-08: the
+  build opened with four questions taken from the skill's own vocabulary —
+  *content authority · data model · migration · an input form behind
+  `requireOwner()` · `billingMode "subscriptions"` · `kind: "one_time"` ·
+  `hasPlan()`* — and the operator, who does not read code, answered all four
+  with "I don't understand", and read the billing mode as her buyer having to
+  pay more than agreed. The decision behind the first of them, asked once more
+  in her terms, took one exchange: *"The taxi to Santa Monica costs 20 € —
+  next year 25. Do you want to change that number yourself, on your phone, or
+  tell me and I put it in?"* — after which she described the database path
+  correctly on her own. It was never a question of understanding; it was one
+  of language. Two of the four were not her questions at all — the archetype
+  and the billing mode change nothing her buyer sees — and one had its reason
+  in a doc she never opens. Where a skill prescribes a question, it prescribes
+  the plain form (`build-app` → `references/intake.md`, `menus-1b.md`); where
+  it does not, this rule is the wording.
+- **A recorded decision is read back as a note, not as a contract.**
+  `docs/plan.md` and `docs/app.md` are written by you, from the conversation —
+  in the customer's words where you had them, in yours where you did not.
+  Quoted back as *"we agreed that…"*, your note becomes their promise: a
+  customer heard a line of her own plan read to her and asked *"when would we
+  have agreed that?"* (2026-09-08), and trusted the file less from then on —
+  the file whose whole purpose is to be what a later session relies on. So the
+  shape is *"this is how I wrote down what you said on <date> — is it still
+  right?"*, and a correction changes the file, dated.
+- **The hand-back is written for the person who does not read code — and the
+  files come last.** Every turn that ends, ends in somebody's hands, and the
+  first paragraph is the one they read. It says what has CHANGED for them —
+  what they can now open, do, or no longer see — and what is still open, in the
+  words step 0 of `CLAUDE.md` → *Adding a feature* used for "done when". Then,
+  under its own line at the very end, the part for whoever reads the code:
+
+  > **What changed for you:** a subscriber whose plan is paused now sees "Your
+  > plan is on hold — nothing is lost" on the invoice page instead of being
+  > asked to choose a plan; I set that state up and looked at the page. The
+  > data download now includes the invoicing data. Three labels were renamed
+  > so a word no longer means two things in one sidebar.
+  >
+  > **Still open:** the German label for "History" — say which of the two.
+  >
+  > **For whoever reads the code:** `lib/billing/rules.ts` → `pausedPlanKey()`,
+  > four tests; `lib/privacy/export.ts` five new sections; `docs/app.md`
+  > carries the two traps.
+
+  A function name in the first paragraph is the rule broken, however good the
+  work. Measured on a customer's app on 2026-09-04: a session closed a critical
+  finding and opened with *"`whatPaysFor()` now has a paused case fed by
+  `pausedKeys()` + `suspendedKeysFor()`"* — three function names before the
+  sentence the customer was waiting for — and the customer asked for exactly the
+  shape above, in their own words: *what has changed for the customer and what is
+  still open; the file paths could be added at the bottom.* The field-test
+  archive agrees: of 162 hand-backs in 31 runs, 21 open with a code name — a
+  file, a function, a table — and 12 put them last (the field report reads it
+  off every run, in its Turns table). Where a stage ends on the question
+  whether to go on, the files line goes before that question, and nothing else
+  follows it. **A test count is not a hand-back either.** "8,465 tests green"
+  impresses and proves nothing the customer can judge — a tester said so in
+  those words (2026-09-14). The count goes in the files block; the first
+  paragraph names the page to open and what they will see there, which is the
+  one check they can make themselves.
+- **An error is told in three parts: what happened, what it means for them,
+  what happens next — and who does it.** *"The app could not send the sign-in
+  mail. For you: nobody can sign in until it can. I am checking the mail
+  settings now; you do not have to do anything."* The pasted error text, if it
+  helps at all, comes after those three sentences, never instead of them. A
+  setup error ("docker: not found") is told the same way, with the third part
+  being `setup-machine`. A tester asked for exactly this shape (2026-09-14):
+  a message they could neither read nor act on is, from their chair, the
+  agent going wrong.
+- **A number you chose is a default, and it says so where it is said.** A cap,
+  a quota, a threshold, a price, a limit that no doc, no test and no customer
+  set is kind (d) of the four below — your own taste, however reasonable — and
+  it is introduced as one: *"I have set a starting value of 50 a day; nothing
+  fixes that number, and it rests on nothing but a guess we can change."* Then
+  it goes into `docs/app.md` under the decisions, marked as a default. A tester
+  watched an agent set an upper limit on a usage measure and admit only when
+  asked that it had invented it (2026-09-14) — the invention was fine, the
+  silence about its source was the defect. **Numbers the template ships are
+  the same case** — the ~100 users of the performance gateway are a default
+  target, and a skill that carries a number says what kind it is.
+- **A secret never travels through the conversation.** An API key, a token,
+  a password: never ask for one in the chat — a beginner will paste it, not
+  knowing the transcript is a place. The paths that exist: a browser login
+  (`ds24-connect`, the host CLIs), a command that asks in the terminal and
+  writes `.env` itself (`mail-setup`, `ds24-connect --manual`), or the customer
+  writing the line into `.env` themselves — you tell them the file, the exact
+  line and that the file is theirs alone, then you check with the command that
+  verifies it (`ai-check`, `ds24-sync`). One that has landed in a chat, a
+  screenshot or a commit is replaced at its issuer, said plainly and without
+  blame. The one exception is a person who is not at the machine at all, and
+  then the sentence about replacing it afterwards travels with the request.
+- **Installing something on their machine is announced in four parts, and
+  waits.** What it is, why this app needs it now, where it goes, and how it
+  comes off again — then the question. *"Node.js, the program the app runs
+  on; it installs like any other program and uninstalls the same way; nothing
+  about your app is decided by it. Shall I?"* `setup-machine` and `agent-browser` say it this
+  way; the project's own building blocks (`npm install`, a `shadcn` component)
+  are inside the project folder and covered by the one sentence at the start
+  of the setup — they are not an install on the machine and not re-asked. A
+  tester named the alternative: *"I am installing X quickly"* leaves somebody
+  who cannot judge it choosing between blind yes and blocking (2026-09-14).
+- **What is final is said as final, in one fixed shape; everything else is
+  said to be saved.** Once, early — at the first hand-back — the customer
+  hears that every finished step is a commit and can be returned to, so
+  "will this break something?" has an answer before it is asked. The short
+  list of acts that cannot be undone from here is in
+  [`glossary.md`](glossary.md) → *What is final*, and each of them is
+  announced with the same words — *"This cannot be undone from here: <what>.
+  Shall I?"* — and waits for the yes. The severity ladder below (🚨 ❌ ⚠️ ℹ️)
+  grades findings in reports; it is not this sentence, and a 🚨 in a doc never
+  means "irreversible" on its own.
+- **Questions come in one announced bundle per turn, numbered, and "you
+  choose" is a valid answer to each of them** — not only inside a menu. A
+  customer who cannot see the consequences of a question answers "just do it"
+  by the third one, and from then on nothing is decided by anybody; the
+  bundle, the reason inside each question and the offered default are what
+  keep a decision a decision. `build-app` → `references/intake.md` has the
+  shape; where a skill does not prescribe one, this is it.
+- **A turn ends with the result, never with an agent still working.** A
+  subagent sent into the background lives exactly as long as the turn in a
+  print session (`claude -p`, and every harness built on it — the field-test
+  runner among them): the process ends with the hand-back, and the work with
+  it. In an interactive session the customer reads *"I will be notified when
+  it is done"* as done, and waits for a message that may never come — they
+  cannot tell a running agent from an ended one, and should not have to. So:
+  wait for it inside the turn, and if the turn has to close first, the first
+  line of the hand-back says what is NOT there yet. A catalogue translation is
+  one job, done in the turn, never a background job. Measured: a session
+  closed on *"the translation agent keeps working in the background"*, and
+  `messages/pt.json` existed only after the customer asked a second time
+  (2026-09-08).
+- **A "no" says which of the four it is.** (a) a limit of the platform; (b) a
+  rule of this template — with the test that holds it; (c) a skill's curation
+  (five font pairings are a MENU, and a list is never a reason by itself);
+  (d) your own taste. Only (a) and (b) are "it cannot"; (c) and (d) are "let us
+  talk", said as such. A customer with a brand was told their
+  Fontsource-packaged script face was "not an option" on the strength of (c)
+  and (d) sold as (a), while the real condition — an npm package with the files
+  on disk — was met (2026-09-07). Name the kind, and for (b) name the test — a
+  (b) you cannot name a test for is a (c) or (d) in (b)'s clothes, and the
+  standing example is the greys: `scripts/design/dials.test.ts` holds that
+  there are four dials and no fifth, and NOTHING holds the neutral tokens'
+  values, so "the grey is a fixed boundary" is untrue; the hand path and its
+  cost are in the skill `design` → `references/tokens.md` → *The greys*. A
+  session said "(b) fixed boundary" for exactly that, named no test, and only
+  on the customer's second ask admitted no test locks it (2026-09-08).
+- **Look before you ask.** Almost everything a skill needs to know is on disk:
+  `.env`, the files under `config/`, the tables in `db/`, the reports in
+  `docs/reports/`. Ask only about what genuinely leaves no trace, and then in
+  one sentence.
+- **Two shapes, and every skill is one of them — numbered either way**, so the
+  user can always see where they are and answer with a number.
+  - A skill that **builds** something is a numbered path: step 0 asks whether
+    the thing is wanted or already there, then steps 1, 2… in order — whether
+    the file spells them as `Step N` headings or as a numbered list.
+    `build-app`, `setup-digistore`, `ai-chat-knowledge`, `setup-hosting`.
+  - A skill that **inspects** something is a numbered menu of independent
+    checks, each with what it looks at and roughly how long it takes. Item 1 is
+    the full run and the default. If the user's request already names one check,
+    start it and skip the menu; otherwise show the menu and **wait**.
+    `ux-gateway`, `security-gateway`, `performance-gateway`.
+- **Point at the reference, do not copy it.** Where a `docs/…` file already
+  explains the thing in full, the skill names it in its first few lines and
+  reads it — it does not restate it. Two copies drift, and the one in the skill
+  is the one nobody updates.
+- **One severity ladder, one shape for a finding.** 🚨 CRITICAL, ❌ HIGH,
+  ⚠️ MEDIUM, ℹ️ LOW, and every finding says *Where · Why · Fix · Evidence* in
+  that order — in full under *One report shape* below, which is where the four
+  rungs and the four lines are owned.
+- **Anything that produces a verdict writes it down**, dated, into
+  `docs/reports/` — so that "have we already done that?" has an answer next
+  month; the shape of that file is *One report shape* below. Anything that
+  produces a plan or a text writes it into `docs/`.
+- **Anything the customer will SEE, and anything the app will DO for them, is
+  proposed, never assumed.** Where an app produces something a person looks at,
+  shows or publishes — or could read, judge or produce *alongside* them while
+  they work — the agent lays the possibilities out as a numbered menu and
+  **waits**. It does not pick on the developer's behalf, and it does not quietly
+  build the version with nobody in it either — that is a decision too, and an
+  unmade decision is how an app ends up handing its customers paragraphs and a
+  form.
+
+  Three answers, and all three are valid:
+
+  | | |
+  |---|---|
+  | **numbers** | exactly those get built |
+  | **"you choose"** | take the default and carry on, no further question. The shortcut for somebody who trusts the suggestion, and it must be offered IN the menu rather than hidden in prose |
+  | **"none of it"** | nothing of it gets built — and it goes into `docs/app.md` under the decisions either way, because a rejected alternative that was not written down is one that gets proposed again three sessions later. For the second question the reason is sharper: it costs money on every use, so a "no" is an answer to a real cost rather than a failure to persuade |
+
+  **When** matters as much as whether: before the data model, because whether a
+  message can carry a picture is a column before it is a layout — and a
+  companion needs columns too, for the submission it reads and the subject its
+  turns hang on. **Once**, at that point — not again on every page afterwards. A
+  menu per page would be the same question asked six times, which trains people
+  to answer it without reading; later pages inherit the decision and only ask
+  again where they hand the customer something, or take something from them,
+  that the first decision did not cover.
+
+  **Trying things out is exempt**, on the same boundary as the SAAS rule in
+  `CLAUDE.md` → *What gets built here*. Somebody who asks for "Hello World" gets
+  Hello World, not a menu.
+
+- **End by naming the next skill and offering to start it.** A skill that stops
+  with "you could now…" leaves the user exactly where they were.
+
+- **The order of the four phases is an argument, not a habit.** Two of them are
+  asked about often enough to be written down. **Experience comes before
+  security**: `ux-gateway`'s findings change the interface, and a security pass
+  run before those changes is a pass on an app that no longer exists. And both
+  come **after** the payment step, because the moment they exist to protect — a
+  customer who has just paid, looking for proof that it worked — is not there
+  until there is a checkout. The phases themselves are DATA
+  (`scripts/dev/journey.mjs`), projected into `CLAUDE.md` and `README.md`; this
+  paragraph is why they sit in that sequence.
+
+## One report shape
+
+Five skills produce a verdict and write it down: the four gateways
+[`ux-gateway`](../.claude/skills/ux-gateway/SKILL.md),
+[`security-gateway`](../.claude/skills/security-gateway/SKILL.md),
+[`performance-gateway`](../.claude/skills/performance-gateway/SKILL.md) and
+[`compliance-check`](../.claude/skills/compliance-check/SKILL.md), plus
+[`operate`](../.claude/skills/operate/SKILL.md) for the round on an app that is
+already live. `user-onboarding` writes one too.
+
+**This is the shape, once, and every one of them points here for it.** What stays
+with a skill is what is genuinely its own: the names of its checks, a section the
+others do not have, the name of its accepted register. The rest was five copies
+of one page, which is the drift this whole file argues against.
+
+### Where the file goes
+
+`docs/reports/<kind>-YYYY-MM-DD.md`, where `<kind>` is `security`, `ux`,
+`performance`, `compliance`, `operations` or `onboarding`. **A second run on the
+same day adds `-2`, then `-3`.** That suffix is not decoration: the code that
+reads these names accepts a date and an optional `-N` and nothing else
+(`scripts/dev/journey.mjs`, `scripts/dev/operations.mjs`,
+`scripts/security/scope.mjs`), so a report named any other way is a report the
+app cannot see. Create the folder if it is not there.
+
+**Every run writes one, whether it found anything or not** — that is what makes
+"have we already done that?" answerable in three months.
+
+🚨 **The report's NAME is the whole record.** Nothing else is written down: no
+`.dev/` file, no config key, no table. `node run.mjs journey` and the session
+greeting read the newest name per kind and never open the file, so a second place
+to record that a run happened would be a second truth to keep in step. The
+`<kind>-accepted.md` register beside them carries no date at all, deliberately —
+it is not a run, and the readers above refuse it by name for that reason.
+
+### The header, and the tally under it
+
+```markdown
+Checks: secrets, deps, code, pay, api        (host: skipped — not deployed yet)
+App:    local, commit a1b2c3d
+
+🚨 CRITICAL 0   ❌ HIGH 2   ⚠️ MEDIUM 3   ℹ️ LOW 1   ✅ accepted 2
+```
+
+- **`Checks:`** names every check of that skill, and **every one that did not run
+  in full says so with its reason** — *scoped*, or *skipped because …*. A check is
+  never silently omitted, and never left to be inferred from an absence.
+- **One line says where this ran, and carries the commit.** `App:` in most of
+  them; `performance-gateway` calls the same line `Measured:`, because there it
+  also carries the build and the load generator's own pessimism.
+- **The tally counts findings only.** An accepted entry is not in it, and neither
+  is anything under `## Worth a look`.
+- 🚨 **Anything that qualifies the whole report sits ABOVE the tally** — a scope,
+  a count of what could not be looked at. A reader who meets `🚨 0 ❌ 0` first has
+  formed an opinion by the time the qualification arrives, and no amount of
+  correct text underneath takes it back.
+
+### The sections, in this order
+
+| | |
+|---|---|
+| `## Findings` | each in the four-line format below, CRITICAL first |
+| `## Fixed in this run` | what was PROVEN fixed, with the measurement or the file |
+| `## Open` | what stays, and why — a decision, a cost, a dependency, an unproven fix |
+| `## Worth a look` | the low-confidence observations. No severity, no count |
+| `## Accepted …` | from the register, with the reason and who accepted it |
+
+A skill ADDS a section where it has something the others do not — `## Numbers`
+above the findings in `performance-gateway`, `## Not covered by this run` after
+them in a scoped security pass, `## Not checked` in `operate`, `## Scope` first in
+`compliance-check`. It does not reorder the five above, and it does not rename one
+to mean something slightly different.
+
+### The severity ladder
+
+🚨 **CRITICAL**, ❌ **HIGH**, ⚠️ **MEDIUM**, ℹ️ **LOW** — four rungs, the same four
+everywhere, always with the emoji, because a report is skimmed before it is read.
+
+**What each rung MEANS is the skill's own**, and deliberately so: money reachable
+right now, an app that falls over, a customer who cannot reach what they paid for
+and something that is unlawful today are four different sentences about one word.
+So each skill states its own four meanings — and none of them invents a fifth
+rung, renames one, or grades on a number out of ten.
+
+**Where a command already rated something, keep its rating.** `node run.mjs
+ux-check`, `security-check` and `legal-check` rate on this same ladder on purpose,
+so a severity invented beside one of them is a second opinion about a measurement.
+
+### The four lines of a finding
+
+```
+🚨 CRITICAL — Admin action reachable without an owner check
+   Where:    app/dashboard/admin/users/actions.ts:34
+   Why:      A server action is an HTTP endpoint. Any signed-in member can POST
+             to it and change another member's role.
+   Fix:      requireOwner() at the top of the action, before the first query.
+   Evidence: The action calls auth() but never checks session.user.role.
+```
+
+*Where · Why · Fix · Evidence*, four lines, always in that order.
+
+- **Where** is a file and a line, a route, or the page you opened.
+- **Why** says what somebody gets out of it, or what it costs them, in plain
+  words. The name of a category is not a reason: "Broken Function Level
+  Authorization", "poor affordance" and "GDPR non-compliance" are labels.
+- **Fix** is a change somebody can make, not a principle.
+- **Evidence** is what you actually saw or measured.
+
+**Only report what you can show.** A finding needs a code path you read, a
+request you sent, a page you opened or a number you measured; what counts as
+showable in a given domain is that skill's own sentence. Anything resting on an
+assumption goes into `## Worth a look` — no severity, no count. A confident wrong
+finding costs the user an afternoon and teaches them to ignore the next report.
+
+### Accepted is not the same as fixed
+
+Some findings are deliberate. Rather than rediscovering them every run they go
+into an undated register beside the reports, `docs/reports/<kind>-accepted.md`:
+
+```markdown
+| Finding | Where | Why accepted | By | Date | Review |
+|---|---|---|---|---|---|
+| Rate limiter is per process | lib/rate-limit.ts | single instance for now | Anna | 2026-07-26 | when scaled out |
+```
+
+- An accepted entry is **not counted** in the tally, and appears in its own
+  section of every later report.
+- **Only the user accepts one — never you, and never silently.** Bringing a
+  finding to them as a decision is the job. Writing the row yourself is not, and
+  it is the cheapest way there is to make a number go away without fixing
+  anything.
+- An entry with no written reason is an exemption nobody can name.
+- 🚨 **A CRITICAL is not accepted.** If somebody wants to accept one, that is the
+  moment to say plainly what it means.
+- When the `Review` condition has come true — the app was scaled out, the date has
+  passed — it is an ordinary finding again.
+- **A skill may ADD a column its domain needs, or make one of these six stricter,
+  and then it says why in one sentence.** `performance-gateway` carries the
+  measured value and the accepted one, because there the acceptance covers a
+  number rather than a route; `compliance-check` insists on a named person and a
+  calendar date, because a legal position expires with the law. What it does not
+  do is drop one of the six, or keep a name while quietly meaning something else
+  by it.
+
+### Two columns, and why the second one has to exist
+
+🚨 **A check that could not look is neither a pass nor a finding, and it needs a
+column of its own.** `operate` is the sharpest form of it: `Checked:` and
+`Not checked:` are two separate header lines, the second carrying its count, and
+the closing sentence is never "✓ clean" while anything is in the second list.
+
+**It is a family, not a rule of one skill.** Every measuring thing in this app
+says the same sentence in its own words, and all of them mean *a refusal is not a
+silence*: `smoke`'s *"9 protected page(s) NOT checked"* — which `CLAUDE.md` →
+*Never ship a broken page* names outright as a line that must not be read as a
+pass — `kb-check`'s unreachable store, `module remove`'s *"I could not look"*,
+`content-check`'s module that cannot answer, and `ux-check`, where green means
+**counted**, not good.
+
+A tick for a question nobody asked is the worst answer available, because it is
+the only one nobody ever goes back to.
+
+### Then say it out loud
+
+**Three or four sentences, ending in a straight yes or no.** What was found, what
+was fixed, what is still open — and then the one question the run exists to
+answer, as *"yes"* or *"no, because X"*: can this go live, would you put it in
+front of a paying stranger, will it hold at a hundred people.
+
+Never a summary of the report. The spoken sentence is the one people act on, and
+it carries none of the report's qualifications unless it says them itself — which
+is why a scoped pass names its scope there too, and a round with a *not checked*
+list says so there before it says anything that sounds clean.

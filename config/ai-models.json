@@ -1,0 +1,27 @@
+{
+  "_comment": "Which provider and which model runs each job. A call in the code names a TASK ('chat'), never a model — so you change what runs here, without touching code. Tasks are declared in lib/ai/task-rules.mjs; a task with no entry below inherits 'default'. Check it with: node run.mjs ai-check. Details: docs/ai-providers.md.",
+  "_autoComment": "\"auto\" means: run on whichever provider key is in the .env — put ONE of ANTHROPIC_API_KEY, OPENAI_API_KEY, GEMINI_API_KEY, MISTRAL_API_KEY or OPENROUTER_API_KEY there and the AI works, on that company's current default model (lib/ai/providers/ids.mjs). Name a company instead as soon as you have chosen one: a named binding is obeyed exactly as written and is never swapped for another. Naming a company means naming its 'model' too, and usually its 'providerOptions' — those three travel together and are not portable between companies.",
+  "default": {
+    "provider": "auto",
+    "model": "auto",
+    "maxTokens": 2000
+  },
+  "tasks": {
+    "chat": {
+      "provider": "auto",
+      "model": "auto",
+      "maxTokens": 4000
+    },
+    "image": {
+      "_comment": "Producing a picture. Two of the five companies cannot — Anthropic makes no images at all, and Mistral only through an agent detour this template does not take. So \"auto\" here means \"whichever of OpenAI, Gemini or OpenRouter you have a key for\", and if your only key is Anthropic's, node run.mjs ai-check says so by name instead of failing at your first picture. There is no maxTokens: images are billed per picture.",
+      "provider": "auto",
+      "model": "auto"
+    },
+    "companion": {
+      "_comment": "Working alongside your customer — reading what they submitted, walking them through a course or a challenge, checking a plan before they commit to it. The call shape is askCompanion() in modules/companion/companion.ts (the companion is a MODULE — `node run.mjs module add companion` puts it in the tree; this task id is core vocabulary and is listed by ai-check in every app); what calls it is your app. It has its own entry rather than inheriting 'default' so that what your companion costs is separable from what support costs on the AI-costs page — spend is grouped by task id. Bind it to another company here and no code changes. maxTokens is higher than chat's because a companion is usually reading something a customer wrote rather than answering a typed question.",
+      "provider": "auto",
+      "model": "auto",
+      "maxTokens": 4000
+    }
+  }
+}

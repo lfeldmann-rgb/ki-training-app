@@ -1,0 +1,70 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if ! command -v node > /dev/null 2>&1; then echo '[Setup: blocked — node. Node.js is not installed on this machine, so the greeting below could not run. Run the skill setup-machine BEFORE writing any code.]'; fi"
+          },
+          {
+            "type": "command",
+            "command": "node scripts/dev/session-start.mjs"
+          }
+        ]
+      },
+      {
+        "matcher": "compact|resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/dev/session-start.mjs --after-compact"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Read|Bash|Agent",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/dev/hooks/read-guard.mjs"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/dev/hooks/language-guard.mjs --prompt"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/dev/hooks/language-guard.mjs --post"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node scripts/dev/hooks/language-guard.mjs --stop"
+          }
+        ]
+      }
+    ]
+  }
+}

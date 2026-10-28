@@ -1,0 +1,23 @@
+# Files that are gitignored but still have to be in a new worktree.
+#
+# Claude Code puts every parallel session in its own git worktree (the Code tab
+# of the desktop app does it for every new session). A worktree is a fresh
+# checkout, so gitignored files are not in it — and without .env the app does
+# not start there. Everything listed here is copied along.
+#
+# Syntax is .gitignore syntax. Only files that match AND are gitignored are
+# copied, so nothing that is in the repo anyway gets duplicated.
+#
+# 🚨 Nobody loads this file here, and that is known. It is read by the agent
+# program when it opens a worktree, and there is no way to ask that program
+# whether it accepted what is below — so nothing in this repository verifies it.
+# Said out loud on purpose: an unchecked file WITHOUT that sentence is a trap,
+# which is what `.gitleaks.toml` was for a year (`scripts/foreign-config.test.ts`).
+
+.env
+.env.local
+
+# Deliberately NOT in here: .dev/ — that is the running app's scratch state
+# (its port, its log). A second session needs its own, not a copy of the first
+# one's. The database is not a file either; it runs in Docker and all sessions
+# share it (docker-compose.yml).

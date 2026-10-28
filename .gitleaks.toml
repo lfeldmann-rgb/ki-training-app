@@ -1,0 +1,91 @@
+# Copyright (c) 2026 Digistore24 Inc, St. Petersburg, USA
+# SPDX-License-Identifier: MIT
+
+# gitleaks — configuration for secret scans.
+#
+# The default rules stay fully active; all that is here is one single,
+# justified exception.
+[extend]
+useDefault = true
+
+# The built-in Digistore24 developer key is not a secret: it carries no rights
+# to any account, it only identifies the application to
+# requestApiKey/retrieveApiKey — the role of an OAuth client ID. The
+# rights-bearing API key comes into existence only once the merchant grants
+# access in the browser, and after that it lives exclusively in their local .env.
+# Full reasoning: lib/digistore/config.mjs (DIGISTORE_DEVELOPER_KEY).
+#
+# The paths are the files that spell the VALUE out. connect-api-key.mjs only
+# imports it and was the only path listed here for a while — a path exemption
+# pointing at the importer excuses nothing, which is why the file the value is
+# actually in now leads the list. `scripts/security/patterns.mjs` carries it as
+# the allowlist entry of `node run.mjs security-check`, so the two agree by
+# construction rather than by luck.
+#
+# 🚨 `[[allowlists]]`, not `[[rules.allowlist]]`, and that is a fix rather than a
+# preference. Measured against gitleaks 8.30.1 on 2026-08-10: the second spelling
+# does not load at all —
+#   FTL Failed to load config  error="1 error(s) decoding:
+#                                     * 'Rules[0].AllowList' expected a map, got 'slice'"
+# — so a scan started with `--config` REFUSED to run, which for
+# `node run.mjs security-check`'s history rung meant a `⏭ NOT ASKED` on every
+# machine that had gitleaks. `[[allowlists]]` is the global allowlist and applies
+# to every rule, which is what this exemption always meant. Re-measured after the
+# change: with default rules the key is reported in lib/digistore/config.mjs
+# (`generic-api-key`), with this file it is not — so the exemption still does
+# something, which is the half worth checking.
+# ⚠️ `condition = "AND"` since 2026-09-10. Before that gitleaks ORed the value
+# and the paths, which made those three files a BLANKET exemption — a real key
+# pasted into `config.mjs` would have been invisible. That is exactly the
+# mistake `scripts/security/patterns.mjs` describes at its own counterpart.
+# Needle probe 2026-09-10: the developer key stays silent, a `ghp_` token on the
+# next line of the same file is reported.
+[[allowlists]]
+description = "Eingebauter DS24-Developer-Key (Client-ID-Rolle, keine Rechte)"
+condition = "AND"
+regexes = ["1706550-aASzoSnqcChueKmMDBvcwqUWvOqnfhXTncfkTN6X"]
+paths = [
+  '''lib/digistore/config\.mjs''',
+  '''scripts/ds24/connect-api-key\.mjs''',
+  '''scripts/security/patterns\.mjs''',
+]
+
+# ── The eleven other values `generic-api-key` matches ─────────────────────
+#
+# Measured 2026-09-10 over this tree's whole history: after the stamp exemption
+# above, exactly eleven distinct values were left, and **none of them is a
+# secret**. Three are identifiers or prose the rule should never have matched;
+# eight are test fixtures whose invented-ness is visible on the face of them.
+#
+# ⚠️ The list binds VALUES, not paths, and that is deliberate.
+# `cookie-namen.test.ts` no longer exists — a path entry would have gone on
+# reporting the finding out of the history while exempting the file's real code.
+# The value is what was judged here.
+#
+# Re-measure when the list looks stale:
+#   gitleaks git . --config .gitleaks.toml --report-format json \
+#     --report-path /tmp/g.json && jq -r '.[].Secret' /tmp/g.json | sort -u
+[[allowlists]]
+description = "Identifiers, prose and test fixtures — eleven measured false positives"
+regexes = [
+  # Identifiers and prose: a column name from the first migration, a field name
+  # in a skill's documentation, two words out of a skill description.
+  '''^ds24_purchase_id$''',
+  '''^ds24PurchaseId$''',
+  '''^IPN/signature$''',
+  # The redacted placeholder in the IPN test vectors (lib/digistore/ipn-vectors.json).
+  # That file is byte-identical to the Skill Pack's copy and must not change, so
+  # the value is exempted here rather than rewritten there.
+  '''^ABCDEFGHI1234$''',
+  # The two examples `redactLine()` proves itself against. A redaction test with
+  # no credential-shaped input tests nothing.
+  '''^ds24api_AbC-123_xyz$''',
+  '''^sk-proj-AbCdEfGh12345678$''',
+  # Test fixtures. Every value either counts up in plain sight or says in its
+  # own name what it is.
+  '''^0123456789abcdef0123456789abcdef$''',
+  '''^diagnostics-secret-0123456789abcdef$''',
+  '''^prod-secret-0123456789abcdef$''',
+  '''^abcdef123456$''',
+  '''^d8e5ee724d6e168d53bbdd045cbadac6$''',
+]

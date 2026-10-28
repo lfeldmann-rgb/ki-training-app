@@ -1,0 +1,691 @@
+// Copyright (c) 2026 Digistore24 Inc, SPDX-License-Identifier: MIT
+
+// The dependency decisions that cannot be written down where they are made.
+//
+// `package.json` and `package-lock.json` are JSON: they hold no comments. So an
+// `overrides` entry looks like an arbitrary version to whoever reads it next,
+// and the two most likely things to happen to it are that somebody deletes it as
+// noise or narrows it back into the shape that caused the noise. This file is
+// where the reasoning lives instead — the same arrangement `scripts/dev/fixes.json`
+// has, and for the same reason.
+//
+// 🚨 **That is now a checked property, not a convention.** The `posture` rung of
+// `node run.mjs security-check` reads THIS FILE'S TEXT and reports an `overrides`
+// entry whose package name it cannot find here — so every key in that block owes
+// a paragraph below. Two things follow. It reads the file with its comments
+// INTACT (the reasons ARE comments; `scripts/security/rungs/posture.mjs` says why
+// at the call site), and a reason that cannot be recovered from git history says
+// **that**, plus what was measured, rather than an invented rationale.
+//
+// Five overrides are pinned here, one measurement, one refusal, one
+// non-decision — one field that is not an override at all (`allowScripts`,
+// section 6), and one deprecation accepted by name with its expiry measured
+// (`eslint`, section 7).
+//
+// ── 6. `allowScripts` — the install scripts, decided rather than defaulted ──
+// npm 11.19 BLOCKS a dependency's `install`/`postinstall` by default and ends
+// the install with a list of the packages whose scripts it skipped, so that
+// somebody reviews them. Until 2026-09-10 nobody had: a customer's very first
+// command printed seven lines of
+// `npm warn install-scripts … not yet covered by allowScripts`, and
+// `make deploy-local-check` — whose whole question is *what does npm SAY on a
+// customer's first install* — was red on it.
+//
+// The answer is `false` for all five: DENY, which is what npm already does by
+// default. It is written down so that the default is a decision rather than an
+// accident, and so the customer's install says nothing. Nothing is lost by it —
+// the four that ship on Linux have been skipped since npm changed, and
+// `make check`, `deploy-test` and the whole suite were green throughout;
+// esbuild and @swc/core resolve their platform binaries through optional
+// packages rather than through a postinstall.
+//
+// 🚨 `fsevents` is in the list although it never installs here. It is
+// `os: ["darwin"]`, so a Linux measurement cannot see it — and a template that
+// must behave the same on three systems (`docs/portability.md`) would otherwise
+// print on a Mac exactly the warning this field exists to stop. The list below
+// is derived from the LOCKFILE rather than from what one machine installed,
+// which is what makes that hold.
+//
+// ⚠️ Approving one later is a real decision, not a formality: an install script
+// runs with the developer's own permissions before a line of this app has been
+// read. Whoever needs one writes `true` AND a line
+// `// APPROVED: <package> — <what its script does and why it must run>`,
+// which is what the test below looks for.
+//
+// ── 1. The esbuild override is a FLOOR, not a pin ───────────────────────────
+// It exists because GHSA-67mh-4wv8-2f99 let esbuild's development server answer
+// cross-origin requests, fixed in 0.25.0. Removing it is not an option:
+// drizzle-kit reaches esbuild through @esbuild-kit/core-utils, whose own range
+// goes back into 0.18.
+//
+// It was written `^0.25.12`, which is `>=0.25.12 <0.26.0` — a pin. vite 8 (via
+// vitest) and tsx 4 both ask for `^0.28`, so every `npm install` printed a wall
+// of `npm WARN ERESOLVE overriding peer dependency` at somebody who had just
+// deployed the app, and npm lost the argument anyway: `npm ls esbuild` reported
+// two `invalid` entries. A floor says what was always meant and prints nothing.
+//
+// ── 1a. postcss and nodemailer — the older copies somebody else brings ──────
+// Both come from the same day (`1c774a4`): a freshly generated app reported 16
+// vulnerabilities, one of them critical, on its first `npm install`.
+// `npm audit fix --force` was refused there and is refused here — it wanted to
+// downgrade `next` to 9.3.3. What was done instead was to raise the direct
+// dependencies (vitest 2→4, drizzle-orm 0.38→0.45, drizzle-kit 0.30→0.31,
+// nodemailer 6→9, next-auth beta.25→beta.32) and then to override the two
+// packages that arrive a second time, older, underneath somebody else:
+//
+//     postcss     `next` asks for the EXACT version 8.4.31, and @tailwindcss/postcss
+//                 and vite ask for ^8.5.x. Without the override npm is entitled to
+//                 nest next's own copy, and that copy is in what the app SHIPS —
+//                 the bundle a customer's visitors load. Raising the direct
+//                 devDependency alone does not reach it.
+//     nodemailer  @auth/core and next-auth declare it as a PEER at
+//                 `^7.0.7 || ^8.0.5`, while this app asks for ^9. The override is
+//                 what makes that one resolution instead of an ERESOLVE block on
+//                 every install — and `make deploy-local-check` is the gate that
+//                 reads those blocks, so it is not a cosmetic difference.
+//
+// Neither is a floor written `>=`, and that is deliberate rather than an
+// oversight: unlike esbuild, nothing here asks for a HIGHER major of either, so
+// the caret prints nothing. If one ever does, the esbuild block above is the
+// worked example of what to do about it.
+//
+// ── 1b. nanoid — a high advisory in the shipped bundle ─────────────────────
+// `cd2c9e4`. GHSA-2v37-7h3g-55p8 in `nanoid <3.3.17`, severity high, and PROD:
+// it reaches the tree transitively under `postcss` under `next`, so it is in the
+// bundle a customer-app's visitors load. Nothing regressed here — 3.3.16 was
+// already in the lockfile and the advisory was new.
+//
+// Fixed as an OVERRIDE rather than as a direct dependency on purpose:
+// `npm install nanoid@…` would have written it into `dependencies`, and this app
+// never imports nanoid — a direct dependency on a package nobody imports is a
+// claim the next tidy-up rightly deletes. `npm audit --omit=dev --audit-level=high`
+// went back to `found 0 vulnerabilities`, which is the question that takes no
+// allowance at all.
+//
+// ── 1c. sharp — two high libvips findings out of every install ─────────────
+// `aa9993e`: sharp arrived transitively (next declares it as an optional
+// dependency at ^0.34.5) and the libvips CVEs in that range came out of every
+// `npm install` as two HIGH findings. The override raised it to ^0.35.0 and
+// `npm audit` reported 0. `71696e6` later made sharp a DIRECT dependency as well
+// — `createMedia()` uses it to write the narrower image variants — deliberately
+// at the same range, so the two cannot drift apart. next's own optional ^0.34.5
+// is still in the lockfile, which is what the override is still holding down.
+//
+// ── 2. brace-expansion must carry the expansion cap ────────────────────────
+// GHSA-mh99-v99m-4gvg: a brace bomb expands without bound and takes the process
+// down with an out-of-memory crash. It reaches this project only through eslint,
+// so it never ships — but a lockfile is what a fresh clone installs, and there
+// is no reason to hand anybody the version that dies. Measured, not assumed:
+//
+//     1.1.16 -> heap out of memory      (what this lockfile used to pin)
+//     1.1.18 -> returns a capped list
+//
+// The 5.x floor had no such line for a long time, and two other files asserted
+// `5.0.9` in prose while this one enforced `5.0.8` — consistent only because a
+// floor admits everything above it, and because the lockfile happens to resolve
+// 5.0.9. Measured 2026-08-10 (Node v22.22.1, `--max-old-space-size=512`):
+//
+//     5.0.7 -> FATAL ERROR: CALL_AND_RETRY_LAST Allocation failed -
+//              JavaScript heap out of memory
+//     5.0.8 -> returns a capped list (2 entries, ~3.9 MB)
+//
+// ⚠️ **The obvious bomb does not separate them, and that is why nobody had an
+// answer.** `"{a,b}".repeat(30)` is capped by 5.0.6 and 5.0.7 as well: 5.x has
+// carried `EXPANSION_MAX` (100000 results) since before either. What 5.0.8 adds
+// is `EXPANSION_MAX_LENGTH` (4000000 characters), so the bomb that tells them
+// apart is one whose result COUNT is small and whose total LENGTH is not —
+// `("{" + "a".repeat(100000) + ",b}").repeat(20)`. 5.0.7 dies on it; 5.0.8
+// returns two strings. **5.0.8 is the floor**, and `5.0.9` was only ever the
+// version this tree happened to resolve.
+//
+// The floors are per major because the fix was backported: 1.1.18 and 5.0.8.
+// An unvetted major fails this test rather than passing quietly — the check is
+// "somebody measured this one", and nobody has measured 3.x or 4.x here.
+//
+// ── 3. minimatch and brace-expansion may NEVER be overridden ───────────────
+// This is the load-bearing one, because it forbids the fix that looks best.
+//
+// For a long stretch of this template's life `npm audit` reported the
+// brace-expansion advisory above once per path through eslint-config-next — one
+// advisory, counted per path, which is why the summary line read like several
+// problems. It never shipped: `npm audit --omit=dev` was clean
+// throughout, which is the question the skill `security-gateway` §5 already asks.
+// It persisted because the advisory range is written `<=5.0.7` across all
+// majors, so the 1.x backport that fixes the bug sits inside it. It is not
+// currently reported here; why it stopped is not measured, and nothing in this
+// decision depends on whether it comes back.
+//
+// `"overrides": { "minimatch": "^10" }` makes any such finding go away. It also
+// breaks the linter. minimatch@10's CommonJS build exports an OBJECT and sets
+// `__esModule: true` with no `default`; eslint-plugin-import,
+// eslint-plugin-jsx-a11y and eslint-plugin-react all do
+// `_interopRequireDefault(require('minimatch'))` and end up calling `undefined`:
+//
+//     TypeError: minimatch is not a function
+//     Rule: "react/forbid-component-props"
+//
+// `npm run lint` in this project stays GREEN, because eslint-config-next enables
+// none of the affected rules. That is exactly what makes it dangerous: it ships
+// as a landmine for the first customer who switches one on. The same reasoning
+// rules out overriding brace-expansion to `^5` — 5.x's CJS export is
+// `{ EXPANSION_MAX, EXPANSION_MAX_LENGTH, expand }`, where minimatch@3 calls the
+// module itself.
+//
+// A clean `npm audit` is not worth a crash in somebody else's app. If the two
+// packages ever have to be forced, the way through is upstream —
+// eslint-config-next moving its plugins off minimatch@3 — not an override here.
+//
+// ── 4. The two deprecation warnings are not a decision at all ──────────────
+// `docs/troubleshooting.md` → *What the first install prints* already answers
+// them for whoever reads them on a first install, and that answer is not
+// repeated here. What is here is the part prose cannot do: the answer is
+// "@esbuild-kit is drizzle-kit's chain, not ours", and nothing checked that it
+// STAYS that. A direct dependency on either, or a second package pulling them
+// in, turns a line somebody was told to ignore into one they should not — and
+// it would arrive looking exactly like the line before it.
+//
+// The check deliberately does not fail when drizzle-kit drops them: that is the
+// day the warnings stop, and a customer's suite going red because upstream
+// improved is noise they cannot act on. Then this block is stale prose, and
+// deleting it is the whole job.
+//
+// ── 5. The app's own IDENTITY, which the lockfile carries a copy of ────────
+// The one block here that is not about a dependency at all. It lives in this
+// file because this is where the two JSON files are already read as a PAIR, and
+// a second reader of them would be a second place to keep in step. It is not an
+// `overrides` reason and the posture rung is not looking for it.
+//
+// `package.json` says what this app is CALLED and what version it is.
+// `package-lock.json` repeats each of those **twice** — once at the top level
+// and once in `packages[""]` — and npm writes those four copies only when npm
+// itself runs. So a field changed by hand, or by anything that is not an
+// install, leaves a lockfile describing the app before last. It happened twice
+// in a row here for `version` (0.22.0 through 0.23.0 to 0.24.0) and was
+// straightened out in passing rather than caught.
+//
+// **Nothing else in this product can catch either of them**, which is why the
+// assertion is worth its lines. Measured 2026-08-12, in a throwaway project
+// outside this repo, for `version` and `name` alike and for each of the four
+// sites separately:
+//
+//     npm ci --dry-run   exit 0, silent  (npm 9.2.0 and npm 11.19.0 alike)
+//     npm install        exit 0, silent — and it REWRITES the field in place
+//
+// The first is what `make deploy-local-check` asks, so the release gate whose
+// job is "do these two files still agree" does not consider this a
+// disagreement; npm's in-sync check is about dependencies (a package missing
+// from the lockfile does exit 1 there — the control ran, both times). The second
+// is worse than silent: the deploy folder repairs its own copy on the way, so
+// the shipped file stays wrong and every install after it looks healthy.
+//
+// 🚨 **`name` is checked too, and it is NOT the same defect wearing another
+// field.** The reason it was left out when `version` went in was a good one —
+// nobody renames an app in the release rhythm, so the stale-copy story does not
+// apply — and that is exactly what makes the assertion cheap and the FAILURE
+// worth reading: a lockfile whose name is not this app's was almost certainly
+// not written for this app at all. This template is COPIED, wholesale, into
+// every customer's repo; a lockfile carried in from another project, or restored
+// from the wrong backup, is a resolved dependency tree for a different
+// `package.json`, and the two silences above mean nothing anywhere would say so.
+// The two fields therefore share one list and one count guard, and nothing else:
+// their messages differ, because "run npm install and commit the lockfile with
+// the bump" is the right advice for one of them and the wrong advice for the
+// other.
+import { describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import path from "node:path";
+
+const ROOT = path.join(import.meta.dirname, "..");
+const json = (rel: string) => JSON.parse(readFileSync(path.join(ROOT, rel), "utf8"));
+
+const pkg = json("package.json");
+const lock = json("package-lock.json");
+
+/** The esbuild dev-server CVE was fixed in 0.25.0; 0.25.12 is where we came in. */
+const ESBUILD_FLOOR = "0.25.12";
+
+/** Majors of brace-expansion somebody has measured, and the version that caps. */
+const BRACE_EXPANSION_FLOORS: Record<string, string> = { "1": "1.1.18", "5": "5.0.8" };
+
+/**
+ * The overrides whose reason names a specific advisory, and the version that
+ * closes it — sections 1b and 1c above.
+ *
+ * Only these two: `esbuild` has its own block below (it is a floor, and the
+ * shape of the range is the whole point there), and `postcss` / `nodemailer` are
+ * not about one advisory but about an older copy somebody else brings, which is
+ * a state of the tree rather than a version anybody can name. A reason with no
+ * assertion is still the deliverable — the posture rung reads this file's TEXT.
+ */
+const ADVISORY_FLOORS: Record<string, { floor: string; advisory: string }> = {
+  nanoid: { floor: "3.3.17", advisory: "GHSA-2v37-7h3g-55p8, high, and in what the app SHIPS" },
+  sharp: { floor: "0.35.0", advisory: "the libvips CVEs next's own ^0.34.5 range sits in" },
+};
+
+/** Packages that must never appear in `overrides` — see decision 3 above. */
+const NEVER_OVERRIDE = ["minimatch", "brace-expansion"];
+
+/** The packages whose deprecation notice a first install prints — see 4 above. */
+const DEPRECATED_TRANSITIVES = ["@esbuild-kit/esm-loader", "@esbuild-kit/core-utils"];
+
+/** The only package that may ask for them (esm-loader asks for core-utils itself). */
+const DEPRECATED_VIA = "drizzle-kit";
+
+/**
+ * The FOUR places `package-lock.json` keeps a copy of this app's own identity —
+ * its `name` and its `version`, each written twice.
+ *
+ * All four, deliberately: npm writes them together, so a reader that knows about
+ * some of them is this same omission again in a year. They are read through
+ * closures rather than by path strings so that a lockfile without `packages[""]`
+ * at all answers `undefined` instead of throwing — that state has its own
+ * message below, and it is a failure rather than a silence.
+ *
+ * `field` is what each site is compared against in `package.json`, and it also
+ * picks which sentence a failure gets: a stale `version` is a forgotten
+ * `npm install` after a bump, and a wrong `name` is a lockfile from somewhere
+ * else. Same mechanism, same silence from npm, different thing to go and do.
+ */
+const LOCK_IDENTITY_SITES: {
+  field: "name" | "version";
+  where: string;
+  read: () => unknown;
+}[] = [
+  { field: "version", where: `the top-level "version"`, read: () => lock.version },
+  {
+    field: "version",
+    where: `packages[""].version`,
+    read: () => (lock.packages as Record<string, { version?: unknown }> | undefined)?.[""]?.version,
+  },
+  { field: "name", where: `the top-level "name"`, read: () => lock.name },
+  {
+    field: "name",
+    where: `packages[""].name`,
+    read: () => (lock.packages as Record<string, { name?: unknown }> | undefined)?.[""]?.name,
+  },
+];
+
+/** What a mismatch at one site means, and what to do about it. */
+const IDENTITY_ADVICE: Record<"name" | "version", string> = {
+  version:
+    `A version bump does not travel into the lockfile by itself — npm copies it there ` +
+    `the next time npm runs, and nothing else does. Run "npm install" in template/ ` +
+    `(no arguments — with the tree already installed it re-resolves nothing) and commit ` +
+    `package-lock.json together with the bump. It writes both places, so editing one by ` +
+    `hand is this same defect again.`,
+  name:
+    `Nobody renames an app in the release rhythm, so this is the less likely reading and ` +
+    `the more serious one: a lockfile whose name is not this app's is a resolved ` +
+    `dependency tree for a DIFFERENT package.json — one copied in from another project, ` +
+    `or restored from the wrong backup. Do not fix it by editing the field. Check where ` +
+    `this lockfile came from, and if the answer is "this app", regenerate it with ` +
+    `"npm install" in template/ and read the diff.`,
+};
+
+/** `1.2.3` → `[1, 2, 3]`. Every version here is a plain triple. */
+function triple(version: string): [number, number, number] {
+  const parts = version.split(".").map(Number);
+  if (parts.length !== 3 || parts.some(Number.isNaN)) {
+    throw new Error(`not a plain version: ${version}`);
+  }
+  return [parts[0], parts[1], parts[2]];
+}
+
+/**
+ * The version a `">=x.y.z"` range admits from below, or null for anything else.
+ *
+ * Deliberately strict rather than forgiving: a range this cannot read is a range
+ * whose lower bound nobody can state, and reporting that is the whole job here.
+ */
+function floorOf(range: string): string | null {
+  return /^>=\s*(\d+\.\d+\.\d+)$/.exec(range.trim())?.[1] ?? null;
+}
+
+/** True when `version` is at or above `floor`. */
+function atLeast(version: string, floor: string): boolean {
+  const [a, b, c] = triple(version);
+  const [x, y, z] = triple(floor);
+  return a !== x ? a > x : b !== y ? b > y : c >= z;
+}
+
+/**
+ * The lockfile paths of every package that ASKS for `name`.
+ *
+ * The root entry is `""`, so a direct dependency shows up as an empty path —
+ * which is exactly the case the deprecation check wants to catch.
+ */
+function requestedBy(name: string): string[] {
+  return Object.entries(lock.packages as Record<string, Record<string, unknown>>)
+    .filter(([, entry]) =>
+      ["dependencies", "devDependencies", "optionalDependencies"].some(
+        (field) => (entry[field] as Record<string, string> | undefined)?.[name] !== undefined,
+      ),
+    )
+    .map(([where]) => where);
+}
+
+/** `node_modules/a/node_modules/b` → `b`; the root entry `""` → `""`. */
+function packageNameAt(where: string): string {
+  return where === "" ? "" : (where.split("node_modules/").pop() as string);
+}
+
+/** Every resolved copy of one package in the lockfile, with the path it sits at. */
+function resolved(name: string): { where: string; version: string }[] {
+  return Object.entries(lock.packages as Record<string, { version?: string }>)
+    .filter(([where]) => where.split("node_modules/").pop() === name)
+    .map(([where, entry]) => ({ where, version: entry.version ?? "" }))
+    .filter((entry) => entry.version !== "");
+}
+
+describe("the esbuild override", () => {
+  it("is still there — drizzle-kit's chain reaches back into 0.18 without it", () => {
+    expect(pkg.overrides?.esbuild).toBeTruthy();
+  });
+
+  it("is a floor, not a pin — a caret range is what printed ERESOLVE at every install", () => {
+    const range: string = pkg.overrides.esbuild;
+    const floor = floorOf(range);
+    expect(
+      floor,
+      `overrides.esbuild is "${range}". It has to be a floor (">=x.y.z"): vite and tsx ` +
+        `ask for ^0.28, and a caret or exact range makes npm print ERESOLVE on every ` +
+        `install and leaves the tree invalid. See the header of this file.`,
+    ).not.toBeNull();
+    expect(
+      atLeast(floor as string, ESBUILD_FLOOR),
+      `the floor is ${floor}, below ${ESBUILD_FLOOR} — the dev-server CVE ` +
+        `(GHSA-67mh-4wv8-2f99) is what the override is for.`,
+    ).toBe(true);
+  });
+
+  it("permits every copy the lockfile actually resolved", () => {
+    // No fallback when the range is not a floor: a copy outside the declared
+    // override is what npm calls `invalid`, and checking it against a guessed
+    // floor instead would report a healthy tree while npm reports a broken one.
+    const floor = floorOf(pkg.overrides.esbuild);
+    expect(
+      floor,
+      `overrides.esbuild is "${pkg.overrides.esbuild}", so what it admits cannot be ` +
+        `checked against the lockfile here. Make it a floor (">=x.y.z").`,
+    ).not.toBeNull();
+    const copies = resolved("esbuild");
+    expect(copies.length).toBeGreaterThan(0);
+    for (const { where, version } of copies) {
+      expect(
+        atLeast(version, floor as string),
+        `${where} resolved esbuild@${version}, below the override's floor ${floor}. ` +
+          `npm would report this as "invalid" — regenerate package-lock.json.`,
+      ).toBe(true);
+    }
+  });
+});
+
+describe("brace-expansion", () => {
+  it("carries the expansion cap in every copy the lockfile resolved", () => {
+    const copies = resolved("brace-expansion");
+    expect(copies.length).toBeGreaterThan(0);
+    for (const { where, version } of copies) {
+      const major = String(triple(version)[0]);
+      const floor = BRACE_EXPANSION_FLOORS[major];
+      expect(
+        floor,
+        `${where} resolved brace-expansion@${version}, and nobody has measured ` +
+          `whether ${major}.x caps its expansion. Check it against a brace bomb and ` +
+          `add the floor to BRACE_EXPANSION_FLOORS.`,
+      ).toBeTruthy();
+      expect(
+        atLeast(version, floor),
+        `${where} resolved brace-expansion@${version}, below ${floor} — that version ` +
+          `dies of an out-of-memory crash on a brace bomb (GHSA-mh99-v99m-4gvg). ` +
+          `Regenerate package-lock.json.`,
+      ).toBe(true);
+    }
+  });
+});
+
+describe("the overrides that hold a named advisory out of the tree", () => {
+  it("resolved every copy at or above the version the reason names", () => {
+    for (const [name, { floor, advisory }] of Object.entries(ADVISORY_FLOORS)) {
+      expect(
+        pkg.overrides?.[name],
+        `overrides.${name} is gone. It is there for ${advisory} — read section 1b/1c ` +
+          `of this file's header before deciding it is noise.`,
+      ).toBeTruthy();
+
+      const copies = resolved(name);
+      // Non-vacuity: a package that has left the tree entirely would make the
+      // loop below pass by having nothing to iterate.
+      expect(copies.length, `nothing in the lockfile resolves ${name} any more`).toBeGreaterThan(0);
+      for (const { where, version } of copies) {
+        expect(
+          atLeast(version, floor),
+          `${where} resolved ${name}@${version}, below ${floor} — ${advisory}. ` +
+            `Regenerate package-lock.json.`,
+        ).toBe(true);
+      }
+    }
+  });
+});
+
+describe("the deprecation warnings a first install prints", () => {
+  it("is somebody else's chain — nothing here asks for @esbuild-kit itself", () => {
+    for (const name of DEPRECATED_TRANSITIVES) {
+      // Allowed askers: drizzle-kit, and the pair asking for each other. Anything
+      // else — this project, or a second package — is a new question, not the one
+      // docs/troubleshooting.md tells the reader to ignore.
+      const allowed = new Set([DEPRECATED_VIA, ...DEPRECATED_TRANSITIVES]);
+      const strangers = requestedBy(name)
+        .map(packageNameAt)
+        .filter((asker) => !allowed.has(asker));
+      expect(
+        strangers,
+        `${name} is deprecated, and ${strangers.map((s) => s || "this project").join(", ")} ` +
+          `now asks for it. Until today the answer to that warning was "not ours, ` +
+          `nothing to do" (docs/troubleshooting.md → What the first install prints). ` +
+          `That answer no longer covers this one — judge it, then either move off it ` +
+          `or say here why it stays.`,
+      ).toEqual([]);
+    }
+  });
+});
+
+// ── 7. `eslint@9` is deprecated, and stays until its plugins let it go ──────
+// Every 9.x prints `npm warn deprecated eslint@9.x: This version is no longer
+// supported` on a first install (measured on a fresh `npm ci`, 2026-10-22). The
+// obvious fix, `eslint@10`, is the one docs/troubleshooting.md already refuses:
+// `eslint-config-next` brings three plugins — react, jsx-a11y, import — whose
+// peer ranges stop at `^9`, so 10 trades one deprecation line for three
+// `ERESOLVE` blocks on the same install. Dev-only, never shipped. The factory's
+// deploy-local check accepts the line by name; THIS block is what ends the
+// acceptance: the day all three plugins admit ESLint 10, the assertion below
+// goes red and the entry — here, there, and the row in troubleshooting.md — goes.
+
+/** The plugins eslint-config-next pins that hold ESLint at 9. */
+const ESLINT_10_BLOCKERS = ["eslint-plugin-react", "eslint-plugin-jsx-a11y", "eslint-plugin-import"];
+
+/** Does one npm range (`^3 || ^4 || >=9`) admit ESLint major 10? */
+function admitsEslint10(range: string): boolean {
+  return range.split("||").some((part) => {
+    const m = /^\s*(\^|>=|~)?\s*(\d+)/.exec(part);
+    if (!m) return false;
+    const major = Number(m[2]);
+    if (m[1] === ">=") return major <= 10;
+    return major === 10;
+  });
+}
+
+describe("the eslint@9 deprecation a first install prints", () => {
+  it("is still held in place by eslint-config-next's plugins — otherwise drop it", () => {
+    const stillBlocking = ESLINT_10_BLOCKERS.filter((name) => {
+      const copies = Object.entries(lock.packages as Record<string, { peerDependencies?: Record<string, string> }>)
+        .filter(([where]) => packageNameAt(where) === name);
+      expect(copies.length, `${name} is not in the lockfile — did eslint-config-next drop it?`).toBeGreaterThan(0);
+      return copies.some(([, entry]) => !admitsEslint10(entry.peerDependencies?.eslint ?? ""));
+    });
+    expect(
+      stillBlocking,
+      "Every plugin that held ESLint at 9 now admits 10. Move eslint to ^10, " +
+        "then remove: this block, \"eslint\" from ACCEPTED_DEPRECATIONS in the " +
+        "factory's scripts/deploy-local.test.mjs, and the eslint@9 row in " +
+        "docs/troubleshooting.md → What the first install prints.",
+    ).not.toEqual([]);
+  });
+
+  it("reads the ranges it judges by — the helper tells 9 from 10", () => {
+    expect(admitsEslint10("^3 || ^4 || ^5 || ^6 || ^7 || ^8 || ^9.7")).toBe(false);
+    expect(admitsEslint10("^9 || ^10")).toBe(true);
+    expect(admitsEslint10(">=9.0.0")).toBe(true);
+    expect(admitsEslint10(">=11")).toBe(false);
+    expect(admitsEslint10("")).toBe(false);
+  });
+});
+
+// The old name of this block was "the audit findings that stay", which was a
+// claim about what `npm audit` reports rather than a description of what is
+// asserted below — and it stopped being true: this tree answers
+// `found 0 vulnerabilities`, and section 3 of the header already says so. The
+// assertion is unchanged; only the sentence describing it moved. 🚨 No fixed
+// count of advisories belongs anywhere here, in code or in prose.
+// Section 5 of the header: not a dependency decision, but the same pair of files.
+describe("every package that wants to run an install script is decided about", () => {
+  // 🚨 Derived from the LOCKFILE, never from `node_modules`. A machine only
+  // installs what its platform gets: `fsevents` is darwin-only, so a list built
+  // from what is on disk here would be complete on Linux and short on a Mac —
+  // and a Mac customer would meet the warning this field exists to prevent.
+  const wantsScripts = [
+    ...new Set(
+      Object.entries(lock.packages as Record<string, { hasInstallScript?: boolean }>)
+        .filter(([, entry]) => entry?.hasInstallScript)
+        .map(([where]) => where.split("node_modules/").pop() as string),
+    ),
+  ].sort();
+
+  it("the lockfile really names some — otherwise this block asks nothing", () => {
+    // Non-vacuity: a lockfile shape this parse no longer recognises would make
+    // every assertion below pass over an empty list.
+    expect(wantsScripts.length).toBeGreaterThan(0);
+    expect(wantsScripts).toContain("esbuild");
+  });
+
+  it("each of them is named in allowScripts", () => {
+    const allow = (pkg.allowScripts ?? {}) as Record<string, boolean>;
+    const unjudged = wantsScripts.filter((name) => !(name in allow));
+    expect(
+      unjudged,
+      `these packages want to run an install script and nobody has decided about ` +
+        `them: ${unjudged.join(", ")}. npm blocks them by default and says so on the ` +
+        `customer's FIRST command, which is what make deploy-local-check reads. Add ` +
+        `each to "allowScripts" in package.json — false to deny, which is what npm ` +
+        `already does — and if any gets true, say why in section 6 of this file.`,
+    ).toEqual([]);
+  });
+
+  it("and none of them is approved without a written reason", () => {
+    // `true` means somebody's install script runs with the developer's own
+    // permissions before a line of this app has been read.
+    //
+    // ⚠️ **An explicit marker, not the package's NAME.** Two weaker versions
+    // were tried and both passed while nothing had been written: "the name
+    // appears anywhere in this file" (esbuild has a section of its own three
+    // hundred lines up), then "the name appears in section 6" (section 6 names
+    // esbuild too, for a different reason). A mention is not a justification,
+    // and no name search can tell the two apart.
+    const allow = (pkg.allowScripts ?? {}) as Record<string, boolean>;
+    const approved = Object.entries(allow)
+      .filter(([, value]) => value === true)
+      .map(([name]) => name);
+
+    const source = readFileSync(path.join(ROOT, "scripts/deps.test.ts"), "utf8");
+    const marked = new Set(
+      [...source.matchAll(/^\s*\/\/\s*APPROVED:\s*(\S+)\s+—\s+\S/gm)].map((m) => m[1]),
+    );
+
+    const silent = approved.filter((name) => !marked.has(name));
+    expect(
+      silent,
+      `approved to run an install script with no \`// APPROVED: <name> — <reason>\` ` +
+        `line in this file: ${silent.join(", ")}. An install script runs with the ` +
+        `developer's own permissions before a line of this app has been read; write ` +
+        `what it does and why it has to run.`,
+    ).toEqual([]);
+  });
+});
+
+describe("the app's own name and version, and the lockfile's two copies of each", () => {
+  it("is a plain version and a name in package.json to begin with", () => {
+    // Non-vacuity for the comparisons below: an absent or exotic field would
+    // make "the lockfile matches it" a statement about `undefined`.
+    expect(
+      typeof pkg.version,
+      `package.json has no "version". Everything below compares the lockfile against it.`,
+    ).toBe("string");
+    expect(() => triple(pkg.version), `package.json's version is "${pkg.version}"`).not.toThrow();
+    expect(
+      typeof pkg.name === "string" && pkg.name.length > 0,
+      `package.json has no "name". Everything below compares the lockfile against it.`,
+    ).toBe(true);
+  });
+
+  it("is written in ALL FOUR places npm writes it — finding none is a failure, not a pass", () => {
+    // The count guard. Without it an emptied LOCK_IDENTITY_SITES, or a lockfile
+    // whose shape moved, would make the comparisons below pass by having nothing
+    // to compare — green for the one reason that must never read as green.
+    const missing = LOCK_IDENTITY_SITES.filter(({ read }) => typeof read() !== "string");
+    expect(
+      missing.map(({ where }) => where),
+      `package-lock.json carries nothing at that path. npm writes the name and the ` +
+        `version in both places each; a lockfile missing one was written by something ` +
+        `else, and the comparison below cannot be made. Regenerate it with ` +
+        `"npm install" in template/.`,
+    ).toEqual([]);
+
+    const found = LOCK_IDENTITY_SITES.filter(({ read }) => typeof read() === "string");
+    expect(
+      found.length,
+      `nothing here read an identity field at all, so nothing was compared. Four are ` +
+        `expected — "name" and "version", each at the top level and in packages[""].`,
+    ).toBe(4);
+
+    // …and that the four are really two of each, so a list that lost a field
+    // entirely cannot reach the count by carrying the other one twice more.
+    expect(
+      found.filter(({ field }) => field === "version").length,
+      `no "version" site is left in the list, so a stale version would go unnoticed ` +
+        `while the count guard above stayed green.`,
+    ).toBe(2);
+    expect(
+      found.filter(({ field }) => field === "name").length,
+      `no "name" site is left in the list, so a lockfile belonging to a different ` +
+        `project would go unnoticed while the count guard above stayed green.`,
+    ).toBe(2);
+  });
+
+  it("says the same thing in the lockfile as in package.json", () => {
+    for (const { field, where, read } of LOCK_IDENTITY_SITES) {
+      expect(
+        read(),
+        `package-lock.json says ${JSON.stringify(read())} at ${where}, package.json says ` +
+          `${JSON.stringify(pkg[field])}. ${IDENTITY_ADVICE[field]} ` +
+          `Measured: "npm ci" and "npm install" both exit 0 without a word about this, ` +
+          `and a fresh install QUIETLY REWRITES the field — so no install anywhere will ` +
+          `tell you, and the file that ships stays wrong.`,
+      ).toBe(pkg[field]);
+    }
+  });
+});
+
+describe("the two packages that may never be overridden", () => {
+  it("is not silenced with an override that breaks the linter", () => {
+    for (const name of NEVER_OVERRIDE) {
+      expect(
+        pkg.overrides?.[name],
+        `overrides.${name} is set. It makes "npm audit" read clean and makes ` +
+          `eslint-plugin-react/import/jsx-a11y throw "minimatch is not a function" ` +
+          `on any rule that matches a pattern — while this project's own lint stays ` +
+          `green, so it ships as a landmine. Whatever it silences is dev-only ` +
+          `anyway; "npm audit --omit=dev" is what decides whether something ` +
+          `ships. See the header of this file.`,
+      ).toBeUndefined();
+    }
+  });
+});
