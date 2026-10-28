@@ -913,5 +913,13 @@
       "low": "low"
     },
     "cta": "Open the admin area"
+  },
+  "practice": {
+    "selfCheckIntro": "Four short questions on this section. You will see how many you got right – as often as you like.",
+    "selfCheckSubmit": "Check my answers",
+    "selfCheckAgain": "Check again",
+    "selfCheckOpen": "{count, plural, one {One question still open} other {# questions still open}}",
+    "selfCheckScore": "{score} of {max} right.",
+    "selfCheckRetry": "Read the section again, then try once more."
   }
 }

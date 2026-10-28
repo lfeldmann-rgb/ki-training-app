@@ -19,6 +19,7 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 import { LegalBody } from "@/components/legal-body";
+import { LessonExtras } from "@/components/practice/lesson-extras";
 import { PageHeader } from "@/components/page-header";
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
@@ -406,6 +407,11 @@ export default async function CourseUnitPage({
             </CardContent>
           </Card>
         ) : null}
+
+        {/* KI-Praxis: the app's own additions to a lesson (the self-check
+            closing a block). One component, owned by the app — this module
+            does not know what is in it. */}
+        <LessonExtras blockSlug={block.slug} isLastInBlock={inBlock === siblings.length} />
 
         <CompletionToggle
           unitSlug={unit.slug}

@@ -913,5 +913,13 @@
       "low": "niedrig"
     },
     "cta": "Adminbereich öffnen"
+  },
+  "practice": {
+    "selfCheckIntro": "Vier kurze Fragen zu diesem Abschnitt. Du siehst danach, wie viele du richtig hattest – so oft du willst.",
+    "selfCheckSubmit": "Auswerten",
+    "selfCheckAgain": "Noch einmal auswerten",
+    "selfCheckOpen": "{count, plural, one {Noch eine Frage offen} other {Noch # Fragen offen}}",
+    "selfCheckScore": "{score} von {max} richtig.",
+    "selfCheckRetry": "Lies den Abschnitt noch einmal und versuch es dann erneut."
   }
 }

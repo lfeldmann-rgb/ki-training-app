@@ -101,6 +101,12 @@
 //   },
 // ];
 // ```
+import {
+  SELF_CHECK_PASS_MARK,
+  publicQuestions,
+  scoreAnswers,
+} from "@/lib/practice/self-checks";
+
 import type { ActivityVerdict, StoredResult } from "./rules";
 
 export interface Activity {
@@ -144,7 +150,32 @@ export interface Activity {
  *
  * It ships **empty** — see the header for why, and for the worked example.
  */
-export const ACTIVITIES: readonly Activity[] = [];
+export const ACTIVITIES: readonly Activity[] = [
+  // KI-Praxis: the self-check closing each block. `subject` is the BLOCK's
+  // slug; the questions and the answer key are lib/practice/self-checks.ts.
+  // Free, unlimited — a self-check, not an exam — with a pass mark so the
+  // learner sees "Bestanden!". No member data is read: the questions are the
+  // same for everybody, so `load()` has nothing to scope and answers `null`
+  // only for a block that has no check.
+  {
+    id: "block-selbsttest",
+    requiresPlan: "ki_praxis",
+    costsTokens: 0,
+    maxAttempts: null,
+    passMark: SELF_CHECK_PASS_MARK,
+    async load({ subject }) {
+      return publicQuestions(subject);
+    },
+    async grade({ subject, submission }) {
+      const result = scoreAnswers(subject, submission);
+      if (!result) throw new Error("no self-check for this subject");
+      // A half-filled sheet is a checkpoint with no score — never a verdict
+      // (rule 3: a scored checkpoint is a free probe).
+      if (!result.complete) return { final: false };
+      return { final: true, score: result.score, maxScore: result.maxScore };
+    },
+  },
+];
 
 /** The entry for an id, or `null` — the registry is the only source, never a prop. */
 export function findActivity(id: string): Activity | null {

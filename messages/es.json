@@ -913,5 +913,13 @@
       "low": "bajo"
     },
     "cta": "Abrir la administración"
+  },
+  "practice": {
+    "selfCheckIntro": "Cuatro preguntas breves sobre esta sección. Después verás cuántas acertaste, tantas veces como quieras.",
+    "selfCheckSubmit": "Evaluar",
+    "selfCheckAgain": "Evaluar de nuevo",
+    "selfCheckOpen": "{count, plural, one {Queda una pregunta} other {Quedan # preguntas}}",
+    "selfCheckScore": "{score} de {max} correctas.",
+    "selfCheckRetry": "Vuelve a leer la sección e inténtalo de nuevo."
   }
 }

@@ -913,5 +913,13 @@
       "low": "faible"
     },
     "cta": "Ouvrir l'administration"
+  },
+  "practice": {
+    "selfCheckIntro": "Quatre petites questions sur cette partie. Tu verras ensuite combien de réponses sont justes – autant de fois que tu veux.",
+    "selfCheckSubmit": "Évaluer",
+    "selfCheckAgain": "Évaluer à nouveau",
+    "selfCheckOpen": "{count, plural, one {Encore une question} other {Encore # questions}}",
+    "selfCheckScore": "{score} sur {max} justes.",
+    "selfCheckRetry": "Relis cette partie, puis réessaie."
   }
 }

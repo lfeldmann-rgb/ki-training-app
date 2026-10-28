@@ -60,6 +60,24 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Tests:** covered by the module's rules tests (`nextUnit`, `progress`,
   `unitRefs`); `app/dashboard/overview-links.test.ts`
 
+### The self-check closing each block — on the block's last lesson
+
+- **Does:** four multiple-choice questions per block (three blocks), shown
+  under the last lesson of the block. The owner answers all four, presses
+  "Auswerten" and sees "x von 4 richtig." — three of four is "Bestanden!".
+  Unlimited, free.
+- **Done when:** an owner at the end of a block answers the self-check and
+  sees how many were right — checked 2026-10-28 as the test owner: "3 von 4
+  richtig.", "Bestanden!", dark mode
+- **Access:** activity `block-selbsttest`, `requiresPlan: "ki_praxis"`
+  (`modules/activity/activities.ts`); `subject` is the block slug
+- **Data:** `activity_results` (module); questions and answer key in code,
+  `lib/practice/self-checks.ts`
+- **Where:** `components/practice/lesson-extras.tsx`, rendered by the course
+  module's lesson page — the one place the app adds to a lesson
+- **Tests:** `lib/practice/self-checks.test.ts` (answer key never sent,
+  half-filled sheets never scored, unknown blocks null)
+
 ### Practice data — no page yet
 
 - **Data:** `practice_profiles`, `practice_reports` (`db/schema-practice.ts`),
@@ -83,6 +101,11 @@ moment the feature works. Written down by your assistant, from the conversation
   rather than a new dashboard slot in the core: one app, one course, and the
   module's own list page uses the same function. If the course module is ever
   removed, `components/course-overview-card.tsx` goes with it.
+- **The self-check tells the score, never which answer was wrong.** Decided
+  2026-10-28 by the assistant: the panel exposes score and pass, and putting
+  per-question verdicts into the stored state would make it a free answer
+  key (`modules/activity/activities.ts`, rule 3). If the vendor wants
+  explanations per question, they belong in the lesson text.
 - ⚠️ **Fernunterricht (FernUSG) is open**: AI feedback on what an owner hands
   in may count as monitoring the learning outcome. Not decided here —
   `compliance-check` before the first sale.
