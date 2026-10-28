@@ -176,3 +176,9 @@ export * from "./schema-media";
 // which is the shipped state. See schema-setup.ts and docs/setup-mcp.md.
 export * from "./schema-setup";
 
+// --- Practice (this app) -----------------------------------------------------
+// `practice_profiles`, `practice_reports` — what an owner says about their
+// business, and what they wrote after trying a task in it. The first report is
+// the app's activation event. See schema-practice.ts.
+export * from "./schema-practice";
+

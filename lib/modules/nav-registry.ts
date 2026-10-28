@@ -9,5 +9,8 @@
 // file and those stop agreeing.
 
 import type { ModuleNav } from "./nav";
+import courses_nav from "@/modules/courses/nav";
 
-export const MODULE_NAV: readonly ModuleNav[] = [];
+export const MODULE_NAV: readonly ModuleNav[] = [
+  courses_nav,
+];

@@ -1,5 +1,5 @@
 {
   "_comment": "Is the course surface running in this app at all? That is the whole job of this file since Story 44.2 — a course's own `shape` and the Product Keys it is sold under live on the course ROW, because an app may hold several and each is a different product (see content/course/<course-slug>/course.json and docs/courses.md). ⚠ A leftover `shape` or `planKeys` here is reported as an unknown field rather than obeyed: it stopped deciding anything, and a value nobody reads is one somebody believes they set. It ships OFF, and the commonest reason is not an incident: it is the window between `node run.mjs module add courses` and the content being written. Switch it on AFTER `node run.mjs content-apply`, or the course answers with empty pages. Check it with: node run.mjs courses-check",
-  "enabled": false,
+  "enabled": true,
   "operatorPreviewsUnlocked": true
 }

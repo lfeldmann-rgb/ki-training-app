@@ -476,6 +476,40 @@ author cannot let the text outlive them with it. `courses.accountDeletionNote`
 is the sentence a member reads above the delete button, and it says exactly
 this.
 
+## 8d. Practice — the owner's business, and what they put into practice
+
+This app's own two tables (`db/schema-practice.ts`), behind the guided task
+"Meine Aufgabe im Betrieb". Both are **free text the member wrote about their
+own business**: what kind it is, how big, where it hurts, and how they tried a
+task in it. That routinely names the business, sometimes employees or
+customers — treat it as the member's unpublished prose, like a hand-in (§8c).
+Both are sent to the AI provider when the companion suggests tasks or answers
+a report (§8a), fenced as customer text.
+
+| `practice_profiles` | What it holds |
+|---|---|
+| `member_id` | whose business this describes (cascades on account deletion) |
+| `trade` | the kind of business, in their words |
+| `size` | how big it is, in their words |
+| `pain_point` | where it hurts, in their words |
+| `updated_at` | when they last changed it |
+
+| `practice_reports` | What it holds |
+|---|---|
+| `member_id` | who wrote it (cascades on account deletion) |
+| `subject` | which lesson it belongs to — the app's own slug |
+| `task` | the task they chose |
+| `body` | **how they put it into practice** — the text itself |
+| `created_at` | when they wrote it. The first one is the app's activation event |
+
+**Both subject-access exports carry them** — the download from
+`/dashboard/account` (`practiceProfile`, `practiceReports`) and
+`node run.mjs data-export`. The companion's feedback on a report is a chat turn
+and travels in `chatMessages` (§8a).
+
+**Retention: until the account is deleted, and then completely.** Both tables
+carry `member_id … on delete cascade`; there is no window and no archive.
+
 ## 9. The HTTP API
 
 Only relevant if this app has the `api` module (`node run.mjs module list`) —

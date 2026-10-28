@@ -218,6 +218,20 @@ try {
         where owner_id = ${memberId} order by created_at`
     : [];
 
+  // --- Their business, and what they wrote about putting tasks into practice --
+  // db/schema-practice.ts. The companion's feedback on a report is a chat turn,
+  // already in chatMessages above.
+  const practiceProfile = memberId
+    ? ((await sql`
+        select trade, size, pain_point, updated_at
+        from practice_profiles where member_id = ${memberId}`)[0] ?? null)
+    : null;
+  const practiceReports = memberId
+    ? await sql`
+        select id, subject, task, body, created_at
+        from practice_reports where member_id = ${memberId} order by created_at`
+    : [];
+
   // --- What they uploaded ------------------------------------------------------
   // The rows, not the files. An export is a JSON document; somebody who wants
   // their pictures back downloads them from the app.
@@ -305,6 +319,8 @@ try {
     setupActs,
     setupKeys,
     media: mediaRows,
+    practiceProfile,
+    practiceReports,
     webhookEvents,
     // 🚨 And whatever the installed modules hold about this person — the same
     // merge `lib/privacy/export.ts` does, from the same manifests. Neither is

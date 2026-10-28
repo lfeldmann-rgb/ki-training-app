@@ -21,6 +21,7 @@ import {
   todayInUtc,
   toUtcDate,
 } from "@/lib/digistore/next-payment";
+import { CourseOverviewCard } from "@/components/course-overview-card";
 import { FlashToast } from "@/components/flash-toast";
 import {
   OnboardingChecklist,
@@ -262,6 +263,13 @@ export default async function DashboardPage({
         toast above cannot (it clears its own parameter by design).
       */}
       <OnboardingChecklist steps={onboardingSteps} className="mb-6" />
+
+      {/*
+        THIS APP'S CARD, first after the checklist: the course is what the
+        member bought (docs/ux.md § 0). It renders nothing on an installation
+        with no course yet.
+      */}
+      <CourseOverviewCard memberId={session.user.id} role={session.user.role} />
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {/*

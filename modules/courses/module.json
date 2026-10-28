@@ -78,7 +78,7 @@
     },
     "courses-diff": {
       "script": "courses-diff.mjs",
-      "help": "What publishing this repo's course into an environment would create and change, and what is only there \u2014 reads, never writes"
+      "help": "What publishing this repo's course into an environment would create and change, and what is only there — reads, never writes"
     }
   },
   "smoke": "smoke.mjs",
@@ -90,5 +90,8 @@
     "rules.ts",
     "shapes.mjs",
     "slug.mjs"
-  ]
+  ],
+  "serverExports": {
+    "courseStandingsFor": "standing.ts"
+  }
 }

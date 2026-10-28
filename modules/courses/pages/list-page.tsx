@@ -40,11 +40,9 @@ import { EmptyState } from "@/components/ui/empty-state";
 import { requireActiveUser } from "@/lib/authz";
 import { isOwner } from "@/lib/roles";
 
-import { courseAccessFor } from "../lib/access";
 import { courseConfigProblems, courseOffReason } from "../lib/config";
-import { usableCourses } from "../lib/courses";
-import { completedSlugsFor, courseOutline } from "../lib/manage";
-import { nextUnit, progress, unitRefs } from "../rules";
+import { progress } from "../rules";
+import { courseStandingsFor } from "../standing";
 
 export async function generateMetadata() {
   const t = await getTranslations("courses");
@@ -83,48 +81,15 @@ export default async function CourseListPage() {
     );
   }
 
-  const memberId = session.user.id;
-  // ⚠️ `usableCourses()`, not `allCourses()`: a course whose row does not hold
-  // is invisible to a member and named to the operator on the admin surface.
-  // Rendering it here would offer somebody a course that cannot open.
-  const courses = await usableCourses();
-  // ONE read for the whole page, not one per course: completions are keyed on
-  // the bare unit slug (`../schema.ts`), so the member's set answers for every
-  // course at once. A per-course query would be the same rows, N times.
-  const completed = await completedSlugsFor(memberId);
-  const now = new Date();
-  const held = await Promise.all(
-    courses.map(async (course) => {
-      const access = await courseAccessFor(memberId, session.user.role, course);
-      // 🚨 **The outline is read for a course this member HOLDS, and for no
-      // other.** The header's rule is that nothing about the inside of an
-      // unbought course may reach this page — a lesson count is exactly that,
-      // and the cheapest way to keep the rule is not to have the number. So the
-      // query is inside the branch rather than the render.
-      if (!access.entitled) return { course, ...access, standing: null };
-
-      const blocks = await courseOutline(course.id);
-      const units = unitRefs(blocks, access.startedAt, course.shape!, now);
-      return {
-        course,
-        ...access,
-        standing: {
-          done: units.filter((unit) => completed.has(unit.slug)).length,
-          total: units.length,
-          // The same answer the overview's card gives, from the same function:
-          // "carry on where you were" has to land on the same lesson on both
-          // pages or one of them is lying.
-          next: nextUnit(units, completed),
-        },
-      };
-    }),
-  );
+  // Where this member stands in each course — `../standing.ts`, the same
+  // computation the overview card uses, so both pages land on the same lesson.
+  const held = await courseStandingsFor(session.user.id, session.user.role);
 
   return (
     <>
       <PageHeader title={t("listTitle")} description={t("listIntro")} />
 
-      {courses.length === 0 ? (
+      {held.length === 0 ? (
         // The state most operators meet first, and the one nobody remembers to
         // add. It says where the rows come from, because "rows do not travel
         // with a deploy" is the thing that surprises people.

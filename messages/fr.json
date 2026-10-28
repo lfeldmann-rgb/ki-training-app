@@ -136,7 +136,16 @@
     "onboardingTokensBody": "Avec des jetons, tu paies ce que tu utilises vraiment.",
     "onboardingTokensCta": "Acheter du crédit",
     "onboardingTokensDone": "{balance} jetons sur ton compte.",
-    "purchaseReseller": "Le prélèvement est effectué par Digistore24 — c'est sous ce nom que le paiement apparaît sur ton relevé bancaire."
+    "purchaseReseller": "Le prélèvement est effectué par Digistore24 — c'est sous ce nom que le paiement apparaît sur ton relevé bancaire.",
+    "courseCardLabel": "Ton cours",
+    "courseProgressLabel": "Progression du cours",
+    "courseProgress": "{done} leçons terminées sur {total}",
+    "courseFinished": "Toutes les leçons sont terminées – bravo !",
+    "courseStart": "Commencer",
+    "courseContinue": "Continuer",
+    "courseOpen": "Voir le cours",
+    "courseUnlock": "Débloquer le cours",
+    "courseNext": "Ensuite : {title}"
   },
   "onboarding": {
     "title": "Tes premiers pas",

@@ -54,6 +54,8 @@ import {
   invoices,
   media,
   orders,
+  practiceProfiles,
+  practiceReports,
   subscriptions,
   tokenAccounts,
   tokenLedger,
@@ -83,6 +85,8 @@ export const MEMBER_EXPORT_SECTIONS = [
   "media",
   "setupActs",
   "setupKeys",
+  "practiceProfile",
+  "practiceReports",
   // ⚠️ **A module's sections are NOT in this list, and they are not optional
   // either.** The community's thirteen used to be spelled out here; they now
   // live in `modules/community/privacy/sections.ts` beside the queries that
@@ -272,6 +276,8 @@ export async function buildMemberExport(
     setupActRows,
     setupKeyRows,
     mediaRows,
+    practiceProfileRows,
+    practiceReportRows,
   ] = await Promise.all([
     orderIds.length
       ? db
@@ -443,6 +449,32 @@ export async function buildMemberExport(
         ),
       )
       .orderBy(asc(media.createdAt)),
+
+    // What they told the app about their business, in their own words
+    // (db/schema-practice.ts). At most one row.
+    db
+      .select({
+        trade: practiceProfiles.trade,
+        size: practiceProfiles.size,
+        painPoint: practiceProfiles.painPoint,
+        updatedAt: practiceProfiles.updatedAt,
+      })
+      .from(practiceProfiles)
+      .where(eq(practiceProfiles.memberId, memberId)),
+
+    // What they wrote after trying a task in their business. The companion's
+    // feedback on it is a chat turn and is already in `chatMessages`.
+    db
+      .select({
+        id: practiceReports.id,
+        subject: practiceReports.subject,
+        task: practiceReports.task,
+        body: practiceReports.body,
+        createdAt: practiceReports.createdAt,
+      })
+      .from(practiceReports)
+      .where(eq(practiceReports.memberId, memberId))
+      .orderBy(asc(practiceReports.createdAt)),
   ]);
 
   return {
@@ -491,6 +523,8 @@ export async function buildMemberExport(
     media: mediaRows,
     setupActs: setupActRows,
     setupKeys: setupKeyRows,
+    practiceProfile: practiceProfileRows[0] ?? null,
+    practiceReports: practiceReportRows,
 
     // 🚨 And whatever the installed modules hold about this person — the
     // community's thirteen sections among them, since Epic 24 moved them into

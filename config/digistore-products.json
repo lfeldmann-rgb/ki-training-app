@@ -4,10 +4,41 @@
   "_envComment": "'productIds' holds ONE PRODUCT SET PER ENVIRONMENT (dev/staging/prod): 'node run.mjs ds24-sync --env <env>' maintains exactly one of them and never touches the others. The dev/staging products carry a visible ' [DEV]'/' [STAGING]' suffix in their name; prod names stay clean. Staging is optional — most apps go dev -> prod, which is fine as long as they test. 'syncId' is this app's own identity inside the vendor's account: it is written into every product's internal note and is what 'ds24-sync --prune' reads before it deletes or deactivates anything - never regenerate it, or every product this app created stops looking like ours. 'productGroupId' is the ONE Digistore24 product group (folder) of this app, shared by every environment; the sync creates it once and keeps every product in it. Both are written back by the sync — treat them like the product ids: committed, never hand-edited.",
   "_billingModeComment": "What this app sells: 'subscriptions' (plans only), 'tokens' (prepaid credit only) or 'both'. ONE switch — it turns off the surfaces of the model you do not use (a balance card stuck at 0, an empty 'next payment' card), so you do not have to hunt them down page by page. It is COSMETIC: hasPlan(), consumeTokens() and the IPN behave the same in every mode, and a mode only ever hides an EMPTY card — a customer who still holds tokens keeps seeing them after a switch. Set it, then delete the products below that you do not sell; lib/billing-mode.test.ts fails the build if the two contradict each other. Details: lib/billing-mode.ts.",
   "_sellComment": "\"sell\" is the switch between \"I offer this\" and \"this is a template I keep\". A missing field means SOLD, so every registry written before this field existed keeps selling; only a literal false parks an entry. A parked entry stays in this file as a shape to copy from, but \"node run.mjs ds24-sync\" creates no Digistore24 product for it and /plans does not show it — that is the difference from deleting it. PARKING IS ABOUT SELLING, NEVER ABOUT ACCESS: whoever already bought it keeps it, hasPlan() still answers for it, and its refunds and cancellations keep arriving. It also does not unpublish anything: a product that was synced while it was on sale stays buyable at Digistore24 through an old checkout link until you deactivate it THERE, by hand — the sync says so when it meets one. Creating products is the step that cannot be undone from here, so ds24-sync refuses to create NEW ones until you have seen the list and re-run it with --create-new. Parking is still not the same as removing: a product that is genuinely no longer wanted is taken out of this file, and the next 'node run.mjs ds24-sync --prune' deletes it at Digistore24 - or deactivates it, if it ever sold anything.",
-  "billingMode": "both",
+  "billingMode": "subscriptions",
   "syncId": null,
   "productGroupId": null,
   "products": {
+    "ki_praxis": {
+      "name": "KI-Praxis für deinen Betrieb",
+      "tagline": "KI im eigenen Betrieb einsetzen – Schritt für Schritt",
+      "description": "Der Selbstlernkurs für Inhaber von Einzelhandel, Handwerk und Kleinbetrieben: Du lernst, wo KI dir im Alltag hilft, und setzt es mit geführten Aufgaben direkt in deinem Betrieb um. Einmal zahlen, kein Abo.",
+      "kind": "one_time",
+      "priceCents": 19900,
+      "currency": "EUR",
+      "features": [
+        "Fünf Lektionen zu KI im Alltag deines Betriebs",
+        "Geführte Aufgaben, die zu deinem Betrieb passen",
+        "Rückmeldung zu dem, was du umgesetzt hast",
+        "Selbsttests und ein Lernspiel",
+        "Einmal zahlen, kein Abo"
+      ],
+      "imageUrl": null,
+      "sell": true,
+      "productIds": {
+        "dev": {
+          "de": null,
+          "en": null,
+          "es": null,
+          "fr": null
+        },
+        "prod": {
+          "de": null,
+          "en": null,
+          "es": null,
+          "fr": null
+        }
+      }
+    },
     "basic": {
       "name": "Basic",
       "tagline": "The uncomplicated way in",
@@ -31,7 +62,7 @@
         "Monthly or yearly - the same access either way"
       ],
       "imageUrl": null,
-      "sell": true,
+      "sell": false,
       "productIds": {
         "dev": {
           "de": null,
@@ -99,7 +130,7 @@
         "Balance does not expire"
       ],
       "imageUrl": null,
-      "sell": true,
+      "sell": false,
       "productIds": {
         "dev": {
           "de": null,

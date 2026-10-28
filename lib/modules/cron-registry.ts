@@ -9,5 +9,8 @@
 // file and those stop agreeing.
 
 import type { CronJob } from "@/lib/cron/types";
+import courses_cron from "@/modules/courses/cron";
 
-export const MODULE_CRON_JOBS: readonly CronJob[] = [];
+export const MODULE_CRON_JOBS: readonly CronJob[] = [
+  ...courses_cron,
+];

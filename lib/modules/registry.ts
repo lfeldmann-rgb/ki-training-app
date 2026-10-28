@@ -9,5 +9,12 @@
 // file and those stop agreeing.
 
 import type { ModuleEntry } from "./types";
+import api_entry from "@/modules/api/module";
+import courses_entry from "@/modules/courses/module";
+import activity_entry from "@/modules/activity/module";
 
-export const MODULES: readonly ModuleEntry[] = [];
+export const MODULES: readonly ModuleEntry[] = [
+  api_entry,
+  courses_entry,
+  activity_entry,
+];

@@ -136,7 +136,16 @@
     "onboardingTokensBody": "Con tokens pagas solo lo que realmente usas.",
     "onboardingTokensCta": "Comprar saldo",
     "onboardingTokensDone": "{balance} tokens en tu cuenta.",
-    "purchaseReseller": "El cargo se realiza a través de Digistore24 — con ese nombre aparece el pago en tu extracto bancario."
+    "purchaseReseller": "El cargo se realiza a través de Digistore24 — con ese nombre aparece el pago en tu extracto bancario.",
+    "courseCardLabel": "Tu curso",
+    "courseProgressLabel": "Progreso del curso",
+    "courseProgress": "{done} de {total} lecciones completadas",
+    "courseFinished": "Has completado todas las lecciones. ¡Genial!",
+    "courseStart": "Empezar",
+    "courseContinue": "Continuar",
+    "courseOpen": "Ver el curso",
+    "courseUnlock": "Desbloquear el curso",
+    "courseNext": "A continuación: {title}"
   },
   "onboarding": {
     "title": "Tus primeros pasos",

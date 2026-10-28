@@ -20,4 +20,5 @@
 // imports from here may be one: this graph reaches the AI layer, the database
 // and the keys. The client-safe half is `component-registry.ts`.
 
-export {};
+export { courseStandingsFor } from "@/modules/courses/standing";
+export { askCompanion } from "@/modules/companion/companion";

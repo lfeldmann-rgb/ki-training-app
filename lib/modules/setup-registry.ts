@@ -9,5 +9,8 @@
 // file and those stop agreeing.
 
 import type { ModuleSetupTools } from "@/lib/setup/types";
+import courses_setup from "@/modules/courses/setup/tools";
 
-export const MODULE_SETUP_TOOLS: readonly ModuleSetupTools[] = [];
+export const MODULE_SETUP_TOOLS: readonly ModuleSetupTools[] = [
+  courses_setup,
+];

@@ -4,7 +4,7 @@
      scripts/api-map.test.ts compares this file with what the generator
      produces, and a hand edit is undone by the next run. -->
 
-_51 files, 228 exported functions, 46 tables. Regenerate
+_51 files, 228 exported functions, 48 tables. Regenerate
 with `node run.mjs api-map` after adding an export or a table; the suite says so
 when it is behind._
 
@@ -522,6 +522,11 @@ commit — `lib/privacy/inventory.test.ts` fails the build otherwise.
 ### db/schema-notify.ts
 
 - `notification_sends` (`notificationSends`): `key`, `claimedAt` (timestamp)
+
+### db/schema-practice.ts
+
+- `practice_profiles` (`practiceProfiles`): `memberId`, `trade`, `size`, `painPoint`, `updatedAt` (timestamp)
+- `practice_reports` (`practiceReports`): `id`, `memberId`, `subject`, `task`, `body`, `createdAt` (timestamp)
 
 ### db/schema-setup.ts
 

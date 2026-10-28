@@ -136,7 +136,16 @@
     "onboardingTokensBody": "With tokens you pay for what you actually use.",
     "onboardingTokensCta": "Buy credit",
     "onboardingTokensDone": "{balance} tokens on your account.",
-    "purchaseReseller": "Your payment is processed by Digistore24 — that is the name that appears on your statement."
+    "purchaseReseller": "Your payment is processed by Digistore24 — that is the name that appears on your statement.",
+    "courseCardLabel": "Your course",
+    "courseProgressLabel": "Course progress",
+    "courseProgress": "{done} of {total} lessons completed",
+    "courseFinished": "All lessons completed – well done!",
+    "courseStart": "Get started",
+    "courseContinue": "Continue",
+    "courseOpen": "View course",
+    "courseUnlock": "Unlock the course",
+    "courseNext": "Up next: {title}"
   },
   "onboarding": {
     "title": "Your first steps",

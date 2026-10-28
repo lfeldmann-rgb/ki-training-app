@@ -9,5 +9,8 @@
 // file and those stop agreeing.
 
 import type { ModuleSlotEntry } from "./slots";
+import api_account_slot from "@/modules/api/components/account-card";
 
-export const MODULE_SLOTS: readonly ModuleSlotEntry[] = [];
+export const MODULE_SLOTS: readonly ModuleSlotEntry[] = [
+  { module: "api", slot: "account", Component: api_account_slot },
+];

@@ -9,5 +9,8 @@
 // file and those stop agreeing.
 
 import type { ContentSource } from "@/lib/content-source/types";
+import courses_content_source from "@/modules/courses/content-source";
 
-export const MODULE_CONTENT_SOURCES: readonly ContentSource[] = [];
+export const MODULE_CONTENT_SOURCES: readonly ContentSource[] = [
+  courses_content_source,
+];

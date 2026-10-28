@@ -10,4 +10,8 @@
 
 import type { ModuleAccountNote } from "./account-notes";
 
-export const MODULE_ACCOUNT_NOTES: readonly ModuleAccountNote[] = [];
+export const MODULE_ACCOUNT_NOTES: readonly ModuleAccountNote[] = [
+  { module: "api", export: "apiKeys.accountExportNote", deletion: "apiKeys.accountDeletionNote" },
+  { module: "courses", export: "courses.accountExportNote", deletion: "courses.accountDeletionNote" },
+  { module: "activity", export: "activity.accountExportNote", deletion: "activity.accountDeletionNote" },
+];

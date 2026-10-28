@@ -1,0 +1,21 @@
+{
+  "slug": "erreichbar-und-organisiert",
+  "title": "Erreichbar und organisiert",
+  "summary": "Weniger verpasste Anrufe, weniger Zettelwirtschaft: KI am Telefon und als Diktiergerät.",
+  "position": 2,
+  "releaseAfterDays": 0,
+  "units": [
+    {
+      "slug": "ki-telefonassistent",
+      "title": "Immer erreichbar: ein KI-Telefonassistent",
+      "position": 1,
+      "body": "# Das Problem\n\nDu stehst auf der Leiter, hast Mehl an den Händen oder berätst gerade einen Kunden – und das Telefon klingelt. Gehst du ran, wirst du unterbrochen. Gehst du nicht ran, ruft der Kunde vielleicht bei der Konkurrenz an.\n\n# Was ein KI-Telefonassistent macht\n\nEin KI-Telefonassistent nimmt Anrufe an, wenn du nicht kannst. Er spricht natürlich mit dem Anrufer und kann zum Beispiel:\n\n- **häufige Fragen beantworten:** Öffnungszeiten, Adresse, ob ein Produkt vorrätig ist, welche Leistungen du anbietest\n- **Anliegen aufnehmen:** Wer ruft an, worum geht es, wann ist ein Rückruf recht?\n- **Termine vormerken**, wenn er mit deinem Kalender verbunden ist\n- **dir eine Zusammenfassung schicken** – zum Beispiel jeden Morgen eine Liste aller Anrufe mit dem, was zu tun ist\n\n# Worauf du achten solltest\n\n- **Sag den Anrufern, dass sie mit einer KI sprechen.** Das ist fair und vermeidet Ärger. Ein Satz zur Begrüßung reicht.\n- **Gib ihm klare Grenzen.** Der Assistent sollte keine Preise zusagen oder Aufträge annehmen, die du nicht geprüft hast. Er nimmt auf, du entscheidest.\n- **Fang klein an.** Lass ihn zunächst nur außerhalb der Öffnungszeiten oder bei besetzter Leitung rangehen.\n- **Prüfe den Datenschutz.** Telefonate enthalten persönliche Daten. Achte darauf, wo der Anbieter die Daten speichert, und kläre die Datenschutz-Hinweise, bevor du startest.\n\n# Was du vorbereiten musst\n\nDer Assistent ist nur so gut wie das, was du ihm sagst. Schreib dir vorher auf:\n\n- die zehn Fragen, die Kunden am häufigsten am Telefon stellen – mit deinen Antworten\n- was er auf keinen Fall sagen oder zusagen darf\n- wie du die Zusammenfassung haben möchtest (E-Mail, Nachricht aufs Handy)\n\nDiese Liste ist schon die halbe Arbeit – und auch ohne Assistent nützlich, zum Beispiel für eine Aushilfe."
+    },
+    {
+      "slug": "ins-handy-sprechen",
+      "title": "Bestellungen und Notizen einfach ins Handy sprechen",
+      "position": 2,
+      "body": "# Das Problem\n\nZettel an der Kasse, Notizen auf dem Lieferschein, Nachrichten an dich selbst: Vieles, was du dir unterwegs merkst, geht verloren oder muss abends mühsam abgetippt werden.\n\n# Die Idee\n\nDu sprichst einfach, was du dir merken willst, ins Handy. Die KI macht daraus einen sauberen Text – sortiert, ohne „äh“ und in der Form, die du brauchst:\n\n- eine **Bestellliste** für den Großhandel\n- eine **Notiz zum Auftrag** mit Maßen und Material\n- einen **Entwurf für eine Nachricht** an Kunden oder Mitarbeiter\n- eine **Aufgabenliste** für morgen\n\n# So gehst du vor\n\n- **Aufnehmen:** Viele Handys haben eine Diktierfunktion schon eingebaut. KI-Apps können zusätzlich zusammenfassen und umformen.\n- **Sag dazu, was du willst:** „Mach daraus eine Bestellliste mit Menge und Artikel“ oder „Schreib eine kurze, freundliche Nachricht an Frau Meier, dass der Termin sich auf Donnerstag verschiebt.“\n- **Prüfen und ablegen:** Lies das Ergebnis kurz gegen. Zahlen und Mengen gehören immer geprüft, bevor etwas bestellt wird.\n\n# Ein Beispiel\n\nDu sagst: *„Für die Baustelle Schulstraße brauche ich zwanzig Meter Kabel, drei Abzweigdosen, ach ja und noch die Steckdosen in Weiß, so zehn Stück.“*\n\nDaraus wird:\n\n- Baustelle Schulstraße\n- 20 m Kabel\n- 3 Abzweigdosen\n- 10 Steckdosen, weiß\n\n# Der eigentliche Gewinn\n\nEs geht nicht um die Technik, sondern um eine Gewohnheit: **Alles, was du dir merken musst, landet sofort an einem Ort.** Das spart abends Zeit und verhindert, dass etwas vergessen wird."
+    }
+  ]
+}

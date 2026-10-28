@@ -9,5 +9,12 @@
 // file and those stop agreeing.
 
 import type { PresenceContributor } from "@/lib/content/presence";
+import api_presence from "@/modules/api/presence/check";
+import courses_presence from "@/modules/courses/presence/check";
+import activity_presence from "@/modules/activity/presence/check";
 
-export const MODULE_PRESENCE: readonly PresenceContributor[] = [];
+export const MODULE_PRESENCE: readonly PresenceContributor[] = [
+  api_presence,
+  courses_presence,
+  activity_presence,
+];

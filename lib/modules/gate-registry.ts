@@ -9,5 +9,8 @@
 // file and those stop agreeing.
 
 import type { ModuleGate } from "./gate";
+import courses_gate from "@/modules/courses/gate";
 
-export const MODULE_GATES: readonly ModuleGate[] = [];
+export const MODULE_GATES: readonly ModuleGate[] = [
+  courses_gate,
+];

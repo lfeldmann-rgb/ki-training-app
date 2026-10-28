@@ -18,4 +18,6 @@
 // why this file exists: without it the instruction in `docs/learning.md` was
 // one no app could follow.
 
-export {};
+export { ActivityPanel } from "@/modules/activity/components/activity-panel";
+export { useActivity } from "@/modules/activity/components/activity-panel";
+export { CompanionPanel } from "@/modules/companion/components/companion-panel";

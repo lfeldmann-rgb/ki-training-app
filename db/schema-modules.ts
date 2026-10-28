@@ -8,4 +8,6 @@
 // modules/. `scripts/modules/generated.test.ts` fails the build when this
 // file and those stop agreeing.
 
-export {};
+export * from "@/modules/api/schema";
+export * from "@/modules/courses/schema";
+export * from "@/modules/activity/schema";
