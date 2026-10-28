@@ -1,0 +1,29 @@
+{
+  "entries": [
+    {
+      "path": "ki-praxis/was-ki-kann.webp",
+      "visibility": "public",
+      "alt": "Illustration: Ein Bäcker steht hinter der Theke und schaut nachdenklich auf ein Tablet, um ihn herum Symbole für Nachrichten, Termine und Notizen."
+    },
+    {
+      "path": "ki-praxis/ki-telefonassistent.webp",
+      "visibility": "public",
+      "alt": "Illustration: Ein Handwerker arbeitet auf der Leiter weiter, während ein freundlicher Assistent neben dem klingelnden Telefon den Anruf annimmt."
+    },
+    {
+      "path": "ki-praxis/ins-handy-sprechen.webp",
+      "visibility": "public",
+      "alt": "Illustration: Ein Ladeninhaber spricht in sein Smartphone, daneben erscheint eine ordentliche Checkliste."
+    },
+    {
+      "path": "ki-praxis/marketing-mit-ki.webp",
+      "visibility": "public",
+      "alt": "Illustration: Eine Floristin bindet einen Strauß, auf der Theke zeigt ein Smartphone einen Social-Media-Beitrag mit Herzen."
+    },
+    {
+      "path": "ki-praxis/anfragen-beantworten.webp",
+      "visibility": "public",
+      "alt": "Illustration: Ein Elektriker beantwortet am Schreibtisch in seiner Werkstatt Kundennachrichten am Laptop."
+    }
+  ]
+}

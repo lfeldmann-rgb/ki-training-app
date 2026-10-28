@@ -20,7 +20,7 @@ moment the feature works. Written down by your assistant, from the conversation
   vendor; a change is one sentence to the assistant
 - **Output artifact:** the owner knows the AI use cases for their business and
   can put them into practice themselves; each lesson carries an AI-generated
-  cover picture (not yet generated — needs an image provider key)
+  cover picture
 - **Alongside the customer:** suggests tasks that fit the owner's business and
   walks them through one; reads what they write about how they did it and
   answers with feedback and a next step (planned — docs/plan.md, line 3)
@@ -44,6 +44,21 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Data:** `courses_*` (module), lessons by `origin = 'content'`
 - **Tests:** the module's own (`modules/courses/**/*.test.ts`);
   `node run.mjs courses-check` green
+
+### Lesson covers — on every lesson page
+
+- **Does:** one AI-drawn illustration per lesson, same style (flat, sage
+  green, no text), on top of the lesson.
+- **Done when:** every lesson shows its cover — checked 2026-10-28 by fetching
+  all lesson pages as the test owner (img with alt text, `/api/media/…` 200,
+  image/webp)
+- **Access:** `visibility: "public"` in `content/media-manifest.json` — they
+  may also serve the salespage
+- **Data:** files `content/media/ki-praxis/<lesson>.webp` (1280×853, ~50–75 KB,
+  drawn with gpt-image-2 at 1536×1024, ~5.3 cents each, recorded in
+  `ai_usage`), referenced by path as `cover` in `content/course/ki-praxis/*.json`;
+  `content-apply` puts them in the store in every environment
+- **Tests:** `node run.mjs courses-check` (5 media paths, all declared)
 
 ### The course card on the overview — `/dashboard`
 
