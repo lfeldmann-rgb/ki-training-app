@@ -22,6 +22,7 @@ import {
   toUtcDate,
 } from "@/lib/digistore/next-payment";
 import { CourseOverviewCard } from "@/components/course-overview-card";
+import { practiceMilestones } from "@/lib/practice/milestones";
 import { FlashToast } from "@/components/flash-toast";
 import {
   OnboardingChecklist,
@@ -191,6 +192,43 @@ export default async function DashboardPage({
           : t("onboardingPlanBody"),
       href: "/plans",
       cta: t("onboardingPlanCta"),
+    });
+  }
+  // KI-Praxis: the path from the purchase to the activation event — lesson 1,
+  // the business described, the first task put into practice and written
+  // down (docs/app.md → Activation). Each `done` is read from state by
+  // practiceMilestones(); the list disappears only when the last one is true.
+  // Asked only for a member who holds the course: before the purchase the one
+  // step that matters is the first.
+  if (owned.length > 0) {
+    const milestones = await practiceMilestones(session.user.id);
+    if (milestones.firstLesson) {
+      onboardingSteps.push({
+        id: "lesson",
+        done: milestones.firstLessonDone,
+        title: t("onboardingLessonTitle"),
+        description: t("onboardingLessonBody", { title: milestones.firstLesson.title }),
+        href: `/dashboard/course/ki-praxis/${encodeURIComponent(milestones.firstLesson.slug)}`,
+        cta: t("onboardingLessonCta"),
+      });
+    }
+    onboardingSteps.push({
+      id: "profile",
+      done: milestones.profileSaved,
+      title: t("onboardingProfileTitle"),
+      description: t("onboardingProfileBody"),
+      href: "/dashboard/aufgabe",
+      cta: t("onboardingProfileCta"),
+    });
+    onboardingSteps.push({
+      id: "report",
+      done: milestones.firstReportSaved,
+      title: t("onboardingReportTitle"),
+      description: t("onboardingReportBody"),
+      href: milestones.firstLesson
+        ? `/dashboard/aufgabe?thema=${encodeURIComponent(milestones.firstLesson.slug)}`
+        : "/dashboard/aufgabe",
+      cta: t("onboardingReportCta"),
     });
   }
   if (sellsTokens()) {

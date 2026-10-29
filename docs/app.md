@@ -78,6 +78,27 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Data:** `chat_messages` (core)
 - **Tests:** `node run.mjs kb-check` (10 pages, in order)
 
+### First steps — "Deine ersten Schritte" on `/dashboard`
+
+- **Does:** four steps from the purchase to the activation event, each with
+  its link; the list disappears once all four are done.
+  1. `plan` — Kurs freischalten → `/plans` · done: `owned.length > 0`
+     (`entitlementsFor()`)
+  2. `lesson` — Lektion 1 lesen → the first lesson · done: a
+     `courses_completions` row for the course's first lesson
+  3. `profile` — Deinen Betrieb beschreiben → `/dashboard/aufgabe` · done: a
+     `practice_profiles` row
+  4. `report` — Deine erste Aufgabe umsetzen → `/dashboard/aufgabe?thema=…` ·
+     done: a `practice_reports` row (= Activation)
+  Steps 2–4 are asked only for a member who holds the course
+  (`lib/practice/milestones.ts`, all read from state, no stored tick).
+- **Done when:** a new buyer sees "1 von 4 erledigt" and the next step, and a
+  step ticks itself when it happens — checked 2026-10-29 as
+  kundin@example.test: 1/4 after the grant, 2/4 after lesson 1 was marked done
+  (test completion removed afterwards)
+- **Tests:** `lib/onboarding/rules.test.ts` (the checklist's rules),
+  `i18n/messages.test.ts`
+
 ### The salespage — `/`
 
 - **Does:** the home page sells KI-Praxis — hero with the lesson-1 cover,
@@ -231,6 +252,15 @@ moment the feature works. Written down by your assistant, from the conversation
   yet (vendor, 2026-10-29); the founder line from feldmannconsult.com stands
   in. Lisa joined the page on 2026-10-29, once her handbook existed.
 - **No guarantee beyond the statutory withdrawal right** (vendor, 2026-10-29).
+- **No welcome survey** (user-onboarding, 2026-10-29): the business profile in
+  step 3 already is the question whose answer changes something — the
+  companion's suggestions. A second survey would drive nothing.
+- **No reminder mail for buyers who never start — not now** (2026-10-29): it
+  is a marketing-adjacent mail, and whether one service reminder is fine
+  without consent belongs to `compliance-check`. The recipe is
+  `docs/onboarding.md` §9 if it comes back.
+- **No product tour / overlay** (2026-10-29): the checklist with links does
+  the job (`docs/onboarding.md` §6).
 - `npx shadcn add accordion` wrote `import { cn } from "cn"` into
   `components/ui/accordion.tsx` and installed an unrelated npm package `cn`
   (2026-10-29) — fixed to `@/lib/utils`, package removed. Its `npm install`
