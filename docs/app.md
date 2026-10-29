@@ -273,15 +273,17 @@ moment the feature works. Written down by your assistant, from the conversation
   `https://kurs.feldmannconsult.com` (a subdomain of the vendor's own
   domain, DNS at IONOS — no new domain bought), sign-in mails go out from
   `kurs@feldmannconsult.com` through **Brevo** (EU-hosted, free tier),
-  hosting is **Railway** Hobby with its managed Postgres, files (the lesson
-  covers) go to **Cloudflare R2**. Rejected: SMTP over IONOS (Railway blocks
-  outbound SMTP below Pro), a separate domain (costs a year's fee and a second
+  hosting is **Render** (Starter web service + Basic Postgres, region
+  Frankfurt — switched from Railway the same day, which accepted no new
+  sign-up for the vendor), files (the lesson
+  covers) go to **Cloudflare R2**. Rejected: SMTP over IONOS (Brevo's API works on
+  every host, SMTP not), a separate domain (costs a year's fee and a second
   DNS account for nothing). STAGING, if ever, goes on
   `test.feldmannconsult.com`. ⚠️ The domain also carries the vendor's own
   mail: Brevo's records join the existing SPF record, MX stays untouched.
-- **Planned: go-live** (2026-10-29) — vendor creates Brevo, Railway and
+- **Planned: go-live** (2026-10-29) — vendor creates Brevo, Render and
   Cloudflare accounts and Brevo's DNS records at IONOS; then `mail-setup`,
-  R2 bucket + `media-check`, Railway deploy, `user-create --role owner`,
+  R2 bucket + `media-check`, Render deploy, `user-create --role owner`,
   `content-publish --env prod`, PROD product + IPN via `ds24-sync --env prod`,
   a real test purchase. **No sale before the FernUSG question is answered by
   a lawyer** (`docs/reports/compliance-2026-10-29.md`).
