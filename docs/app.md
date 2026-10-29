@@ -63,6 +63,28 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Tests:** `lib/practice/sorting-game.test.ts` (key never sent, half rounds
   never scored, both piles in the key)
 
+### The salespage — `/`
+
+- **Does:** the home page sells KI-Praxis — hero with the lesson-1 cover,
+  problem → promise, three benefits, every feature by its app name (#inside)
+  with the five lessons and their covers, the founder line, ONE offer block
+  (#offer: price via `formatPrice()`, value stack, 14-day withdrawal right,
+  who charges, what happens after the purchase, buy button), six FAQ, final
+  CTA. Buy button: signed out `checkoutLinksFor()`, signed in
+  `startCheckoutAction`, a blocker sentence otherwise (same split as /plans).
+- **Done when:** a stranger can say within one scroll what it is, for whom,
+  what it costs, why believe it and what to click — checked 2026-10-29 in
+  dark, light and at 380 px; the buy button reaches the Digistore24 order
+  form (HTTP 200) with the DEV test-payment parameter
+- **Copy:** `docs/marketing/salespage-de.md` (approved deck with its
+  Lektorat, 2 rounds, read by the writer — no subagent could be started),
+  voice `docs/marketing/voice.md`; en/es/fr translated from the approved deck
+- **Access:** public by design (the route `/`)
+- **Data:** none of its own; covers via `lib/practice/covers.ts`
+  (`mayAccess()` → `mediaUrlFor()`), lessons via `practiceTopics()`
+- **Tests:** `node run.mjs ux-check` (no placeholder, no long badge),
+  `legal-check` (no access-duration wording)
+
 ### Lesson covers — on every lesson page
 
 - **Does:** one AI-drawn illustration per lesson, same style (flat, sage
@@ -186,6 +208,15 @@ moment the feature works. Written down by your assistant, from the conversation
   her.
 - Planned 2026-10-29: Lia's handbook about KI-Praxis — the skill
   `ai-chat-knowledge`, then she joins the salespage's feature list.
+- **No social proof with quotes or numbers on the salespage** — there are none
+  yet (vendor, 2026-10-29); the founder line from feldmannconsult.com stands
+  in. Lia stays off the page until her handbook exists.
+- **No guarantee beyond the statutory withdrawal right** (vendor, 2026-10-29).
+- `npx shadcn add accordion` wrote `import { cn } from "cn"` into
+  `components/ui/accordion.tsx` and installed an unrelated npm package `cn`
+  (2026-10-29) — fixed to `@/lib/utils`, package removed. Its `npm install`
+  also pruned the embedded Postgres mid-run; `node run.mjs start` puts it
+  back by itself.
 - ⚠️ **Fernunterricht (FernUSG) is open**: AI feedback on what an owner hands
   in may count as monitoring the learning outcome. Not decided here —
   `compliance-check` before the first sale.

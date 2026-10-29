@@ -59,22 +59,98 @@
     "close": "Schließen"
   },
   "home": {
-    "badge": "Mit Digistore24-Abrechnung",
-    "title": "{app}",
-    "subtitle": "Dieses Template ist für den Verkauf über Digistore24 vorbereitet: Konten, geschützter Bereich und Kaufabwicklung sind schon da.",
-    "signIn": "Anmelden",
-    "plans": "Tarife ansehen",
-    "includedTitle": "Was schon eingebaut ist",
-    "dashboard": "Zum Dashboard",
-    "setupHint": "Sag deinem KI-Programm einfach „Digistore24 verbinden“ — oder tippe im Terminal: <code>node run.mjs ds24-connect</code>",
+    "badge": "Praxiskurs für kleine Betriebe",
+    "title": "Lass die KI den Kleinkram in Laden und Werkstatt vorbereiten.",
+    "subtitle": "Der Praxiskurs für Inhaber von Läden, Werkstätten und kleinen Betrieben. Du lernst, wo KI dir im Alltag Zeit spart. Und du setzt es gleich in deinem Betrieb um.",
+    "buy": "Kurs kaufen",
+    "inside": "Was drin ist",
+    "problem": {
+      "title": "Dein Tag ist voll. Und nicht nur mit deiner Arbeit.",
+      "pain": "Du stehst auf der Leiter, und das Telefon klingelt. Eine Anfrage wartet seit gestern auf Antwort. Der Beitrag für Instagram ist wieder liegen geblieben. Und die Bestellliste steht noch auf einem Zettel an der Kasse.",
+      "promise": "Genau dort hilft dir KI. Nicht bei deinem Handwerk, sondern beim Drumherum. In KI-Praxis lernst du, wo das geht. Und du setzt es selbst um, Schritt für Schritt."
+    },
+    "benefits": {
+      "title": "Was sich in deinem Alltag ändert",
+      "calls": {
+        "title": "Du verpasst weniger Anrufe.",
+        "body": "In der Lektion zum KI-Telefonassistenten erfährst du, wie Anrufe angenommen werden, während du arbeitest."
+      },
+      "replies": {
+        "title": "Du antwortest schneller auf Anfragen.",
+        "body": "Mit „Meine Aufgabe im Betrieb“ baust du dir Antwortvorlagen für die Fragen, die immer wieder kommen."
+      },
+      "delegate": {
+        "title": "Du weißt, was du abgeben kannst.",
+        "body": "Im Lernspiel „Wer macht was?“ übst du, was die KI vorbereiten kann und was bei dir bleibt."
+      }
+    },
     "features": {
-      "authTitle": "Anmeldung per Link oder Kennwort",
-      "authBody": "Magic-Link per E-Mail, Kennwort freiwillig, optional Google. Konten und Rollen sind eingebaut.",
-      "billingTitle": "Verkauf über Digistore24",
-      "billingBody": "Checkout, Abos und Token-Guthaben — Kaufabschlüsse kommen per signierter IPN an.",
-      "readyTitle": "Startklar",
-      "readyBody": "Hell- und Dunkelmodus, vier Sprachen, Datenbank und Tests inklusive."
-    }
+      "title": "Das steckt in KI-Praxis",
+      "course": {
+        "name": "Kurs „KI-Praxis für deinen Betrieb“",
+        "line": "fünf Lektionen in drei Abschnitten. Du arbeitest sie in deinem Tempo durch."
+      },
+      "selfCheck": {
+        "name": "Selbsttest",
+        "line": "am Ende jedes Abschnitts vier kurze Fragen. Du siehst sofort, was hängen geblieben ist."
+      },
+      "game": {
+        "name": "Lernspiel „Wer macht was?“",
+        "line": "acht Aufgaben aus dem Betriebsalltag. Du entscheidest bei jeder: Kann die KI das vorbereiten, oder bleibt es bei dir?"
+      },
+      "practice": {
+        "name": "Meine Aufgabe im Betrieb",
+        "line": "Du beschreibst deinen Betrieb in ein paar Stichworten. Die KI schlägt dir drei passende Aufgaben vor und führt dich Schritt für Schritt hindurch. Danach schreibst du auf, wie es lief, und bekommst eine Rückmeldung mit dem nächsten Schritt."
+      },
+      "lessonsTitle": "Die fünf Lektionen"
+    },
+    "founder": {
+      "title": "Von einem Berater, der kleine Betriebe kennt",
+      "body": "KI-Praxis kommt von Feldmann Consult aus Pfungstadt. Seit Jahren bringen wir KI in kleine Betriebe: in Läden, Werkstätten und Handwerksbetriebe. Praxisnah und auf deinen Alltag zugeschnitten. Diesen Kurs haben wir aus dieser Arbeit gebaut."
+    },
+    "offer": {
+      "stack1": "5 Lektionen mit Titelbildern",
+      "stack2": "3 Selbsttests",
+      "stack3": "Lernspiel „Wer macht was?“",
+      "stack4": "Meine Aufgabe im Betrieb mit KI-Vorschlägen und Rückmeldung",
+      "once": "Einmal zahlen, kein Abo.",
+      "withdrawal": "Du hast das gesetzliche Widerrufsrecht von 14 Tagen. Wann es bei digitalen Inhalten früher endet, steht im Bestellformular.",
+      "seller": "Wir verkaufen über die Plattform Digistore24. Unter diesem Namen erscheint die Zahlung auf deinem Kontoauszug.",
+      "after": "Nach dem Kauf meldest du dich mit deiner E-Mail-Adresse an und startest mit Lektion 1."
+    },
+    "faq": {
+      "title": "Häufige Fragen",
+      "basics": {
+        "q": "Brauche ich Vorwissen über KI?",
+        "a": "Nein. Der Kurs fängt bei null an und kommt ohne Fachwörter aus."
+      },
+      "time": {
+        "q": "Wie viel Zeit brauche ich?",
+        "a": "Die Lektionen sind kurz. Du arbeitest in deinem Tempo, auch zwischendurch."
+      },
+      "fit": {
+        "q": "Passt das zu meinem Betrieb?",
+        "a": "Der Kurs ist für Läden, Werkstätten und kleine Betriebe gemacht. Unter „Meine Aufgabe im Betrieb“ beschreibst du deinen Betrieb, und die Vorschläge richten sich danach."
+      },
+      "aiCost": {
+        "q": "Kostet die KI in den Aufgaben extra?",
+        "a": "Nein. Die Vorschläge und Rückmeldungen sind im Preis enthalten."
+      },
+      "subscription": {
+        "q": "Ist das ein Abo?",
+        "a": "Nein. Du zahlst einmal."
+      },
+      "seller": {
+        "q": "Wer kassiert, und kann ich widerrufen?",
+        "a": "Wir verkaufen über die Plattform Digistore24. Du hast das gesetzliche Widerrufsrecht von 14 Tagen. Wann es bei digitalen Inhalten früher endet, steht im Bestellformular."
+      }
+    },
+    "finalCta": {
+      "title": "Fang mit deiner ersten Aufgabe an. Noch diese Woche."
+    },
+    "signIn": "Anmelden",
+    "dashboard": "Zum Dashboard",
+    "setupHint": "Sag deinem KI-Programm einfach „Digistore24 verbinden“ — oder tippe im Terminal: <code>node run.mjs ds24-connect</code>"
   },
   "login": {
     "title": "Anmelden",

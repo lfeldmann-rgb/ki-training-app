@@ -59,22 +59,98 @@
     "close": "Fermer"
   },
   "home": {
-    "badge": "Avec la facturation Digistore24",
-    "title": "{app}",
-    "subtitle": "Ce modèle est prêt pour la vente via Digistore24 : les comptes, l'espace protégé et le paiement sont déjà en place.",
-    "signIn": "Se connecter",
-    "plans": "Voir les forfaits",
-    "includedTitle": "Ce qui est déjà intégré",
-    "dashboard": "Vers le tableau de bord",
-    "setupHint": "Dis simplement à ton programme d'IA « connecte Digistore24 » — ou tape dans le terminal : <code>node run.mjs ds24-connect</code>",
+    "badge": "Formation pour petites entreprises",
+    "title": "Laisse l’IA préparer les petites tâches de ta boutique et de ton atelier.",
+    "subtitle": "La formation pratique pour les patrons de boutiques, d’ateliers et de petites entreprises. Tu apprends où l’IA te fait gagner du temps au quotidien. Et tu l’appliques tout de suite dans ton entreprise.",
+    "buy": "Acheter la formation",
+    "inside": "Ce qu’elle contient",
+    "problem": {
+      "title": "Ta journée est pleine. Et pas seulement de ton travail.",
+      "pain": "Tu es sur l’échelle, et le téléphone sonne. Une demande attend une réponse depuis hier. La publication Instagram est encore restée en plan. Et la liste de commandes est toujours sur un papier près de la caisse.",
+      "promise": "C’est justement là que l’IA t’aide. Pas pour ton métier, mais pour tout ce qui l’entoure. Dans KI-Praxis, tu apprends où ça marche. Et tu le mets en pratique toi-même, pas à pas."
+    },
+    "benefits": {
+      "title": "Ce qui change dans ton quotidien",
+      "calls": {
+        "title": "Tu rates moins d’appels.",
+        "body": "Dans la leçon sur l’assistant téléphonique IA, tu découvres comment les appels sont pris pendant que tu travailles."
+      },
+      "replies": {
+        "title": "Tu réponds plus vite aux demandes.",
+        "body": "Avec « Ma tâche en entreprise », tu crées des modèles de réponse pour les questions qui reviennent sans cesse."
+      },
+      "delegate": {
+        "title": "Tu sais ce que tu peux déléguer.",
+        "body": "Dans le jeu « Qui fait quoi ? », tu t’exerces à distinguer ce que l’IA peut préparer et ce qui reste chez toi."
+      }
+    },
     "features": {
-      "authTitle": "Connexion par lien ou mot de passe",
-      "authBody": "Lien magique par e-mail, mot de passe facultatif, Google en option. Les comptes et les rôles sont intégrés.",
-      "billingTitle": "Vente via Digistore24",
-      "billingBody": "Checkout, abonnements et solde de jetons — les achats arrivent sous forme d'événements IPN signés.",
-      "readyTitle": "Prêt à démarrer",
-      "readyBody": "Mode clair et sombre, quatre langues, base de données et tests inclus."
-    }
+      "title": "Ce que contient KI-Praxis",
+      "course": {
+        "name": "Formation « KI-Praxis für deinen Betrieb »",
+        "line": "cinq leçons en trois parties. Tu les suis à ton rythme."
+      },
+      "selfCheck": {
+        "name": "Auto-test",
+        "line": "quatre petites questions à la fin de chaque partie. Tu vois tout de suite ce que tu as retenu."
+      },
+      "game": {
+        "name": "Jeu « Qui fait quoi ? »",
+        "line": "huit tâches du quotidien de l’entreprise. Pour chacune, tu décides : l’IA peut-elle la préparer, ou reste-t-elle chez toi ?"
+      },
+      "practice": {
+        "name": "Ma tâche en entreprise",
+        "line": "Tu décris ton entreprise en quelques mots-clés. L’IA te propose trois tâches adaptées et te guide pas à pas dans l’une d’elles. Ensuite, tu notes comment ça s’est passé et tu reçois un retour avec l’étape suivante."
+      },
+      "lessonsTitle": "Les cinq leçons"
+    },
+    "founder": {
+      "title": "Par un conseiller qui connaît les petites entreprises",
+      "body": "KI-Praxis vient de Feldmann Consult, à Pfungstadt (Allemagne). Depuis des années, nous apportons l’IA dans les petites entreprises : boutiques, ateliers et artisans. De façon pratique et adaptée à ton quotidien. Cette formation est née de ce travail."
+    },
+    "offer": {
+      "stack1": "5 leçons avec image de couverture",
+      "stack2": "3 auto-tests",
+      "stack3": "Jeu « Qui fait quoi ? »",
+      "stack4": "Ma tâche en entreprise, avec propositions et retours de l’IA",
+      "once": "Paiement unique, sans abonnement.",
+      "withdrawal": "Tu disposes du droit légal de rétractation de 14 jours. Le formulaire de commande indique quand il prend fin plus tôt pour les contenus numériques.",
+      "seller": "Nous vendons via la plateforme Digistore24. Le paiement apparaît sous ce nom sur ton relevé bancaire.",
+      "after": "Après l’achat, tu te connectes avec ton adresse e-mail et tu commences par la leçon 1."
+    },
+    "faq": {
+      "title": "Questions fréquentes",
+      "basics": {
+        "q": "Faut-il des connaissances en IA ?",
+        "a": "Non. La formation part de zéro et n’utilise pas de jargon."
+      },
+      "time": {
+        "q": "Combien de temps faut-il ?",
+        "a": "Les leçons sont courtes. Tu avances à ton rythme, même entre deux choses."
+      },
+      "fit": {
+        "q": "Est-ce adapté à mon entreprise ?",
+        "a": "La formation est faite pour les boutiques, ateliers et petites entreprises. Dans « Ma tâche en entreprise », tu décris la tienne, et les propositions s’y adaptent."
+      },
+      "aiCost": {
+        "q": "L’IA dans les tâches coûte-t-elle en plus ?",
+        "a": "Non. Les propositions et les retours sont compris dans le prix."
+      },
+      "subscription": {
+        "q": "Est-ce un abonnement ?",
+        "a": "Non. Tu paies une seule fois."
+      },
+      "seller": {
+        "q": "Qui encaisse, et puis-je me rétracter ?",
+        "a": "Nous vendons via la plateforme Digistore24. Tu disposes du droit légal de rétractation de 14 jours. Le formulaire de commande indique quand il prend fin plus tôt pour les contenus numériques."
+      }
+    },
+    "finalCta": {
+      "title": "Commence par ta première tâche. Dès cette semaine."
+    },
+    "signIn": "Se connecter",
+    "dashboard": "Vers le tableau de bord",
+    "setupHint": "Dis simplement à ton programme d'IA « connecte Digistore24 » — ou tape dans le terminal : <code>node run.mjs ds24-connect</code>"
   },
   "login": {
     "title": "Se connecter",

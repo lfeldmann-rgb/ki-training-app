@@ -59,22 +59,98 @@
     "close": "Close"
   },
   "home": {
-    "badge": "Billing by Digistore24",
-    "title": "{app}",
-    "subtitle": "This template is ready to sell through Digistore24: accounts, a protected area and checkout are already in place.",
-    "signIn": "Sign in",
-    "plans": "View plans",
-    "includedTitle": "What is already wired in",
-    "dashboard": "Go to dashboard",
-    "setupHint": "Just tell your AI program “connect Digistore24” — or type in the terminal: <code>node run.mjs ds24-connect</code>",
+    "badge": "Hands-on course for small businesses",
+    "title": "Let AI prepare the small stuff in your shop and workshop.",
+    "subtitle": "The hands-on course for owners of shops, workshops and small businesses. You learn where AI saves you time every day. And you put it to work in your own business right away.",
+    "buy": "Buy the course",
+    "inside": "What's inside",
+    "problem": {
+      "title": "Your day is full. And not only with your work.",
+      "pain": "You're up the ladder, and the phone rings. A request has been waiting for an answer since yesterday. The Instagram post got left behind again. And the order list is still on a note by the till.",
+      "promise": "That is exactly where AI helps you. Not with your craft, but with everything around it. In KI-Praxis you learn where that works. And you put it into practice yourself, step by step."
+    },
+    "benefits": {
+      "title": "What changes in your day",
+      "calls": {
+        "title": "You miss fewer calls.",
+        "body": "In the lesson on the AI phone assistant you learn how calls get answered while you work."
+      },
+      "replies": {
+        "title": "You answer requests faster.",
+        "body": "With “My task in the business” you build reply templates for the questions that keep coming back."
+      },
+      "delegate": {
+        "title": "You know what you can hand over.",
+        "body": "In the learning game “Who does what?” you practise what AI can prepare and what stays with you."
+      }
+    },
     "features": {
-      "authTitle": "Sign in by link or password",
-      "authBody": "Magic link by email, password optional, Google optional. Accounts and roles are built in.",
-      "billingTitle": "Selling via Digistore24",
-      "billingBody": "Checkout, subscriptions and token credit — purchases arrive as signed IPN events.",
-      "readyTitle": "Ready to go",
-      "readyBody": "Light and dark mode, four languages, database and tests included."
-    }
+      "title": "What's in KI-Praxis",
+      "course": {
+        "name": "Course “KI-Praxis für deinen Betrieb”",
+        "line": "five lessons in three sections. You work through them at your own pace."
+      },
+      "selfCheck": {
+        "name": "Self-check",
+        "line": "four short questions at the end of each section. You see right away what stuck."
+      },
+      "game": {
+        "name": "Learning game “Who does what?”",
+        "line": "eight tasks from everyday business. For each one you decide: can AI prepare it, or does it stay with you?"
+      },
+      "practice": {
+        "name": "My task in the business",
+        "line": "You describe your business in a few keywords. The AI suggests three tasks that fit and walks you through one step by step. Then you write down how it went and get feedback with the next step."
+      },
+      "lessonsTitle": "The five lessons"
+    },
+    "founder": {
+      "title": "From a consultant who knows small businesses",
+      "body": "KI-Praxis comes from Feldmann Consult in Pfungstadt, Germany. For years we have been bringing AI into small businesses: shops, workshops and trades. Practical and tailored to your day. We built this course out of that work."
+    },
+    "offer": {
+      "stack1": "5 lessons with cover pictures",
+      "stack2": "3 self-checks",
+      "stack3": "Learning game “Who does what?”",
+      "stack4": "My task in the business, with AI suggestions and feedback",
+      "once": "Pay once, no subscription.",
+      "withdrawal": "You have the statutory 14-day right of withdrawal. When it ends earlier for digital content is explained in the order form.",
+      "seller": "We sell through the platform Digistore24. The payment appears under that name on your bank statement.",
+      "after": "After buying you sign in with your email address and start with lesson 1."
+    },
+    "faq": {
+      "title": "Frequently asked questions",
+      "basics": {
+        "q": "Do I need to know anything about AI?",
+        "a": "No. The course starts from zero and uses no jargon."
+      },
+      "time": {
+        "q": "How much time do I need?",
+        "a": "The lessons are short. You work at your own pace, in between other things too."
+      },
+      "fit": {
+        "q": "Does it fit my business?",
+        "a": "The course is made for shops, workshops and small businesses. Under “My task in the business” you describe yours, and the suggestions follow it."
+      },
+      "aiCost": {
+        "q": "Does the AI in the tasks cost extra?",
+        "a": "No. The suggestions and feedback are included in the price."
+      },
+      "subscription": {
+        "q": "Is this a subscription?",
+        "a": "No. You pay once."
+      },
+      "seller": {
+        "q": "Who takes the payment, and can I withdraw?",
+        "a": "We sell through the platform Digistore24. You have the statutory 14-day right of withdrawal. When it ends earlier for digital content is explained in the order form."
+      }
+    },
+    "finalCta": {
+      "title": "Start with your first task. This week."
+    },
+    "signIn": "Sign in",
+    "dashboard": "Go to dashboard",
+    "setupHint": "Just tell your AI program “connect Digistore24” — or type in the terminal: <code>node run.mjs ds24-connect</code>"
   },
   "login": {
     "title": "Sign in",
