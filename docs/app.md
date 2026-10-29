@@ -144,10 +144,22 @@ moment the feature works. Written down by your assistant, from the conversation
   build-app 1b.
 - **No look back over the course (companion row 3).** Decided on 2026-10-28 by
   the vendor in build-app 1c.
-- **One product, `ki_praxis`, `one_time`, 199 € as a PLACEHOLDER.** The vendor
-  has not named a price yet (2026-10-28); `setup-digistore` asks it before any
-  Digistore24 product exists. The template's examples `basic` and `starter`
-  are parked (`"sell": false`), `billingMode` is `subscriptions`.
+- **One product, `ki_praxis`, `one_time`, 149 €** — named by the vendor
+  2026-10-29. The template's examples `basic` and `starter` are parked
+  (`"sell": false`), `billingMode` is `subscriptions`.
+- **German order form only.** Decided by the vendor 2026-10-29: the course is
+  German, so `productIds` carries `de` alone and en/es/fr visitors get the
+  German form. `ds24-sync` warns about the three missing languages on every
+  run — that warning is this decision, not a gap.
+- **Digistore24 account:** the vendor's (lf@feldmannconsult.com), connected
+  2026-10-29 with `ds24-connect`. DEV product 756657 in product group
+  "KI-Praxis" (71963). The PROD product is a go-live step.
+- **IPN in DEV not registered yet** (2026-10-29): it needs a Cloudflare Quick
+  Tunnel, and the assistant's own safety check refuses to open a public
+  tunnel from the vendor's machine. `cloudflared` is installed
+  (`C:\Program Files (x86)\cloudflared`); the vendor runs `node run.mjs
+  ds24-sync` once in a NEW terminal, or it waits for the real domain at
+  go-live.
 - **"KI-Praxis" is a working title** set by the assistant on 2026-10-28; the
   vendor is unsure about the name.
 - **The overview card reads the course module through a server export**,
