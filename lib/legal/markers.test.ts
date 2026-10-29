@@ -65,12 +65,15 @@ describe("readMarkers", () => {
   });
 });
 
-describe("the shipped placeholders", () => {
+// The template ships every page as a placeholder; compliance-check replaces
+// them with drafts (2026-10-29), and the operator removes the draft marker
+// after a lawyer has read the text. What must hold in every one of those
+// states: a page is never a placeholder AND a draft at once.
+describe("the legal pages", () => {
   for (const file of readdirSync(LEGAL).filter((f) => f.endsWith(".md"))) {
-    it(`content/legal/${file} is a placeholder and not a draft`, () => {
+    it(`content/legal/${file} is either the placeholder or filled in, never both`, () => {
       const out = readMarkers(readFileSync(join(LEGAL, file), "utf8"));
-      expect(out.placeholder).toBe(true);
-      expect(out.draft).toBe(false);
+      expect(out.placeholder && out.draft).toBe(false);
     });
   }
 });

@@ -1,21 +1,27 @@
-<!-- ds24-appkit:placeholder -->
-Diese Seite ist noch nicht ausgefüllt.
+<!-- ds24-appkit:draft -->
+**Entwurf zur Vorlage bei einer Rechtsberatung** — am 2026-10-29 mit Software aus dem Datenbestand dieser App entworfen, noch nicht rechtlich geprüft. Keine Rechtsberatung.
 
-Ein Impressum nach **§ 5 DDG** ist Pflicht, sobald diese App öffentlich
-erreichbar ist — unabhängig davon, ob schon jemand etwas gekauft hat. Es gehört
-dir und niemand kann es für dich schreiben: es nennt deinen Namen, deine
-ladungsfähige Anschrift (kein Postfach), eine E-Mail-Adresse und einen zweiten
-schnellen Kontaktweg, dazu Register und Registernummer sowie die
-Umsatzsteuer-Identifikationsnummer, falls du eine hast.
+## Angaben gemäß § 5 DDG
 
-Starte im Terminal den Skill **compliance-check**. Er fragt genau die Angaben
-ab, die für deine Rechtsform nötig sind, und schreibt diese Datei
-(**content/legal/impressum.de.md**) und ihre Gegenstücke in den übrigen
-Sprachen der App.
+Feldmann Consult, Inhaber: Richard Lutz Feldmann
 
-Was der Skill schreibt, ist ein **Entwurf zur Vorlage bei einer Rechtsberatung**
-und steht so gekennzeichnet auf der Seite, bis du die Kennzeichnung nach der
-Prüfung entfernst — eine Rechtsberatung ist es nicht.
+Niedergasse 43, 64319 Pfungstadt, Deutschland
 
-**node run.mjs legal-check** sagt dir jederzeit, welche Rechtsseiten noch auf
-diesem Text stehen.
+## Kontakt
+
+Telefon: 0176-3172-2853
+
+E-Mail: lf@feldmannconsult.com
+
+## Umsatzsteuer-Identifikationsnummer
+
+Umsatzsteuer-Identifikationsnummer gemäß § 27a Umsatzsteuergesetz: DE359470981
+
+## Rechtsform und Register
+
+Einzelunternehmen. Eine Eintragung im Handelsregister besteht nicht.
+
+## Verbraucherstreitbeilegung
+
+Wir sind nicht bereit und nicht verpflichtet, an Streitbeilegungsverfahren vor
+einer Verbraucherschlichtungsstelle teilzunehmen.

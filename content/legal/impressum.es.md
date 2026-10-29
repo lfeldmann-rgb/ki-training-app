@@ -1,21 +1,27 @@
-<!-- ds24-appkit:placeholder -->
-Esta página todavía no se ha rellenado.
+<!-- ds24-appkit:draft -->
+**Borrador para revisión jurídica** — redactado el 2026-10-29 por software a partir del inventario de datos de esta aplicación, aún no revisado por un abogado. No es asesoramiento jurídico.
 
-Un aviso legal conforme al **§ 5 DDG** es obligatorio en cuanto esta aplicación
-sea accesible públicamente, con independencia de que alguien haya comprado algo
-o no. Es tuyo y nadie puede escribirlo por ti: indica tu nombre, tu dirección
-postal (no un apartado de correos), una dirección de correo electrónico y una
-segunda vía rápida de contacto, además del registro mercantil y su número, y el
-número de identificación fiscal si tienes uno.
+## Información conforme al § 5 DDG (Ley alemana de servicios digitales)
 
-Ejecuta en el terminal el skill **compliance-check**. Pregunta exactamente los
-datos que exige tu forma jurídica y escribe este archivo
-(**content/legal/impressum.es.md**) y sus equivalentes en los demás idiomas de la
-aplicación.
+Feldmann Consult, Titular: Richard Lutz Feldmann
 
-Lo que escribe el skill es un **borrador para revisión jurídica** y aparece
-marcado así en la página hasta que retires la marca tras la revisión — no es
-asesoramiento jurídico.
+Niedergasse 43, 64319 Pfungstadt, Alemania
 
-**node run.mjs legal-check** te dice en cualquier momento qué páginas legales
-siguen mostrando este texto.
+## Contacto
+
+Teléfono: +49 176 3172 2853
+
+Correo electrónico: lf@feldmannconsult.com
+
+## Número de identificación a efectos del IVA
+
+Número de identificación a efectos del IVA conforme al § 27a de la Ley alemana del IVA: DE359470981
+
+## Forma jurídica y registro
+
+Empresa individual. No existe inscripción en el registro mercantil.
+
+## Resolución de litigios de consumo
+
+No estamos dispuestos ni obligados a participar en procedimientos de
+resolución de litigios ante una entidad de arbitraje de consumo.

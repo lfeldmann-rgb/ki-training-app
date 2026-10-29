@@ -1,21 +1,27 @@
-<!-- ds24-appkit:placeholder -->
-Cette page n'est pas encore remplie.
+<!-- ds24-appkit:draft -->
+**Projet à soumettre à un conseil juridique** — rédigé le 2026-10-29 par un logiciel à partir de l’inventaire des données de cette application, pas encore vérifié par un avocat. Ceci n’est pas un conseil juridique.
 
-Des mentions légales au sens du **§ 5 DDG** sont obligatoires dès que cette
-application est accessible au public, que quelqu'un ait déjà acheté quelque
-chose ou non. Elles t'appartiennent et personne ne peut les rédiger à ta place :
-elles indiquent ton nom, ton adresse postale (pas une boîte postale), une
-adresse e-mail et un second moyen de contact rapide, ainsi que le registre du
-commerce et son numéro, et le numéro de TVA intracommunautaire si tu en as un.
+## Informations conformément au § 5 DDG (loi allemande sur les services numériques)
 
-Lance le skill **compliance-check** dans le terminal. Il demande exactement
-les informations qu'exige ta forme juridique et écrit ce fichier
-(**content/legal/impressum.fr.md**) ainsi que ses équivalents dans les autres
-langues de l'application.
+Feldmann Consult, Exploitant : Richard Lutz Feldmann
 
-Ce que la skill écrit est un **projet à soumettre à un conseil juridique** ;
-il est signalé comme tel sur la page jusqu'à ce que tu retires la mention
-après la relecture — ce n'est pas un conseil juridique.
+Niedergasse 43, 64319 Pfungstadt, Allemagne
 
-**node run.mjs legal-check** t'indique à tout moment quelles pages légales portent
-encore ce texte.
+## Contact
+
+Téléphone : +49 176 3172 2853
+
+E-mail : lf@feldmannconsult.com
+
+## Numéro d’identification à la TVA
+
+Numéro d’identification à la TVA conformément au § 27a de la loi allemande sur la TVA : DE359470981
+
+## Forme juridique et registre
+
+Entreprise individuelle. Il n’existe pas d’inscription au registre du commerce.
+
+## Règlement des litiges de consommation
+
+Nous ne sommes ni disposés ni tenus à participer à une procédure de règlement
+des litiges devant un organisme de médiation de la consommation.
