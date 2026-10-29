@@ -106,6 +106,7 @@ import {
   publicQuestions,
   scoreAnswers,
 } from "@/lib/practice/self-checks";
+import { publicCards, scoreSort } from "@/lib/practice/sorting-game";
 
 import type { ActivityVerdict, StoredResult } from "./rules";
 
@@ -171,6 +172,24 @@ export const ACTIVITIES: readonly Activity[] = [
       if (!result) throw new Error("no self-check for this subject");
       // A half-filled sheet is a checkpoint with no score — never a verdict
       // (rule 3: a scored checkpoint is a free probe).
+      if (!result.complete) return { final: false };
+      return { final: true, score: result.score, maxScore: result.maxScore };
+    },
+  },
+  // KI-Praxis: the learning game on lesson 1 — eight cards, sorted into "KI
+  // kann vorbereiten" or "bleibt bei dir". Practice, not an exam: unlimited,
+  // free, no pass mark. Cards and key are lib/practice/sorting-game.ts.
+  {
+    id: "ki-sortierspiel",
+    requiresPlan: "ki_praxis",
+    costsTokens: 0,
+    maxAttempts: null,
+    async load({ subject }) {
+      return publicCards(subject);
+    },
+    async grade({ subject, submission }) {
+      const result = scoreSort(subject, submission);
+      if (!result) throw new Error("no sorting game for this subject");
       if (!result.complete) return { final: false };
       return { final: true, score: result.score, maxScore: result.maxScore };
     },

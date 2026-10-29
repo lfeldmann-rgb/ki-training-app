@@ -48,8 +48,8 @@ vorgelesen ist es eine Notiz zum Prüfen, kein Versprechen, das du gegeben hast.
       Schritt für Schritt durch eine geführt werden, aufschreiben wie er sie
       umgesetzt hat und eine Rückmeldung mit nächstem Schritt bekommen (gebaut
       2026-10-28)
-- [ ] im Lernspiel zuordnen, welche Aufgaben im Betrieb KI übernehmen kann
-      und welche nicht
+- [x] im Lernspiel zuordnen, welche Aufgaben im Betrieb KI übernehmen kann
+      und welche nicht (gebaut 2026-10-29)
 
 ## Nicht in der ersten Version (entschieden, nicht vergessen)
 

@@ -45,6 +45,24 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Tests:** the module's own (`modules/courses/**/*.test.ts`);
   `node run.mjs courses-check` green
 
+### The learning game — "Wer macht was?", on lesson 1
+
+- **Does:** eight cards from everyday business, one at a time; the owner
+  sorts each into "Kann KI vorbereiten" or "Bleibt bei dir" and sees
+  "x von 8 richtig zugeordnet" plus the rule of thumb. Unlimited, free, no
+  pass mark — practice, not an exam.
+- **Done when:** an owner on lesson 1 sorts all eight cards and sees their
+  score — checked 2026-10-29 as the test owner: two deliberate mistakes gave
+  "6 von 8 richtig zugeordnet.", "Noch einmal spielen" starts at card 1;
+  test result deleted
+- **Access:** activity `ki-sortierspiel`, `requiresPlan: "ki_praxis"`,
+  `subject: "was-ki-kann"` (`modules/activity/activities.ts`)
+- **Data:** `activity_results` (module); cards and key in code,
+  `lib/practice/sorting-game.ts`
+- **Where:** `components/practice/lesson-extras.tsx` → `sorting-game.tsx`
+- **Tests:** `lib/practice/sorting-game.test.ts` (key never sent, half rounds
+  never scored, both piles in the key)
+
 ### Lesson covers — on every lesson page
 
 - **Does:** one AI-drawn illustration per lesson, same style (flat, sage

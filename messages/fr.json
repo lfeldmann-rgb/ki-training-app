@@ -963,6 +963,15 @@
       "practiceUnknownTopic": "Ce thème n’existe pas. Choisis-en un ci-dessus."
     },
     "lessonPracticeLink": "Faire une tâche dans ton entreprise pour cette leçon",
-    "courseCardPractice": "Ma tâche en entreprise"
+    "courseCardPractice": "Ma tâche en entreprise",
+    "gameTitle": "Jeu : qui fait quoi ?",
+    "gameIntro": "Huit tâches du quotidien de l’entreprise. Décide pour chacune : l’IA peut-elle la préparer – ou reste-t-elle chez toi ?",
+    "gameCardOf": "Carte {index} sur {total}",
+    "gamePileKi": "L’IA peut préparer",
+    "gamePileDu": "Reste chez toi",
+    "gameChecking": "Évaluation …",
+    "gameScore": "{score} sur {max} bien classées.",
+    "gameExplain": "Règle simple : l’IA prépare – les décisions, les engagements et le contrôle technique restent chez toi.",
+    "gameAgain": "Rejouer"
   }
 }

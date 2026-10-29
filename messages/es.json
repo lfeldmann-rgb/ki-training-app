@@ -963,6 +963,15 @@
       "practiceUnknownTopic": "Ese tema no existe. Elige uno arriba."
     },
     "lessonPracticeLink": "Resolver una tarea en tu negocio sobre esta lección",
-    "courseCardPractice": "Mi tarea en el negocio"
+    "courseCardPractice": "Mi tarea en el negocio",
+    "gameTitle": "Juego: ¿quién hace qué?",
+    "gameIntro": "Ocho tareas del día a día del negocio. Decide en cada una: ¿puede prepararla la IA o se queda contigo?",
+    "gameCardOf": "Tarjeta {index} de {total}",
+    "gamePileKi": "La IA puede prepararlo",
+    "gamePileDu": "Se queda contigo",
+    "gameChecking": "Evaluando …",
+    "gameScore": "{score} de {max} bien clasificadas.",
+    "gameExplain": "Regla práctica: la IA prepara; las decisiones, los compromisos y la revisión técnica se quedan contigo.",
+    "gameAgain": "Jugar otra vez"
   }
 }

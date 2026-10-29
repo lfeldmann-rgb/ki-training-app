@@ -963,6 +963,15 @@
       "practiceUnknownTopic": "That topic does not exist. Pick one above."
     },
     "lessonPracticeLink": "Do a task in your business for this lesson",
-    "courseCardPractice": "My task in the business"
+    "courseCardPractice": "My task in the business",
+    "gameTitle": "Learning game: who does what?",
+    "gameIntro": "Eight tasks from everyday business. Decide for each: can AI prepare it – or does it stay with you?",
+    "gameCardOf": "Card {index} of {total}",
+    "gamePileKi": "AI can prepare it",
+    "gamePileDu": "Stays with you",
+    "gameChecking": "Checking …",
+    "gameScore": "{score} of {max} sorted correctly.",
+    "gameExplain": "Rule of thumb: AI prepares – decisions, promises and expert checks stay with you.",
+    "gameAgain": "Play again"
   }
 }

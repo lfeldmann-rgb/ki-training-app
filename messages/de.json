@@ -963,6 +963,15 @@
       "practiceUnknownTopic": "Dieses Thema gibt es nicht. Wähle oben ein Thema aus."
     },
     "lessonPracticeLink": "Zu dieser Lektion eine Aufgabe im Betrieb lösen",
-    "courseCardPractice": "Meine Aufgabe im Betrieb"
+    "courseCardPractice": "Meine Aufgabe im Betrieb",
+    "gameTitle": "Lernspiel: Wer macht was?",
+    "gameIntro": "Acht Aufgaben aus dem Betriebsalltag. Entscheide bei jeder: Kann die KI das vorbereiten – oder bleibt es bei dir?",
+    "gameCardOf": "Karte {index} von {total}",
+    "gamePileKi": "Kann KI vorbereiten",
+    "gamePileDu": "Bleibt bei dir",
+    "gameChecking": "Wird ausgewertet …",
+    "gameScore": "{score} von {max} richtig zugeordnet.",
+    "gameExplain": "Faustregel: Die KI bereitet vor – Entscheidungen, Zusagen und fachliche Prüfung bleiben bei dir.",
+    "gameAgain": "Noch einmal spielen"
   }
 }
