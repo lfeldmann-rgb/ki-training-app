@@ -1,9 +1,11 @@
 // Copyright (c) 2026 Digistore24 Inc, St. Petersburg, USA
 // SPDX-License-Identifier: MIT
 
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { PageHeader } from "@/components/page-header";
+import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/ui/callout";
 import { requireActiveUser } from "@/lib/authz";
 import { hasPlan } from "@/lib/entitlements/manage";
@@ -125,8 +127,16 @@ export default async function ChatPage() {
     return (
       <>
         {header}
+        {/* Not a dead end: the menu shows this page to every member, so the
+            refusal says who she is and where she is unlocked (UX report
+            2026-10-29). The plans page resolves `needs` to the product name. */}
         <Callout variant="warning" title={t("noAccessTitle")}>
-          {t("noAccessBody")}
+          <p>{t("noAccessBody", { name: config.name })}</p>
+          <Button asChild size="sm" className="mt-3">
+            <Link href={`/plans?needs=${encodeURIComponent(config.requiresPlan)}`}>
+              {t("noAccessCta")}
+            </Link>
+          </Button>
         </Callout>
       </>
     );

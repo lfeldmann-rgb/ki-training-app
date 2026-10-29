@@ -203,7 +203,7 @@
     "holdingPlanLabel": "Habilitado",
     "holdingTokensLabel": "Saldo",
     "planTitle": "Planes",
-    "planBody": "Mira lo que ofreces o contrata un plan.",
+    "planBody": "Mira lo que hay y desbloquea lo que necesites.",
     "planCta": "Ver planes",
     "nextPaymentTitle": "Próximo pago",
     "nextPaymentBody": "Ese día se renueva tu suscripción.",
@@ -226,7 +226,7 @@
     "courseStart": "Empezar",
     "courseContinue": "Continuar",
     "courseOpen": "Ver el curso",
-    "courseUnlock": "Desbloquear el curso",
+    "courseUnlock": "Comprar el curso",
     "courseNext": "A continuación: {title}"
   },
   "onboarding": {
@@ -567,7 +567,7 @@
   },
   "chat": {
     "title": "Preguntar a {name}",
-    "subtitle": "Respuestas a todas las preguntas sobre esta aplicación — las 24 horas.",
+    "subtitle": "Respuestas a tus preguntas sobre el curso y la aplicación — las 24 horas.",
     "placeholder": "Escribe tu pregunta …",
     "send": "Enviar",
     "open": "Preguntar a {name}",
@@ -588,7 +588,8 @@
     "offBrokenConfig": "config/ai-chat.json no es coherente. node run.mjs kb-check dice qué falta.",
     "offForMember": "{name} no está disponible en esta aplicación en este momento.",
     "noAccessTitle": "Sin acceso",
-    "noAccessBody": "El asistente pertenece a un plan que esta cuenta no tiene."
+    "noAccessBody": "{name} responde a tus preguntas sobre el curso. En cuanto lo hayas desbloqueado, podrás preguntarle aquí.",
+    "noAccessCta": "Comprar el curso"
   },
   "answerMedia": {
     "video": "Vídeo",
@@ -611,7 +612,7 @@
     "oneTime": "pago único",
     "onRequest": "a consultar",
     "from": "desde",
-    "buy": "Comprar ahora",
+    "buy": "Comprar",
     "checkoutFailedTitle": "No se pudo iniciar el checkout",
     "checkoutFailedBody": "Vuelve a intentarlo en unos instantes. No se ha cobrado nada.",
     "needsTitle": "Para eso necesitas {product}",

@@ -203,7 +203,7 @@
     "holdingPlanLabel": "Unlocked",
     "holdingTokensLabel": "Balance",
     "planTitle": "Plans",
-    "planBody": "See what you offer, or book a plan.",
+    "planBody": "See what there is, and unlock what you need.",
     "planCta": "View plans",
     "nextPaymentTitle": "Next payment",
     "nextPaymentBody": "Your subscription renews on this day.",
@@ -226,7 +226,7 @@
     "courseStart": "Get started",
     "courseContinue": "Continue",
     "courseOpen": "View course",
-    "courseUnlock": "Unlock the course",
+    "courseUnlock": "Buy the course",
     "courseNext": "Up next: {title}"
   },
   "onboarding": {
@@ -567,7 +567,7 @@
   },
   "chat": {
     "title": "Ask {name}",
-    "subtitle": "Answers to any question about this app — around the clock.",
+    "subtitle": "Answers to your questions about the course and the app — around the clock.",
     "placeholder": "Type your question …",
     "send": "Send",
     "open": "Ask {name}",
@@ -588,7 +588,8 @@
     "offBrokenConfig": "config/ai-chat.json does not hold together. node run.mjs kb-check says what is wrong.",
     "offForMember": "{name} is not available in this app at the moment.",
     "noAccessTitle": "No access",
-    "noAccessBody": "The assistant belongs to a plan this account does not hold."
+    "noAccessBody": "{name} answers your questions about the course. As soon as you have unlocked it, you can ask her here.",
+    "noAccessCta": "Buy the course"
   },
   "answerMedia": {
     "video": "Video",
@@ -611,7 +612,7 @@
     "oneTime": "one-time",
     "onRequest": "on request",
     "from": "from",
-    "buy": "Buy now",
+    "buy": "Buy",
     "checkoutFailedTitle": "The checkout could not be started",
     "checkoutFailedBody": "Please try again shortly. Nothing was charged.",
     "needsTitle": "You need {product} for that",

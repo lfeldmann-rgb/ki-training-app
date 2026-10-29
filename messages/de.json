@@ -203,7 +203,7 @@
     "holdingPlanLabel": "Freigeschaltet",
     "holdingTokensLabel": "Guthaben",
     "planTitle": "Tarife",
-    "planBody": "Sieh dir an, was du anbietest, oder buche einen Tarif.",
+    "planBody": "Sieh dir an, was es gibt, und schalte frei, was du brauchst.",
     "planCta": "Tarife ansehen",
     "nextPaymentTitle": "Nächste Zahlung",
     "nextPaymentBody": "An diesem Tag verlängert sich dein Abo.",
@@ -226,7 +226,7 @@
     "courseStart": "Loslegen",
     "courseContinue": "Weiterlernen",
     "courseOpen": "Kurs ansehen",
-    "courseUnlock": "Kurs freischalten",
+    "courseUnlock": "Kurs kaufen",
     "courseNext": "Als Nächstes: {title}"
   },
   "onboarding": {
@@ -567,7 +567,7 @@
   },
   "chat": {
     "title": "{name} fragen",
-    "subtitle": "Antworten auf alle Fragen zu dieser App — rund um die Uhr.",
+    "subtitle": "Antworten auf deine Fragen zum Kurs und zur App — rund um die Uhr.",
     "placeholder": "Frage eingeben …",
     "send": "Senden",
     "open": "{name} fragen",
@@ -588,7 +588,8 @@
     "offBrokenConfig": "config/ai-chat.json ist nicht schlüssig. node run.mjs kb-check sagt, was fehlt.",
     "offForMember": "{name} steht in dieser App gerade nicht zur Verfügung.",
     "noAccessTitle": "Kein Zugang",
-    "noAccessBody": "Der Assistent gehört zu einem Tarif, den dieses Konto nicht hat."
+    "noAccessBody": "{name} beantwortet deine Fragen zum Kurs. Sobald du ihn freigeschaltet hast, kannst du sie hier fragen.",
+    "noAccessCta": "Kurs kaufen"
   },
   "answerMedia": {
     "video": "Video",
@@ -611,7 +612,7 @@
     "oneTime": "einmalig",
     "onRequest": "auf Anfrage",
     "from": "ab",
-    "buy": "Jetzt buchen",
+    "buy": "Kaufen",
     "checkoutFailedTitle": "Der Checkout konnte nicht gestartet werden",
     "checkoutFailedBody": "Bitte versuche es in Kürze noch einmal. Es wurde nichts abgebucht.",
     "needsTitle": "Dafür brauchst du {product}",

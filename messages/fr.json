@@ -203,7 +203,7 @@
     "holdingPlanLabel": "Débloqué",
     "holdingTokensLabel": "Solde",
     "planTitle": "Forfaits",
-    "planBody": "Regarde ce que tu proposes, ou souscris un forfait.",
+    "planBody": "Regarde ce qui existe, et débloque ce dont tu as besoin.",
     "planCta": "Voir les forfaits",
     "nextPaymentTitle": "Prochain paiement",
     "nextPaymentBody": "Ce jour-là, ton abonnement est reconduit.",
@@ -226,7 +226,7 @@
     "courseStart": "Commencer",
     "courseContinue": "Continuer",
     "courseOpen": "Voir le cours",
-    "courseUnlock": "Débloquer le cours",
+    "courseUnlock": "Acheter la formation",
     "courseNext": "Ensuite : {title}"
   },
   "onboarding": {
@@ -567,7 +567,7 @@
   },
   "chat": {
     "title": "Demander à {name}",
-    "subtitle": "Des réponses à toutes les questions sur cette application — 24 h/24.",
+    "subtitle": "Des réponses à tes questions sur la formation et l’application — 24 h/24.",
     "placeholder": "Saisis ta question …",
     "send": "Envoyer",
     "open": "Demander à {name}",
@@ -588,7 +588,8 @@
     "offBrokenConfig": "config/ai-chat.json n'est pas cohérent. node run.mjs kb-check indique ce qui manque.",
     "offForMember": "{name} n'est pas disponible dans cette application pour le moment.",
     "noAccessTitle": "Pas d'accès",
-    "noAccessBody": "L'assistant fait partie d'un forfait que ce compte n'a pas."
+    "noAccessBody": "{name} répond à tes questions sur la formation. Dès que tu l’as débloquée, tu peux lui poser tes questions ici.",
+    "noAccessCta": "Acheter la formation"
   },
   "answerMedia": {
     "video": "Vidéo",
@@ -611,7 +612,7 @@
     "oneTime": "paiement unique",
     "onRequest": "sur demande",
     "from": "à partir de",
-    "buy": "Acheter maintenant",
+    "buy": "Acheter",
     "checkoutFailedTitle": "Le checkout n'a pas pu être lancé",
     "checkoutFailedBody": "Réessaie dans quelques instants. Rien n'a été débité.",
     "needsTitle": "Il te faut {product} pour ça",
