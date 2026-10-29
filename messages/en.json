@@ -102,7 +102,11 @@
         "name": "My task in the business",
         "line": "You describe your business in a few keywords. The AI suggests three tasks that fit and walks you through one step by step. Then you write down how it went and get feedback with the next step."
       },
-      "lessonsTitle": "The five lessons"
+      "lessonsTitle": "The five lessons",
+      "assistant": {
+        "name": "Lisa, your AI assistant",
+        "line": "answers your questions about the course and the app, around the clock. For money and access she sends you to us."
+      }
     },
     "founder": {
       "title": "From a consultant who knows small businesses",
@@ -116,7 +120,8 @@
       "once": "Pay once, no subscription.",
       "withdrawal": "You have the statutory 14-day right of withdrawal. When it ends earlier for digital content is explained in the order form.",
       "seller": "We sell through the platform Digistore24. The payment appears under that name on your bank statement.",
-      "after": "After buying you sign in with your email address and start with lesson 1."
+      "after": "After buying you sign in with your email address and start with lesson 1.",
+      "stack5": "Lisa, your AI assistant for questions about the course"
     },
     "faq": {
       "title": "Frequently asked questions",

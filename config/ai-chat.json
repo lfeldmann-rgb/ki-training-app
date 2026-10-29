@@ -1,8 +1,8 @@
 {
   "enabled": true,
-  "name": "Lia",
+  "name": "Lisa",
   "avatar": "/share/chat.png",
-  "requiresPlan": null,
+  "requiresPlan": "ki_praxis",
   "maxHistoryTurns": 12,
   "maxMessagesPer10Min": 20
 }

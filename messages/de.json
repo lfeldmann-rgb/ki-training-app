@@ -102,7 +102,11 @@
         "name": "Meine Aufgabe im Betrieb",
         "line": "Du beschreibst deinen Betrieb in ein paar Stichworten. Die KI schlägt dir drei passende Aufgaben vor und führt dich Schritt für Schritt hindurch. Danach schreibst du auf, wie es lief, und bekommst eine Rückmeldung mit dem nächsten Schritt."
       },
-      "lessonsTitle": "Die fünf Lektionen"
+      "lessonsTitle": "Die fünf Lektionen",
+      "assistant": {
+        "name": "Lisa, deine KI-Assistentin",
+        "line": "beantwortet deine Fragen zum Kurs und zur App, rund um die Uhr. Bei Geld und Zugang verweist sie dich an uns."
+      }
     },
     "founder": {
       "title": "Von einem Berater, der kleine Betriebe kennt",
@@ -116,7 +120,8 @@
       "once": "Einmal zahlen, kein Abo.",
       "withdrawal": "Du hast das gesetzliche Widerrufsrecht von 14 Tagen. Wann es bei digitalen Inhalten früher endet, steht im Bestellformular.",
       "seller": "Wir verkaufen über die Plattform Digistore24. Unter diesem Namen erscheint die Zahlung auf deinem Kontoauszug.",
-      "after": "Nach dem Kauf meldest du dich mit deiner E-Mail-Adresse an und startest mit Lektion 1."
+      "after": "Nach dem Kauf meldest du dich mit deiner E-Mail-Adresse an und startest mit Lektion 1.",
+      "stack5": "Lisa, deine KI-Assistentin für Fragen zum Kurs"
     },
     "faq": {
       "title": "Häufige Fragen",

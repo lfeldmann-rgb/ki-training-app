@@ -102,7 +102,11 @@
         "name": "Ma tâche en entreprise",
         "line": "Tu décris ton entreprise en quelques mots-clés. L’IA te propose trois tâches adaptées et te guide pas à pas dans l’une d’elles. Ensuite, tu notes comment ça s’est passé et tu reçois un retour avec l’étape suivante."
       },
-      "lessonsTitle": "Les cinq leçons"
+      "lessonsTitle": "Les cinq leçons",
+      "assistant": {
+        "name": "Lisa, ton assistante IA",
+        "line": "répond à tes questions sur la formation et l’application, jour et nuit. Pour l’argent et l’accès, elle te renvoie vers nous."
+      }
     },
     "founder": {
       "title": "Par un conseiller qui connaît les petites entreprises",
@@ -116,7 +120,8 @@
       "once": "Paiement unique, sans abonnement.",
       "withdrawal": "Tu disposes du droit légal de rétractation de 14 jours. Le formulaire de commande indique quand il prend fin plus tôt pour les contenus numériques.",
       "seller": "Nous vendons via la plateforme Digistore24. Le paiement apparaît sous ce nom sur ton relevé bancaire.",
-      "after": "Après l’achat, tu te connectes avec ton adresse e-mail et tu commences par la leçon 1."
+      "after": "Après l’achat, tu te connectes avec ton adresse e-mail et tu commences par la leçon 1.",
+      "stack5": "Lisa, ton assistante IA pour les questions sur la formation"
     },
     "faq": {
       "title": "Questions fréquentes",

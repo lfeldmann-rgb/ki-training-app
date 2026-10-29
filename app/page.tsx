@@ -58,8 +58,8 @@ const BENEFITS = [
 ] as const;
 
 // One per row of the confirmed feature list, every row.
-const FEATURES = ["course", "selfCheck", "game", "practice"] as const;
-const STACK = ["stack1", "stack2", "stack3", "stack4"] as const;
+const FEATURES = ["course", "selfCheck", "game", "practice", "assistant"] as const;
+const STACK = ["stack1", "stack2", "stack3", "stack4", "stack5"] as const;
 const FAQ = ["basics", "time", "fit", "aiCost", "subscription", "seller"] as const;
 
 const PRODUCT_KEY = "ki_praxis";

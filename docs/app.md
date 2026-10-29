@@ -63,6 +63,21 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Tests:** `lib/practice/sorting-game.test.ts` (key never sent, half rounds
   never scored, both piles in the key)
 
+### Lisa, the assistant — `/dashboard/chat` and the launcher
+
+- **Does:** answers buyers' questions from her handbook (`content/knowledge/`,
+  10 pages: start, course, self-check, game, guided task, purchase and access,
+  account, "bought but not unlocked", when she sends you to support,
+  glossary) and from the course lessons (the courses content source).
+- **Done when:** a buyer asks Lisa about the app and gets the handbook's answer,
+  an honest "no" for what is not there, and the support address for money —
+  checked 2026-10-29 with three questions (self-check: correct; bookkeeping:
+  "Nein … Support"; refund: support address + order number); cache hit from
+  the second message (cached=5034 tokens), ~0.55 cents per answer
+- **Access:** `requiresPlan: "ki_praxis"` in `config/ai-chat.json`
+- **Data:** `chat_messages` (core)
+- **Tests:** `node run.mjs kb-check` (10 pages, in order)
+
 ### The salespage — `/`
 
 - **Does:** the home page sells KI-Praxis — hero with the lesson-1 cover,
@@ -202,15 +217,19 @@ moment the feature works. Written down by your assistant, from the conversation
   because one key covers text and the lesson cover pictures. The template sent
   OpenAI `max_tokens`, which its current models refuse; fixed in
   `lib/ai/providers/openai-compat.ts` (`maxTokensField`).
-- **Lia, the in-app assistant, gets a handbook about the course** — decided by
-  the vendor 2026-10-29 (`ai-chat-knowledge`, after the salespage). Until
-  then she runs on the template's handbook, and the salespage does not name
-  her.
-- Planned 2026-10-29: Lia's handbook about KI-Praxis — the skill
-  `ai-chat-knowledge`, then she joins the salespage's feature list.
+- **The assistant is called Lisa and answers buyers only** (vendor,
+  2026-10-29): `config/ai-chat.json` → `name: "Lisa"`,
+  `requiresPlan: "ki_praxis"`. Support address she names:
+  lf@feldmannconsult.com. She does not answer refunds, withdrawal, invoices,
+  legal advice, third-party prices or firm promises (handbook
+  `20-howto/wann-support.md`).
+- **OpenAI refuses function tools with reasoning on /chat/completions** —
+  Lisa failed on every message until the adapter sent
+  `reasoning_effort: "none"` with tools (2026-10-29,
+  `lib/ai/providers/openai-compat.ts`, `toolsNeedNoReasoning`).
 - **No social proof with quotes or numbers on the salespage** — there are none
   yet (vendor, 2026-10-29); the founder line from feldmannconsult.com stands
-  in. Lia stays off the page until her handbook exists.
+  in. Lisa joined the page on 2026-10-29, once her handbook existed.
 - **No guarantee beyond the statutory withdrawal right** (vendor, 2026-10-29).
 - `npx shadcn add accordion` wrote `import { cn } from "cn"` into
   `components/ui/accordion.tsx` and installed an unrelated npm package `cn`

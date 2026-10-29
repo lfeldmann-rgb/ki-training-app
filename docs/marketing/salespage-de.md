@@ -12,8 +12,10 @@ _Stand 2026-10-29. Stimme: `docs/marketing/voice.md`. Abschnitte: alle acht,
 | Lernspiel „Wer macht was?“ | Kartentitel in Lektion 1 | 8 Karten: „Kann KI vorbereiten“ oder „Bleibt bei dir“ |
 | Meine Aufgabe im Betrieb | Menü | KI schlägt 3 Aufgaben für den eigenen Betrieb vor, führt Schritt für Schritt hindurch, gibt Rückmeldung auf die Umsetzung |
 
-Nicht auf der Seite: **Lia** — ihr Handbuch zum Kurs fehlt noch (Entscheidung
-2026-10-29). Konto, Abrechnung: keine Funktionen, die man kauft.
+| Lisa | `config/ai-chat.json` → `name`, Seite „Lisa fragen“ | KI-Assistentin, antwortet aus ihrem Handbuch und den Lektionen; nur für Käufer (`requiresPlan: "ki_praxis"`) |
+
+Lisa kam am 2026-10-29 dazu, nachdem ihr Handbuch geschrieben war. Konto,
+Abrechnung: keine Funktionen, die man kauft.
 
 Preis: 149 €, einmal (aus `config/digistore-products.json`, auf der Seite über
 `formatPrice()`, nie abgetippt).
@@ -67,6 +69,8 @@ Preis: 149 €, einmal (aus `config/digistore-products.json`, auf der Seite übe
   Stichworten. Die KI schlägt dir drei passende Aufgaben vor und führt dich
   Schritt für Schritt hindurch. Danach schreibst du auf, wie es lief, und
   bekommst eine Rückmeldung mit dem nächsten Schritt.
+- **Lisa, deine KI-Assistentin:** beantwortet deine Fragen zum Kurs und zur
+  App, rund um die Uhr. Bei Geld und Zugang verweist sie dich an uns.
 
 Darunter: **Die fünf Lektionen** (mit Titelbild, Titel aus dem Kurs)
 1. Was KI für deinen Betrieb tun kann – und was nicht
@@ -91,7 +95,7 @@ keine.)_
 - **Überschrift:** KI-Praxis für deinen Betrieb
 - **Inhalt (aus Abschnitt 4):** 5 Lektionen mit Titelbildern · 3 Selbsttests ·
   Lernspiel „Wer macht was?“ · Meine Aufgabe im Betrieb mit KI-Vorschlägen und
-  Rückmeldung
+  Rückmeldung · Lisa, deine KI-Assistentin für Fragen zum Kurs
 - **Preis:** {formatPrice}. Einmal zahlen, kein Abo.
 - **Widerruf:** Du hast das gesetzliche Widerrufsrecht von 14 Tagen. Wann es
   bei digitalen Inhalten früher endet, steht im Bestellformular.
@@ -151,3 +155,11 @@ ein Klick über „Kurs kaufen“), warum glauben (Feldmann Consult, ohne erfund
 Stimmen), was klicken („Kurs kaufen“, dreimal gleich). Alle vier Zeilen der
 Funktionsliste stehen in Abschnitt 4 mit ihrem App-Namen; jede Zahl (5, 3, 4,
 8, 3) steht so in der App. Kein Wort über die Dauer des Zugangs.
+
+## Lektorat — 2026-10-29, Runde 3 (Nachtrag Lisa) — Urteil: freigegeben
+
+Gelesen: die neue Zeile in Abschnitt 4 und im Angebot. 1.2: Lisa bei der ersten
+Nennung mit Rolle („deine KI-Assistentin“) — erfüllt. 5.2: der Name steht so in
+`config/ai-chat.json` und auf ihrer Seite „Lisa fragen“ — erfüllt. 8.3: sie ist
+auf `ki_praxis` gesperrt, also genau auf das Produkt hinter dem Button —
+erfüllt. 6.1: keine ausgeschlossene Konstruktion. 0 × zurück, 0 Hinweise.

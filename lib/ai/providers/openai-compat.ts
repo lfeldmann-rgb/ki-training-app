@@ -71,6 +71,11 @@ export interface CompatProfile {
    * Mistral and OpenRouter still take `max_tokens`, the default.
    */
   maxTokensField?: "max_tokens" | "max_completion_tokens";
+  /**
+   * A request WITH tools gets `reasoning_effort: "none"` unless the binding set
+   * one — see `buildBody()`. OpenAI only.
+   */
+  toolsNeedNoReasoning?: boolean;
 }
 
 export const COMPAT_PROFILES: Record<string, CompatProfile> = {
@@ -80,6 +85,7 @@ export const COMPAT_PROFILES: Record<string, CompatProfile> = {
     envVar: "OPENAI_API_KEY",
     streamUsageOption: true,
     maxTokensField: "max_completion_tokens",
+    toolsNeedNoReasoning: true,
   },
   mistral: {
     id: "mistral",
@@ -190,6 +196,14 @@ export function buildBody(
       },
     }));
     if (req.toolChoice === "none") body.tool_choice = "none";
+    // OpenAI's current models reason by default, and on /chat/completions they
+    // refuse function tools together with ANY reasoning effort but "none" — a
+    // 400 that took the assistant down on every message (measured 2026-10-29
+    // on gpt-5.6-luna, the "auto" model). An Operator who set an effort in the
+    // binding keeps theirs and gets the provider's answer to it.
+    if (profile.toolsNeedNoReasoning && body.reasoning_effort === undefined) {
+      body.reasoning_effort = "none";
+    }
   }
 
   return body;

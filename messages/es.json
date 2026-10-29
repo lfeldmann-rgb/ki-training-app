@@ -102,7 +102,11 @@
         "name": "Mi tarea en el negocio",
         "line": "Describes tu negocio con unas palabras clave. La IA te propone tres tareas adecuadas y te guía paso a paso en una. Después anotas cómo fue y recibes una opinión con el siguiente paso."
       },
-      "lessonsTitle": "Las cinco lecciones"
+      "lessonsTitle": "Las cinco lecciones",
+      "assistant": {
+        "name": "Lisa, tu asistente de IA",
+        "line": "responde a tus preguntas sobre el curso y la aplicación, a cualquier hora. Para temas de dinero y acceso te remite a nosotros."
+      }
     },
     "founder": {
       "title": "De un asesor que conoce los pequeños negocios",
@@ -116,7 +120,8 @@
       "once": "Pagas una vez, sin suscripción.",
       "withdrawal": "Tienes el derecho legal de desistimiento de 14 días. Cuándo termina antes en el caso de contenidos digitales se explica en el formulario de pedido.",
       "seller": "Vendemos a través de la plataforma Digistore24. El pago aparece con ese nombre en tu extracto bancario.",
-      "after": "Después de comprar, inicias sesión con tu correo electrónico y empiezas con la lección 1."
+      "after": "Después de comprar, inicias sesión con tu correo electrónico y empiezas con la lección 1.",
+      "stack5": "Lisa, tu asistente de IA para dudas sobre el curso"
     },
     "faq": {
       "title": "Preguntas frecuentes",

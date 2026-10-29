@@ -303,6 +303,18 @@ describe("buildBody with tools", () => {
     expect(body.tool_choice).toBe("none");
   });
 
+  it("REGRESSION: OpenAI with tools gets reasoning_effort none, unless the binding set one", () => {
+    // gpt-5.6-luna refuses function tools with any other effort on
+    // /chat/completions — every assistant message failed (2026-10-29).
+    expect(buildBody({ ...REQUEST, tools: TOOLS }, COMPAT_PROFILES.openai, true).reasoning_effort).toBe("none");
+    expect(buildBody(REQUEST, COMPAT_PROFILES.openai, true)).not.toHaveProperty("reasoning_effort");
+    const chosen = { ...REQUEST, tools: TOOLS, providerOptions: { reasoning_effort: "low" } };
+    expect(buildBody(chosen, COMPAT_PROFILES.openai, true).reasoning_effort).toBe("low");
+    for (const other of [COMPAT_PROFILES.mistral, COMPAT_PROFILES.openrouter]) {
+      expect(buildBody({ ...REQUEST, tools: TOOLS }, other, true)).not.toHaveProperty("reasoning_effort");
+    }
+  });
+
   it("sends NEITHER field without tools — OpenAI 400s on tools: []", () => {
     for (const req of [REQUEST, { ...REQUEST, tools: [] }]) {
       const body = buildBody(req, COMPAT_PROFILES.openai, false);
