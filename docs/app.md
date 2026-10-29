@@ -180,9 +180,12 @@ moment the feature works. Written down by your assistant, from the conversation
   because one key covers text and the lesson cover pictures. The template sent
   OpenAI `max_tokens`, which its current models refuse; fixed in
   `lib/ai/providers/openai-compat.ts` (`maxTokensField`).
-- **The in-app assistant ("Assistent") is live now that a key exists**, still
-  with the template's handbook — `ai-chat-knowledge` writes hers, or she is
-  switched off in `config/ai-chat.json`. Not decided yet.
+- **Lia, the in-app assistant, gets a handbook about the course** — decided by
+  the vendor 2026-10-29 (`ai-chat-knowledge`, after the salespage). Until
+  then she runs on the template's handbook, and the salespage does not name
+  her.
+- Planned 2026-10-29: Lia's handbook about KI-Praxis — the skill
+  `ai-chat-knowledge`, then she joins the salespage's feature list.
 - ⚠️ **Fernunterricht (FernUSG) is open**: AI feedback on what an owner hands
   in may count as monitoring the learning outcome. Not decided here —
   `compliance-check` before the first sale.
