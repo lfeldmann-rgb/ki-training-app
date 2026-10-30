@@ -69,8 +69,8 @@ necesita consentimiento (§ 25.2 TDDDG).
 
 - **Digistore24** — compra y pago (sección 4).
 - **OpenAI** — funciones de IA (sección 6).
-- **El proveedor de alojamiento** que opera la aplicación y la base de datos — **[completar antes del lanzamiento: nombre, sede, ubicación de los servidores]**.
-- **El servicio de envío de correo** que envía los enlaces de acceso y las confirmaciones; recibe tu dirección de correo y el contenido de esos mensajes — **[completar antes del lanzamiento: nombre, sede, base de una posible transferencia fuera de la UE]**.
+- **El proveedor de alojamiento** que opera la aplicación y la base de datos — **Render Services, Inc.**, San Francisco, EE. UU.; los servidores están en **Fráncfort del Meno**. Como el proveedor tiene su sede en EE. UU., no puede descartarse un acceso desde allí. **[Completar antes del lanzamiento: base — EU-US Data Privacy Framework o cláusulas contractuales tipo.]**
+- **El servicio de envío de correo** que envía los enlaces de acceso y las confirmaciones; recibe tu dirección de correo y el contenido de esos mensajes — **Brevo** (Sendinblue SAS, París, Francia) — tratamiento dentro de la UE.
 
 Con estos proveedores existen, o se firmarán antes del lanzamiento, contratos de
 encargo de tratamiento según el art. 28 RGPD.

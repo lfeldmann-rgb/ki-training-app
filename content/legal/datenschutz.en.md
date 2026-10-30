@@ -68,8 +68,8 @@ consent is required for this (§ 25(2) TDDDG).
 
 - **Digistore24** — purchase and payment (section 4).
 - **OpenAI** — AI features (section 6).
-- **The hosting provider** that runs the app and the database — **[to be filled in before launch: name, seat, server location]**.
-- **The email delivery service** that sends sign-in links and confirmations; it receives your email address and the content of those emails — **[to be filled in before launch: name, seat, basis of any transfer outside the EU]**.
+- **The hosting provider** that runs the app and the database — **Render Services, Inc.**, San Francisco, USA; the servers are in **Frankfurt am Main**. As the provider is based in the USA, access from there cannot be ruled out. **[To be filled in before launch: basis — EU-US Data Privacy Framework or standard contractual clauses.]**
+- **The email delivery service** that sends sign-in links and confirmations; it receives your email address and the content of those emails — **Brevo** (Sendinblue SAS, Paris, France) — processing within the EU.
 
 Data processing agreements under Art. 28 GDPR are in place with these service
 providers or will be concluded before launch.

@@ -71,8 +71,8 @@ par. 2 TDDDG).
 
 - **Digistore24** — achat et paiement (section 4).
 - **OpenAI** — fonctions d’IA (section 6).
-- **L’hébergeur** qui exploite l’application et la base de données — **[à compléter avant le lancement : nom, siège, localisation des serveurs]**.
-- **Le service d’envoi d’e-mails** qui envoie les liens de connexion et les confirmations ; il reçoit ton adresse e-mail et le contenu de ces messages — **[à compléter avant le lancement : nom, siège, base d’un éventuel transfert hors de l’UE]**.
+- **L’hébergeur** qui exploite l’application et la base de données — **Render Services, Inc.**, San Francisco, États-Unis ; les serveurs se trouvent à **Francfort-sur-le-Main**. Le prestataire ayant son siège aux États-Unis, un accès depuis ce pays ne peut être exclu. **[À compléter avant le lancement : base — EU-US Data Privacy Framework ou clauses contractuelles types.]**
+- **Le service d’envoi d’e-mails** qui envoie les liens de connexion et les confirmations ; il reçoit ton adresse e-mail et le contenu de ces messages — **Brevo** (Sendinblue SAS, Paris, France) — traitement au sein de l’UE.
 
 Des contrats de sous-traitance au sens de l’art. 28 du RGPD existent avec ces
 prestataires ou seront conclus avant le lancement.

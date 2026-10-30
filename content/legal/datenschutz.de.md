@@ -70,8 +70,8 @@ TDDDG).
 
 - **Digistore24** — Kauf und Zahlung (Abschnitt 4).
 - **OpenAI** — KI-Funktionen (Abschnitt 6).
-- **Der Hosting-Anbieter**, der die App und die Datenbank betreibt — **[vor dem Start eintragen: Name, Sitz, Serverstandort]**.
-- **Der E-Mail-Versanddienst**, der Anmelde-Links und Bestätigungen verschickt; er erhält deine E-Mail-Adresse und den Inhalt dieser Mails — **[vor dem Start eintragen: Name, Sitz, ggf. Grundlage einer Übermittlung außerhalb der EU]**.
+- **Der Hosting-Anbieter**, der die App und die Datenbank betreibt — **Render Services, Inc.**, San Francisco, USA; die Server stehen in **Frankfurt am Main**. Da der Anbieter seinen Sitz in den USA hat, ist ein Zugriff von dort nicht ausgeschlossen. **[Vor dem Start eintragen: Grundlage — EU-US Data Privacy Framework oder Standardvertragsklauseln.]**
+- **Der E-Mail-Versanddienst**, der Anmelde-Links und Bestätigungen verschickt; er erhält deine E-Mail-Adresse und den Inhalt dieser Mails — **Brevo** (Sendinblue SAS, Paris, Frankreich) — Verarbeitung in der EU.
 
 Mit diesen Dienstleistern bestehen bzw. werden vor dem Start Verträge zur
 Auftragsverarbeitung nach Art. 28 DSGVO geschlossen.
