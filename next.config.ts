@@ -265,12 +265,6 @@ const nextConfig: NextConfig = {
   // of refusal to somewhere that can say why.
   experimental: {
     serverActions: { bodySizeLimit: "10mb" },
-    // Build workers. Next starts one per CPU the machine REPORTS, and a build
-    // container can report far more CPUs than its memory carries: Render's
-    // reported 47, and "Collecting page data" died on a different route each
-    // run (2026-10-29). Four is plenty for this app's page count;
-    // NEXT_BUILD_CPUS overrides it.
-    cpus: Number(process.env.NEXT_BUILD_CPUS) || 4,
   },
 
   // Runs directly with `npm run start` (next start) on all four hosts in
