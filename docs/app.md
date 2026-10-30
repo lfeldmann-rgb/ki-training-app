@@ -281,6 +281,16 @@ moment the feature works. Written down by your assistant, from the conversation
   DNS account for nothing). STAGING, if ever, goes on
   `test.feldmannconsult.com`. ⚠️ The domain also carries the vendor's own
   mail: Brevo's records join the existing SPF record, MX stays untouched.
+- **Live since 2026-10-30** at `https://kurs.feldmannconsult.com` (Render
+  service `ki-training-app`, Node 24 via `.nvmrc`, Postgres `ki_praxis_db` in
+  Frankfurt). Done: owner `lf@feldmannconsult.com` (`user-create` in the Render
+  shell), smoke member, course + covers via `content-apply --env prod`,
+  `health`, `smoke` (22 pages, 15 signed in) and `errors` against the live URL
+  green. The first builds failed on a `DATABASE_URL` that held only the
+  database's host name, not on the code. Open: PROD product + IPN, real test
+  purchase, live gateways. The setup surface stays OFF, so
+  `content-check --env prod` cannot answer; `courses-check` against the prod
+  database stood in for it.
 - **Planned: go-live** (2026-10-29) — vendor creates Brevo, Render and
   Cloudflare accounts and Brevo's DNS records at IONOS; then `mail-setup`,
   R2 bucket + `media-check`, Render deploy, `user-create --role owner`,
