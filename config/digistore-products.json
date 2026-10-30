@@ -29,7 +29,7 @@
           "de": "756657"
         },
         "prod": {
-          "de": null
+          "de": "757175"
         }
       },
       "payplanIds": {
@@ -37,6 +37,16 @@
           "de": {
             "default": {
               "id": "1545076",
+              "priceCents": 14900,
+              "currency": "EUR",
+              "billingInterval": null
+            }
+          }
+        },
+        "prod": {
+          "de": {
+            "default": {
+              "id": "1546137",
               "priceCents": 14900,
               "currency": "EUR",
               "billingInterval": null
