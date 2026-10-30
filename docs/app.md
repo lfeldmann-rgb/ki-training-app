@@ -287,8 +287,12 @@ moment the feature works. Written down by your assistant, from the conversation
   shell), smoke member, course + covers via `content-apply --env prod`,
   `health`, `smoke` (22 pages, 15 signed in) and `errors` against the live URL
   green. The first builds failed on a `DATABASE_URL` that held only the
-  database's host name, not on the code. Open: PROD product + IPN, real test
-  purchase, live gateways. The setup surface stays OFF, so
+  database's host name, not on the code. PROD product `757175` + IPN (domain
+  `kurs-feldmannconsult-com-prod-…`) created 2026-10-30, passphrase and domain id
+  set at Render, testpay key rotated; a Digistore24 test purchase (Testpay,
+  vendor's "Testkauf durchführen") reached `/api/ipn` at 09:29 UTC with no error
+  in the live log. Open: live gateways (ux, security, performance), product
+  approval — **not before the FernUSG answer**. The setup surface stays OFF, so
   `content-check --env prod` cannot answer; `courses-check` against the prod
   database stood in for it.
 - **Planned: go-live** (2026-10-29) — vendor creates Brevo, Render and
