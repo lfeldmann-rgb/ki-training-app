@@ -12,7 +12,8 @@
         "image/png",
         "image/webp"
       ],
-      "signedUrlSeconds": 300
+      "_signedUrlSeconds": "One hour, raised from 300 on 2026-10-30: the lesson covers are lazy-loaded, and a visitor who scrolled to one after five minutes on the page got an expired address and a grey box. A public base URL on the bucket was the alternative and was rejected for now — an R2 custom domain needs the domain's DNS at Cloudflare (it is at IONOS), and r2.dev is rate-limited and not meant for production. The cost: an image address can be passed on for an hour. This app holds only public covers; revisit before members upload private pictures.",
+      "signedUrlSeconds": 3600
     },
     "video": {
       "_comment": "Six hours, because a player re-requests byte ranges as somebody scrubs through it and an address that expired mid-view looks like a broken video. The cost is that the address can be passed on for that long — for paid content that is a real trade, and docs/visuals.md states it.",
