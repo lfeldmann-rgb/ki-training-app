@@ -195,6 +195,15 @@ moment the feature works. Written down by your assistant, from the conversation
 - **Tests:** `lib/practice/rules.test.ts`; the companion module's own tests
   (fence, gate, guard order)
 
+### Page copy for the launch crowd — `/` and `/plans`, signed out
+
+- **What:** `proxy.ts` answers a signed-out GET of `/` or `/plans` (no query, no session cookie, a document request) from an in-memory copy at most 60 s old, one per locale (`lib/page-cache.ts`). The copy carries no Set-Cookie; signed-in visitors, variants and every other page render as before. On in production builds only; `PAGE_CACHE=off` switches it off.
+- **Why:** a page costs ~50 ms of framework render; Render Starter (0,5 CPU) managed ~12 pages/s and timed out a third of the home pages at 100 parallel visitors (`docs/reports/performance-2026-10-30.md`).
+- **Measured locally, 100 parallel, `/`:** 45 → 661 pages/s, p97.5 3.7 s → 0.21 s; headers identical fresh vs. cached.
+- **Cost:** a text or price change on these two pages reaches visitors after up to 60 s.
+- **Tests:** `lib/page-cache.test.ts`.
+- **Done when:** the live home page answers 100 parallel visitors without timeouts — checked live after deploy.
+
 ## Decisions worth remembering
 
 - **No lesson videos.** Decided on 2026-10-28 by the vendor in build-app 1b.
@@ -281,6 +290,7 @@ moment the feature works. Written down by your assistant, from the conversation
   DNS account for nothing). STAGING, if ever, goes on
   `test.feldmannconsult.com`. ⚠️ The domain also carries the vendor's own
   mail: Brevo's records join the existing SPF record, MX stays untouched.
+- **Page caching built against the assistant's advice, at the vendor's request** (2026-10-31): the advice was "scale the instance for a launch instead"; the vendor chose the free route. Built as a proxy-level copy rather than a static route, because the root layout reads the locale from a cookie and making two pages static would have meant changing how the whole app picks its language.
 - **Live since 2026-10-30** at `https://kurs.feldmannconsult.com` (Render
   service `ki-training-app`, Node 24 via `.nvmrc`, Postgres `ki_praxis_db` in
   Frankfurt). Done: owner `lf@feldmannconsult.com` (`user-create` in the Render

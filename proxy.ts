@@ -31,6 +31,8 @@ import {
 import authConfig from "@/auth.config";
 import { staleAuthCookieNames } from "@/lib/auth/cookie-names";
 import { MODULE_GATES } from "@/lib/modules/gate-registry";
+import { LOCALE_COOKIE } from "@/i18n/config";
+import { cachedPage } from "@/lib/page-cache";
 
 // Deliberately in two steps: Next.js reads this export statically, and a
 // destructured `export const { auth: proxy } = …` is not recognized as a
@@ -121,6 +123,19 @@ export default async function proxy(request: NextRequest, event: NextFetchEvent)
   // asking Auth.js first would re-issue session cookies on every hit (see the
   // warning at the top of the file).
   const { pathname } = request.nextUrl;
+
+  // `/` and `/plans` for a signed-out visitor: a copy at most a minute old
+  // instead of a fresh render (lib/page-cache.ts says why and what it refuses).
+  const copy = await cachedPage({
+    method: request.method,
+    pathname,
+    search: request.nextUrl.search,
+    headers: request.headers,
+    cookieNames: request.cookies.getAll().map((cookie) => cookie.name),
+    localeCookie: request.cookies.get(LOCALE_COOKIE)?.value,
+  });
+  if (copy) return copy;
+
   let response = pathname.startsWith("/dashboard")
     ? await protect(request, event)
     : NextResponse.next();
