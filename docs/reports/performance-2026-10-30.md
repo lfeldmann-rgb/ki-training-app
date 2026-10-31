@@ -43,11 +43,20 @@ Nach allen Läufen: `/api/healthz` 200, `errors --url` leer, kein Absturz
 
 ## Fixed in this run
 
+- ❌ Durchsatz bei Ansturm, für `/` und `/plans` (abgemeldet) → **Seitenkopie im Proxy** (2026-10-31, commit 07cda11, `lib/page-cache.ts`; gebaut auf Wunsch des Betreibers gegen die Empfehlung, die Instanz zu vergrößern). Live, 100 Dauerverbindungen, 20 s:
+
+  | Route | vorher: req/s · p97.5 · Abbrüche | nachher: req/s · p97.5 · Abbrüche |
+  |---|---|---|
+  | / | 6 · 9 949 ms · **67 (35 %)** | **54** · 6 096 ms · **0** |
+  | /plans | 15 · 8 012 ms · 0 | **72** · 3 780 ms · 0 |
+
+  Lokal (ohne Netzweg) 45 → 661 Seiten/s, p97.5 3,7 s → 0,21 s. Live begrenzt jetzt sehr wahrscheinlich die **Leitung des Messrechners**: eine Startseite ist ~160 KB, 54 Seiten/s sind ~70 Mbit/s am Hausanschluss — eine Messung aus dem Rechenzentrum würde das bestätigen. Angemeldete Seiten (`/dashboard`) sind davon NICHT betroffen und bleiben beim Befund.
+
 - ⚠️ Titelbilder → behoben anders als vorgeschlagen (2026-10-31, commit 0b64386): Gültigkeit der Bildadressen 300 s → 3600 s statt öffentlicher Bucket-Adresse (eigene Domain bei R2 bräuchte die DNS bei Cloudflare; r2.dev ist gedrosselt). Live geprüft: `X-Amz-Expires=3600`, 6/6 Bilder geladen. Zwischenspeichern im Browser bleibt dadurch eingeschränkt.
 
 ## Open
 
-- ❌ Durchsatz bei Ansturm — Entscheidung: Plan Standard oder Zwischenspeicher.
+- ⚠️ Durchsatz bei Ansturm auf **angemeldete** Seiten (`/dashboard`, Lektionen): unverändert ~12 Seiten/s auf Starter. Öffentliche Seiten: behoben (siehe oben).
 - ℹ️ Öffentliche Bucket-Adresse für die Titelbilder — nur noch für Zwischenspeicherung, nicht mehr nötig gegen graue Bilder.
 
 ## Profil 2026-10-31 — warum das Zwischenspeichern der Seiten NICHT gebaut wurde
