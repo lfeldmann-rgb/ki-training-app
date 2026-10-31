@@ -43,12 +43,12 @@ Nach allen Läufen: `/api/healthz` 200, `errors --url` leer, kein Absturz
 
 ## Fixed in this run
 
-— (nichts geändert; die Behebung kostet Geld oder ist eine Entscheidung)
+- ⚠️ Titelbilder → behoben anders als vorgeschlagen (2026-10-31, commit 0b64386): Gültigkeit der Bildadressen 300 s → 3600 s statt öffentlicher Bucket-Adresse (eigene Domain bei R2 bräuchte die DNS bei Cloudflare; r2.dev ist gedrosselt). Live geprüft: `X-Amz-Expires=3600`, 6/6 Bilder geladen. Zwischenspeichern im Browser bleibt dadurch eingeschränkt.
 
 ## Open
 
 - ❌ Durchsatz bei Ansturm — Entscheidung: Plan Standard oder Zwischenspeicher.
-- ⚠️ Öffentliche Adresse für die Titelbilder.
+- ℹ️ Öffentliche Bucket-Adresse für die Titelbilder — nur noch für Zwischenspeicherung, nicht mehr nötig gegen graue Bilder.
 
 ## Worth a look
 
