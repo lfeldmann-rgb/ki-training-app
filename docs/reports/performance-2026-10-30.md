@@ -50,6 +50,12 @@ Nach allen Läufen: `/api/healthz` 200, `errors --url` leer, kein Absturz
 - ❌ Durchsatz bei Ansturm — Entscheidung: Plan Standard oder Zwischenspeicher.
 - ℹ️ Öffentliche Bucket-Adresse für die Titelbilder — nur noch für Zwischenspeicherung, nicht mehr nötig gegen graue Bilder.
 
+## Profil 2026-10-31 — warum das Zwischenspeichern der Seiten NICHT gebaut wurde
+
+- **Gemessen** (CPU-Profil, Produktions-Build, lokal, `/impressum` — eine Seite ohne Digistore24-Aufruf): rund **50 ms Rechenzeit pro Seite**, fast alles im Seitenaufbau von Next.js/React selbst, nicht im Code dieser App und nicht in der Datenbank. Auf Renders 0,5 CPU ergibt das die gemessenen ~12 Seiten/s.
+- **Der Digistore24-Kauflink ist kein Engpass:** er wird 20 Stunden in `buy_url_cache` gehalten (`lib/digistore/buyUrl.ts`). Lokal griff der Speicher nicht, weil das DEV-Produkt 756657 bei Digistore24 nicht mehr existiert — jeder Aufruf fragte neu und scheiterte (200–600 ms). Live, mit 757175, greift er.
+- **Ganze Seiten zwischenspeichern** hieße, Start- und Preisseite unabhängig von Sprache (Cookie/Browser, ohne Sprachkürzel in der Adresse) und Anmeldestatus (Kopfzeile) zu machen, oder `cacheComponents` für die ganze App einzuschalten. Beides greift in den Kern der Vorlage ein, der für JEDE Seite gilt — ein großer, riskanter Umbau für einen Engpass, der heute keinen Kunden trifft. **Entschieden dagegen** (2026-10-31): Vor einem großen Launch lieber die Render-Instanz für die Launch-Zeit vergrößern (kostet Geld, Entscheidung des Betreibers, danach messen) und hinterher zurückstufen.
+
 ## Worth a look
 
 - Die Lastmessung lief über den Hausanschluss des Betreibers; ein Lastgenerator im Rechenzentrum würde etwas bessere Zahlen zeigen, nicht andere Schlüsse.
