@@ -93,6 +93,7 @@ Von der Platte gelesen:
 ## Still needs a human
 
 1. 🚨 **FernUSG — ob der Kurs eine Zulassung der ZFU braucht.** Gefundene Tatsachen: Der Kurs kostet Geld. Er ist zeitunabhängiges Selbststudium, die Lernenden sind also überwiegend räumlich getrennt. Ein KI-Coach liest, was die Lernenden zu ihren Aufgaben aufschreiben, und gibt Rückmeldung — eine Modell-Bewertung trägt nach der Vorlage das Merkmal „Überwachung des Lernerfolgs". Die Selbsttests mit Bestehensgrenze werden automatisch ausgewertet und tragen es für sich nicht. Ein `community`-Raum oder eine menschliche Korrektur gibt es nicht, ein Zertifikat wird nicht versprochen. Ohne nötige Zulassung ist ein Vertrag nach § 7 Abs. 1 FernUSG nichtig, auch gegenüber Unternehmen (BGH, 12.06.2025 – III ZR 109/24). **Das entscheidet eine Rechtsberatung, nicht diese Prüfung** — vor dem ersten Verkauf.
+   **Nachtrag 2026-11-01:** Laut Betreiber geklärt, „kein Problem“. Diese Prüfung hat das nicht bewertet. Kommen später menschliche Korrektur, ein Gemeinschaftsraum oder ein Zertifikat hinzu, ist die Frage neu zu stellen.
 2. **Vertragspartner bei Digistore24** klären → davon hängen AGB und Widerrufsbelehrung ab.
 3. **Alle Texte** (Impressum, Datenschutzerklärung, die sieben Nachweise) durch eine Rechtsberatung lesen lassen. Erst danach entfernt der Betreiber den Entwurfs-Hinweis (`<!-- ds24-appkit:draft -->` und die fette Zeile).
 4. **Hoster und Mail-Dienst** beim Livegang in die Datenschutzerklärung und das AVV-Register eintragen.

@@ -72,4 +72,4 @@ Nach allen Läufen: `/api/healthz` 200, `errors --url` leer, kein Absturz
 
 ## Accepted
 
-— keine
+- Durchsatz der angemeldeten Seiten auf Render Starter — vom Betreiber am 2026-11-01 akzeptiert, siehe `docs/reports/performance-accepted.md`.

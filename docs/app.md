@@ -275,9 +275,11 @@ moment the feature works. Written down by your assistant, from the conversation
   (2026-10-29) — fixed to `@/lib/utils`, package removed. Its `npm install`
   also pruned the embedded Postgres mid-run; `node run.mjs start` puts it
   back by itself.
-- ⚠️ **Fernunterricht (FernUSG) is open**: AI feedback on what an owner hands
-  in may count as monitoring the learning outcome. Not decided here —
-  `compliance-check` before the first sale.
+- **Fernunterricht (FernUSG): clarified by the vendor, 2026-11-01** — "geklärt,
+  kein Problem" (vendor's statement; the assistant gave no assessment). The
+  facts it rested on are in `docs/reports/compliance-2026-10-29.md`. ⚠️ If the
+  course ever adds human correction, a community room or a certificate, the
+  question is open again.
 - **Go-live setup, chosen by the vendor 2026-10-29:** the app lives at
   `https://kurs.feldmannconsult.com` (a subdomain of the vendor's own
   domain, DNS at IONOS — no new domain bought), sign-in mails go out from
@@ -302,12 +304,11 @@ moment the feature works. Written down by your assistant, from the conversation
   set at Render, testpay key rotated; a Digistore24 test purchase (Testpay,
   vendor's "Testkauf durchführen") reached `/api/ipn` at 09:29 UTC with no error
   in the live log. Open: live gateways (ux, security, performance), product
-  approval — **not before the FernUSG answer**. The setup surface stays OFF, so
+  approval — the FernUSG question was cleared by the vendor on 2026-11-01. The setup surface stays OFF, so
   `content-check --env prod` cannot answer; `courses-check` against the prod
   database stood in for it.
 - **Planned: go-live** (2026-10-29) — vendor creates Brevo, Render and
   Cloudflare accounts and Brevo's DNS records at IONOS; then `mail-setup`,
   R2 bucket + `media-check`, Render deploy, `user-create --role owner`,
   `content-publish --env prod`, PROD product + IPN via `ds24-sync --env prod`,
-  a real test purchase. **No sale before the FernUSG question is answered by
-  a lawyer** (`docs/reports/compliance-2026-10-29.md`).
+  a real test purchase. FernUSG: cleared by the vendor on 2026-11-01 (`docs/reports/compliance-2026-10-29.md`).
