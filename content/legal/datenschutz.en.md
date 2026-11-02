@@ -28,7 +28,7 @@ data the app actually holds.
 
 ## 4. The purchase via Digistore24
 
-- Sale and payment are handled by **Digistore24** (Digistore24 GmbH, Germany). Depending on the contract, Digistore24 is the contracting party and a controller of the purchase data in its own right; in that case Digistore24's privacy policy applies as well.
+- Sale and payment are handled by **Digistore24** (Digistore24 GmbH, Germany). According to the order form, Digistore24 is the seller and your contracting party and a controller of the purchase data in its own right; Digistore24's privacy policy applies to that as well.
 - **What we receive:** the order data Digistore24 sends us after the purchase — order number, product, amount, time, the buyer's email address and name. We keep the complete technical message from Digistore24 for **60 days** so that access problems can be cleared up.
 - **Purpose and legal basis:** to unlock the course (Art. 6(1)(b) GDPR) and to meet statutory retention duties (Art. 6(1)(c) GDPR).
 - **How long:** orders are accounting records and are kept for six to ten years under § 147 AO and § 257 HGB — **even if you delete your account**. The link to your account is removed when you do.

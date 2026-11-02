@@ -29,7 +29,7 @@ réellement.
 
 ## 4. L’achat via Digistore24
 
-- La vente et le paiement sont gérés par **Digistore24** (Digistore24 GmbH, Allemagne). Selon le contrat, Digistore24 est la partie contractante et un responsable du traitement à part entière pour les données d’achat ; dans ce cas, sa politique de confidentialité s’applique également.
+- La vente et le paiement sont gérés par **Digistore24** (Digistore24 GmbH, Allemagne). Selon le formulaire de commande, Digistore24 est le vendeur et ta partie contractante, et un responsable du traitement à part entière pour les données d’achat ; sa politique de confidentialité s’applique également à cet égard.
 - **Ce que nous recevons :** les données de commande que Digistore24 nous transmet après l’achat — numéro de commande, produit, montant, date, adresse e-mail et nom de l’acheteur. Nous conservons le message technique complet de Digistore24 pendant **60 jours** afin de pouvoir résoudre les problèmes d’accès.
 - **Finalité et base juridique :** débloquer le cours (art. 6, par. 1, point b du RGPD) et respecter les obligations légales de conservation (art. 6, par. 1, point c du RGPD).
 - **Combien de temps :** les commandes sont des pièces comptables et sont conservées six à dix ans selon le § 147 AO et le § 257 HGB — **même si tu supprimes ton compte**. Le lien avec ton compte est alors supprimé.

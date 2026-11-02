@@ -28,7 +28,7 @@ de los datos que la aplicación realmente guarda.
 
 ## 4. La compra a través de Digistore24
 
-- La venta y el pago los gestiona **Digistore24** (Digistore24 GmbH, Alemania). Según el contrato, Digistore24 es la parte contratante y responsable propio de los datos de compra; en ese caso se aplica además su política de privacidad.
+- La venta y el pago los gestiona **Digistore24** (Digistore24 GmbH, Alemania). Según el formulario de pedido, Digistore24 es el vendedor y tu parte contratante, y responsable propio de los datos de compra; para ello se aplica además su política de privacidad.
 - **Qué recibimos:** los datos del pedido que Digistore24 nos envía tras la compra — número de pedido, producto, importe, fecha, correo electrónico y nombre del comprador. Guardamos el mensaje técnico completo de Digistore24 durante **60 días** para poder aclarar problemas de acceso.
 - **Finalidad y base jurídica:** desbloquear el curso (art. 6.1.b RGPD) y cumplir las obligaciones legales de conservación (art. 6.1.c RGPD).
 - **Cuánto tiempo:** los pedidos son justificantes contables y se conservan de seis a diez años según el § 147 AO y el § 257 HGB — **también si eliminas tu cuenta**. En ese caso se elimina el vínculo con tu cuenta.

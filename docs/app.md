@@ -293,6 +293,7 @@ moment the feature works. Written down by your assistant, from the conversation
   `test.feldmannconsult.com`. ⚠️ The domain also carries the vendor's own
   mail: Brevo's records join the existing SPF record, MX stays untouched.
 - **Page caching built against the assistant's advice, at the vendor's request** (2026-10-31): the advice was "scale the instance for a launch instead"; the vendor chose the free route. Built as a proxy-level copy rather than a static route, because the root layout reads the locale from a cookie and making two pages static would have meant changing how the whole app picks its language.
+- **Product 757175 is approved at Digistore24 Germany** (seen 2026-11-02 in `ds24-approval`; not requested from here). The public order form names Digistore24 GmbH as seller and contracting party, with its own AGB and Widerruf — so no purchase terms of our own, pending a look at the contract. Real sales are possible from now on.
 - **Live since 2026-10-30** at `https://kurs.feldmannconsult.com` (Render
   service `ki-training-app`, Node 24 via `.nvmrc`, Postgres `ki_praxis_db` in
   Frankfurt). Done: owner `lf@feldmannconsult.com` (`user-create` in the Render

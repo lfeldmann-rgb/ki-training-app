@@ -28,7 +28,7 @@ tatsächlichen Datenbestand der App geschrieben.
 
 ## 4. Der Kauf über Digistore24
 
-- Den Verkauf und die Zahlung wickelt **Digistore24** ab (Digistore24 GmbH, Deutschland). Je nach Vertragsgestaltung ist Digistore24 dabei Vertragspartner und eigener Verantwortlicher für die Kaufdaten; dann gilt zusätzlich die Datenschutzerklärung von Digistore24.
+- Den Verkauf und die Zahlung wickelt **Digistore24** ab (Digistore24 GmbH, Deutschland). Laut Bestellformular ist Digistore24 Verkäufer und dein Vertragspartner und für die Kaufdaten eigener Verantwortlicher; dafür gilt zusätzlich die Datenschutzerklärung von Digistore24.
 - **Was wir erhalten:** die Daten der Bestellung, die Digistore24 uns nach dem Kauf übermittelt — Bestellnummer, Produkt, Betrag, Zeitpunkt, E-Mail-Adresse und Name des Käufers. Die vollständige technische Nachricht von Digistore24 speichern wir **60 Tage**, um Fehler bei der Freischaltung aufklären zu können.
 - **Wozu und Rechtsgrundlage:** um den Kurs freizuschalten (Art. 6 Abs. 1 lit. b DSGVO) und um gesetzliche Aufbewahrungspflichten zu erfüllen (Art. 6 Abs. 1 lit. c DSGVO).
 - **Wie lange:** Bestellungen sind Buchungsbelege und werden nach § 147 AO und § 257 HGB sechs bis zehn Jahre aufbewahrt — **auch wenn du dein Konto löschst**. Die Verknüpfung mit deinem Konto wird dabei entfernt.
