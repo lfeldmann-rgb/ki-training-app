@@ -8,6 +8,6 @@
 | OpenAI, L.L.C. | KI-Assistentin Lisa, Aufgaben-Coach, Titelbilder | USA | Auftragsverarbeiter | **abzuschließen** (Data Processing Addendum im OpenAI-API-Konto) | Zertifizierung nach dem EU-US Data Privacy Framework prüfen, sonst Standardvertragsklauseln | **offen** |
 | Render Services, Inc. | App und Datenbank (Hoster) | USA, Server in Frankfurt | Auftragsverarbeiter | **abzuschließen** (Render DPA) | Sitz USA: DPF-Zertifizierung prüfen, sonst Standardvertragsklauseln | **offen** |
 | Cloudflare, Inc. (R2) | Speicher für Titelbilder | USA, Bucket-Standort automatisch (nicht EU-gebunden) | Auftragsverarbeiter — derzeit **keine personenbezogenen Daten** (nur öffentliche Titelbilder) | bei Bedarf abschließen, spätestens wenn Kunden Dateien hochladen | Sitz USA | **offen, geringe Priorität** |
-| Sendinblue SAS (Brevo) | Anmelde-Links, Bestätigungen | Frankreich (EU) | Auftragsverarbeiter | in Brevos AGB enthalten — prüfen und ablegen | — | **offen: prüfen** |
+| Sendinblue SAS (Brevo) | Anmelde-Links, Bestätigungen | Frankreich (EU) | Auftragsverarbeiter | in Brevos AGB enthalten — prüfen und ablegen. ⚠️ Das Brevo-Konto läuft auf **ANISOPRINT**, nicht auf Feldmann Consult (Betreiber-Entscheidung 2026-11-03): von der Rechtsberatung prüfen lassen, wer hier Vertragspartner von Brevo ist und ob das zum Verantwortlichen Feldmann Consult passt | — | **offen: prüfen** |
 
 Vor dem ersten echten Kunden braucht jede Zeile einen abgeschlossenen Vertrag.
